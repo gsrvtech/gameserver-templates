@@ -1,7 +1,7 @@
 {
   "Name": "Athena Bot",
   "Author": "eggs@goover.dev",
-  "UpdateUrl": null,
+  "UpdateUrl": "https://github.com/gsrvtech/gameserver-templates/blob/main/bots/athenabot/moonlight-athena-bot.json",
   "DonateUrl": "https://ko-fi.com/oldnoob",
   "StartupCommand": "if [ -f /home/container/package.json ]; then npm install; fi; node /home/container/{{JS_FILE}}",
   "OnlineDetection": "AthenaBot\\ is\\ up\\ and\\ running\\.",
