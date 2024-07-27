@@ -1,4 +1,4 @@
-# / Days 2 Die
+# 7 Days 2 Die
 
 ## Author & Contributers
 | Name        | Github Profile  | Buy me a Coffee |
