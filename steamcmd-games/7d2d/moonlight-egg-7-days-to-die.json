@@ -1,7 +1,7 @@
 {
   "Name": "7 Days To Die",
   "Author": "eggs@goover.dev",
-  "UpdateUrl": null,
+  "UpdateUrl": "https://github.com/gsrvtech/gameserver-templates/blob/main/steamcmd-games/7d2d/moonlight-egg-7-days-to-die.json",
   "DonateUrl": "https://ko-fi.com/oldnoob",
   "StartupCommand": "./7DaysToDieServer.x86_64 -configfile=serverconfig.xml -quit -batchmode -nographics -dedicated -ServerPort={{ML_PORT_1}} -ServerDisabledNetworkProtocols={{SERVER_DISABLED_NETWORK_PROTOCOLS}} -ServerName=\"{{SRV_NAME}}\" -ServerDescription=\"{{SRV_DESCRIPTION}}\" -ServerPassword=\"{{SRV_PW}}\" -Region={{REGION}} -Language={{LANGUAGE}} -ServerMaxPlayerCount={{MAX_PLAYERS}} -GameDifficulty={{GAME_DIFFICULTY}} -GameWorld={{GAME_WORLD}} -GameName={{GAME_NAME}} -WorldGenSeed={{WORLD_SEED}} -WorldGenSize={{WORLD_SIZE}} -GameMode={{GAME_MODE}} -ServerWebsiteURL={{WEB_URL}} -WebDashboardEnabled={{WEBDASHBOARD}} -WebDashboardPort={{ML_PORT_2}} -TelnetEnabled=true -TelnetPort={{ML_PORT_3}} -TelnetPassword={{TELNET_PW}} -logfile logs/latest.log & echo -e \"Checking on telnet connection\" && until nc -z -v -w5 127.0.0.1 {{ML_PORT_3}}; do echo \"Waiting for telnet connection...\"; sleep 5; done && $( [[ -z {{TELNET_PW}} ]] && printf %s \"telnet -E 127.0.0.1 {{ML_PORT_3}}\" || printf %s \"rcon -t telnet -a 127.0.0.1:{{ML_PORT_3}} -p {{TELNET_PW}}\" )",
   "OnlineDetection": "GameServer\\.LogOn\\ successful",
