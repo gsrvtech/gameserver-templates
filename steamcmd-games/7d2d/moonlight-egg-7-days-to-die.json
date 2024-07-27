@@ -1,0 +1,223 @@
+{
+  "Name": "7 Days To Die",
+  "Author": "eggs@goover.dev",
+  "UpdateUrl": null,
+  "DonateUrl": "https://ko-fi.com/oldnoob",
+  "StartupCommand": "./7DaysToDieServer.x86_64 -configfile=serverconfig.xml -quit -batchmode -nographics -dedicated -ServerPort={{ML_PORT_1}} -ServerDisabledNetworkProtocols={{SERVER_DISABLED_NETWORK_PROTOCOLS}} -ServerName=\"{{SRV_NAME}}\" -ServerDescription=\"{{SRV_DESCRIPTION}}\" -ServerPassword=\"{{SRV_PW}}\" -Region={{REGION}} -Language={{LANGUAGE}} -ServerMaxPlayerCount={{MAX_PLAYERS}} -GameDifficulty={{GAME_DIFFICULTY}} -GameWorld={{GAME_WORLD}} -GameName={{GAME_NAME}} -WorldGenSeed={{WORLD_SEED}} -WorldGenSize={{WORLD_SIZE}} -GameMode={{GAME_MODE}} -ServerWebsiteURL={{WEB_URL}} -WebDashboardEnabled={{WEBDASHBOARD}} -WebDashboardPort={{ML_PORT_2}} -TelnetEnabled=true -TelnetPort={{ML_PORT_3}} -TelnetPassword={{TELNET_PW}} -logfile logs/latest.log & echo -e \"Checking on telnet connection\" && until nc -z -v -w5 127.0.0.1 {{ML_PORT_3}}; do echo \"Waiting for telnet connection...\"; sleep 5; done && $( [[ -z {{TELNET_PW}} ]] && printf %s \"telnet -E 127.0.0.1 {{ML_PORT_3}}\" || printf %s \"rcon -t telnet -a 127.0.0.1:{{ML_PORT_3}} -p {{TELNET_PW}}\" )",
+  "OnlineDetection": "GameServer\\.LogOn\\ successful",
+  "StopCommand": "shutdown",
+  "InstallShell": "/bin/bash",
+  "InstallDockerImage": "ghcr.io/goover/installers:debian",
+  "InstallScript": "#!/bin/bash\r\n# File: Pterodactyl 7 Days 2 Die\r\n# Authors: gOOvER\r\n# Date: 2024/03/30\r\n# License: MIT License\r\n\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}7 Days 2 Die Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https://goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd /tmp\r\nmkdir -p /mnt/server/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd\r\nmkdir -p /mnt/server/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd /mnt/server/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root /mnt\r\nexport HOME=/mnt/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n./steamcmd.sh +force_install_dir /mnt/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ \"${STEAM_SDK}\" == \"1\" ]] && printf %s '+app_update 1007' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s \"-beta ${SRCDS_BETAID}\" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s \"-betapassword ${SRCDS_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p /mnt/server/.steam/sdk32\r\ncp -v linux32/steamclient.so ../.steam/sdk32/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p /mnt/server/.steam/sdk64\r\ncp -v linux64/steamclient.so ../.steam/sdk64/steamclient.so\r\n\r\n# add below your custom commands if needed\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+  "ParseConfiguration": "[]",
+  "AllocationsNeeded": 3,
+  "Variables": [
+    {
+      "Key": "SRV_NAME",
+      "DefaultValue": "",
+      "DisplayName": "[SERVER] Servername",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "SRV_DESCRIPTION",
+      "DefaultValue": "Egg by gameserver.tech",
+      "DisplayName": "[SERVER] Serverdescription",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "SRV_PW",
+      "DefaultValue": "",
+      "DisplayName": "[SERVER] Server Password",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "REGION",
+      "DefaultValue": "Europe",
+      "DisplayName": "[SERVER] Region",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "LANGUAGE",
+      "DefaultValue": "English",
+      "DisplayName": "[SERVER] Language",
+      "Description": "rimary language for players on this server. Values: Use any language name that you would users expect to search for. Should be the English name of the language, e.g. not \"Deutsch\" but \"German\"",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "MAX_PLAYERS",
+      "DefaultValue": "8",
+      "DisplayName": "[SERVER] Max Players",
+      "Description": "Maximum Concurrent Players",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "GAME_DIFFICULTY",
+      "DefaultValue": "2",
+      "DisplayName": "[SERVER] Game Difficulty",
+      "Description": "0 - 5, 0=easiest, 5=hardest",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "SERVER_DISABLED_NETWORK_PROTOCOLS",
+      "DefaultValue": "",
+      "DisplayName": "[SERVER] Network Protocols",
+      "Description": "Networking protocols that should NOT be used. Separated by comma. Possible values: LiteNetLib, SteamNetworking. Dedicated servers should disable SteamNetworking if there is no NAT router in between your users and the server or when port-forwarding is set up correctly. lets it empty if you are connecting your self hosted server behind a NAT",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "AUTO_UPDATE",
+      "DefaultValue": "1",
+      "DisplayName": "[SERVER] Auto Update",
+      "Description": "This is to auto update the server on start.\r\n\r\nOptions are 0 or 1\r\nDefault is 1",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "GAME_WORLD",
+      "DefaultValue": "Navezgane",
+      "DisplayName": "[GAMEWORLD] GameWorld",
+      "Description": "\"RWG\" (see WorldGenSeed and WorldGenSize options below) or any already existing world name in the Worlds folder (currently shipping with e.g. \"Navezgane\", \"PREGEN01\", ...)",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "GAME_NAME",
+      "DefaultValue": "My Game",
+      "DisplayName": "[GAMEWORLD] GameName",
+      "Description": "Whatever you want the game name to be. This affects the save game name as well as the seed used when placing decoration (trees etc) in the world. It does not control the generic layout of the world if creating an RWG world",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "WORLD_SEED",
+      "DefaultValue": "asdf",
+      "DisplayName": "[GAMEWORLD] WorldGenSeed",
+      "Description": "If RWG this is the seed for the generation of the new world. If a world with the resulting name already exists it will simply load it",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "WORLD_SIZE",
+      "DefaultValue": "6192",
+      "DisplayName": "[GAMEWORLD] WorldGenSize",
+      "Description": "If RWG this controls the width and height of the created world. It is also used in combination with WorldGenSeed to create the internal RWG seed thus also creating a unique map name even if using the same WorldGenSeed. Has to be between 2048 and 16384, though large map sizes will take long to generate / download / load",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "GAME_MODE",
+      "DefaultValue": "GameModeSurvival",
+      "DisplayName": "[GAMEWORLD] GameMode",
+      "Description": "GameModeSurvival",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "TELNET_PW",
+      "DefaultValue": "",
+      "DisplayName": "[TELNET] Password",
+      "Description": "Telnet listens on a local interface by default without a password. However, you can specify a password if  you wish to expose telnet.",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "TELNET_PORT",
+      "DefaultValue": "",
+      "DisplayName": "[TELNET] Port",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "WEBDASHBOARD",
+      "DefaultValue": "false",
+      "DisplayName": "[WEB] Dashboard enabled?",
+      "Description": "Enable/disable the web dashboard",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "DASHBOARD_PORT",
+      "DefaultValue": "",
+      "DisplayName": "[WEB] Dashboard Port",
+      "Description": "",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "WEB_URL",
+      "DefaultValue": "",
+      "DisplayName": "[SERVER] ServerWebsiteURL",
+      "Description": "Website URL for the server, will be shown in the serverbrowser as a clickable link",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "SRCDS_BETAID",
+      "DefaultValue": "",
+      "DisplayName": "[STEAM] Beta Branch",
+      "Description": "Installs beta branch if specified. For example, latest_experimental would install the latest experimental branch release. Requires a reinstall to switch branches properly.",
+      "AllowView": true,
+      "AllowEdit": true,
+      "Filter": null
+    },
+    {
+      "Key": "LD_LIBRARY_PATH",
+      "DefaultValue": ".",
+      "DisplayName": "[SYSTEM] LD_LIBRARY_PATH",
+      "Description": "This is really annoying that more games are doing this.",
+      "AllowView": false,
+      "AllowEdit": false,
+      "Filter": null
+    },
+    {
+      "Key": "STEAM_APPID",
+      "DefaultValue": "294420",
+      "DisplayName": "[STEAM] Steam AppID",
+      "Description": "This is the app id for 7dtd please no step on snek.",
+      "AllowView": false,
+      "AllowEdit": false,
+      "Filter": null
+    }
+  ],
+  "DefaultDockerImage": 0,
+  "AllowDockerImageChange": true,
+  "DockerImages": [
+    {
+      "DisplayName": "ghcr.io/goover/steamcmd:debian",
+      "Name": "ghcr.io/goover/steamcmd:debian",
+      "AutoPull": true
+    }
+  ]
+}
