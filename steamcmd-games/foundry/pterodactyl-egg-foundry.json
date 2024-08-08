@@ -12,7 +12,7 @@
         "steam_disk_space"
     ],
     "docker_images": {
-        "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging"
+        "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
     },
     "file_denylist": [],
     "startup": "xvfb :0 -screen 0 1024x768x16; DISPLAY=:0.0 xvfb-run wine \/home\/container\/FoundryDedicatedServer.exe -log",
