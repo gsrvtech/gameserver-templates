@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/sonsoftheforrest\/pelican-egg-sons-of-the-forest.json"
     },
-    "exported_at": "2024-08-08T07:02:18+00:00",
+    "exported_at": "2024-08-08T07:13:34+00:00",
     "name": "Sons Of The Forest",
     "author": "info@goover.de",
     "uuid": "7ee5f7cd-89f5-4115-8685-5029bd97801f",
@@ -16,9 +16,9 @@
         "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
     },
     "file_denylist": [],
-    "startup": "wine .\/SonsOfTheForestDS.exe -nographics -batchmode -userdatapath \"\/home\/container\/serverconfig\" -dedicatedserver.IpAddress \"0.0.0.0\" -dedicatedserver.GamePort \"{{SERVER_PORT}}\" -dedicatedserver.QueryPort \"{{QUERY_PORT}}\" -dedicatedserver.BlobSyncPort \"{{BLOBSYNC_PORT}}\" -dedicatedserver.MaxPlayers \"{{MAX_PLAYERS}}\" -dedicatedserver.Password \"{{SRV_PW}}\" -dedicatedserver.GameMode \"{{GAME_MODE}}\" -dedicatedserver.SkipNetworkAccessibilityTest \"{{SKIP_TESTS}}\" -dedicatedserver.LogFilesEnabled \"true\" -dedicatedserver.TimestampLogFilenames \"true\"",
+    "startup": "wine .\/SonsOfTheForestDS.exe -nographics -batchmode -userdatapath \"\/home\/container\/serverconfig\" -dedicatedserver.IpAddress \"0.0.0.0\" -dedicatedserver.GamePort \"{{SERVER_PORT}}\" -dedicatedserver.QueryPort \"{{QUERY_PORT}}\" -dedicatedserver.BlobSyncPort \"{{BLOBSYNC_PORT}}\" -dedicatedserver.ServerName \"{{SRV_NAME}}\" -dedicatedserver.MaxPlayers \"{{MAX_PLAYERS}}\" -dedicatedserver.Password \"{{SRV_PW}}\" -dedicatedserver.GameMode \"{{GAME_MODE}}\" -dedicatedserver.SkipNetworkAccessibilityTest \"{{SKIP_TESTS}}\" -dedicatedserver.LogFilesEnabled \"true\" -dedicatedserver.TimestampLogFilenames \"true\"",
     "config": {
-        "files": "{\r\n    \"serverconfig\/dedicatedserver.cfg\": {\r\n        \"parser\": \"json\",\r\n        \"find\": {\r\n            \"Port\": \"{{server.allocations.default.port}}\",\r\n            \"SlotCount\": \"{{server.environment.MAX_PLAYERS}}\",\r\n            \"Password\": \"{{server.environment.SRV_PW}}\"\r\n        }\r\n    }\r\n}",
+        "files": "{\n    \"serverconfig\/dedicatedserver.cfg\": {\n        \"parser\": \"json\",\n        \"find\": {\n            \"Port\": \"{{server.allocations.default.port}}\",\n            \"SlotCount\": \"{{server.environment.MAX_PLAYERS}}\",\n            \"Password\": \"{{server.environment.SRV_PW}}\"\n        }\n    }\n}",
         "startup": "{\r\n    \"done\": \"#DSL Dedicated server loaded.\"\r\n}",
         "logs": "{}",
         "stop": "^C"
