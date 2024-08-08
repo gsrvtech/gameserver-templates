@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/eco\/pelican-egg-eco.json"
     },
-    "exported_at": "2024-08-08T05:54:06+00:00",
+    "exported_at": "2024-08-08T05:55:11+00:00",
     "name": "Eco",
     "author": "eggs@goover.dev",
     "uuid": "b587b1a2-dd20-42b2-9b60-a3c40d320b0f",
