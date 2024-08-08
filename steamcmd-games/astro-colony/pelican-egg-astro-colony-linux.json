@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/astro-colony\/pelican-egg-astro-colony-linux.json"
     },
-    "exported_at": "2024-08-08T05:58:38+00:00",
+    "exported_at": "2024-08-08T05:59:35+00:00",
     "name": "Astro Colony Linux",
     "author": "eggs@goover.dev",
     "uuid": "5c0f03f0-378b-4199-8561-82721c499c5c",
