@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/astro-colony\/pelican-egg-astro-colony-linux.json"
     },
-    "exported_at": "2024-08-08T06:14:57+00:00",
+    "exported_at": "2024-08-08T06:19:58+00:00",
     "name": "Astro Colony Linux",
     "author": "eggs@goover.dev",
     "uuid": "5c0f03f0-378b-4199-8561-82721c499c5c",
@@ -123,10 +123,10 @@
             "name": "STEAM_APPID",
             "description": "DO NOT CHANGE !!!",
             "env_variable": "STEAM_APPID",
-            "default_value": "2662210",
+            "default_value": "2934900",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
+            "rules": "required|in:2934900",
             "sort": 14,
             "field_type": "text"
         },
