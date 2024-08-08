@@ -1,0 +1,174 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-08-08T07:57:14+02:00",
+    "name": "Astro Colony Linux",
+    "author": "eggs@goover.dev",
+    "description": "Astro Colony is a first-person open-world sci-fi game focused on the construction, automation, and management of your space stations.",
+    "features": [
+        "steam_disk_space"
+    ],
+    "docker_images": {
+        "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/AstroColony\/Binaries\/Linux\/AstroColonyServer -log -QueryPort={{SERVER_PORT}} -SteamServerName=\"{{SRV_NAME}}\" -Seed={{SEED}} -AutosaveInterval={{AUTOSAVE_INT}} -AutosavesCount={{AUTOSAVE_COUNT}} -FreeConstruction={{FREE_CONSTRUCT}} -OxygenConsumption={{OXYGEN}} -SharedTechnologies={{SHARED_TECH}}",
+    "config": {
+        "files": "{\r\n    \"\/AstroColony\/Saved\/Config\/LinuxServer\/ServerSettings.ini\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"ServerPassword=\": \"ServerPassword={{server.build.env.SRV_PW}}\",\r\n            \"Seed=\": \"Seed={{server.build.env.SEED}}\",\r\n            \"MapName=\": \"MapName={{server.build.env.MAP_NAME}}\",\r\n            \"MaxPlayers=\": \"MaxPlayers={{server.build.env.MAX_PLAYERS}}\",\r\n            \"SavegameName=\": \"SavegameName={{server.build.env.MAP_NAME}}\",\r\n            \"ShouldLoadLatestSavegame=\": \"ShouldLoadLatestSavegame={{server.build.env.LOAD_SAVE}}\",\r\n            \"AdminList=\": \"AdminList={{server.build.env.ADMINS}}\",\r\n            \"SharedTechnologies=\": \"SharedTechnologies={{server.build.env.SHARED_TECH}}\",\r\n            \"OxygenConsumption=\": \"OxygenConsumption={{server.build.env.OXYGEN}}\",\r\n            \"FreeConstruction=\": \"FreeConstruction={{server.build.env.FREE_CONSTRUCT}}\",\r\n            \"AutosaveInterval=\": \"AutosaveInterval={{server.build.env.AUTOSAVE_INT}}\",\r\n            \"AutosavesCount=\": \"AutosavesCount={{server.build.env.AUTOSAVE_COUNT}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"LogBlueprintUserMessages:\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Astro Coloyny Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit ## other flags may be needed depending on install. looking at you cs 1.6\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\ncp -v $HOME\/linux64\/steamclient.so ..\/AstroColony\/Binaries\/Linux\/steamclient.so\r\nchmod +x ..\/AstroColony\/Binaries\/Linux\/AstroColonyServer\r\n\r\nmkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\r\nFILE=$HOME\/AstroColony\/Saved\/Config\/LinuxServer\/ServerSettings.ini\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}ServerSettings.ini found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No ServerSettings.ini found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  mkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  cd $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  curl -sSL -o ServerSettings.ini https:\/\/raw.githubusercontent.com\/gOOvER\/own-pterodactyl-eggs\/main\/steamcmd\/astro-colony\/ServerSettings.ini\r\nfi\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Name",
+            "description": "",
+            "env_variable": "SRV_NAME",
+            "default_value": "goover.dev - Pterodactyl Egg",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Password",
+            "description": "",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Mapname",
+            "description": "",
+            "env_variable": "MAP_NAME",
+            "default_value": "mymap",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "5",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,20",
+            "field_type": "text"
+        },
+        {
+            "name": "Should load latest Savegame?",
+            "description": "",
+            "env_variable": "LOAD_SAVE",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Admin List",
+            "description": "Steam PlayerIDs (, comma separated) like 76561199104220463",
+            "env_variable": "ADMINS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Oxygen Consumption",
+            "description": "turn on or off",
+            "env_variable": "OXYGEN",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Free Construction",
+            "description": "",
+            "env_variable": "FREE_CONSTRUCT",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "STEAM_APPID",
+            "description": "DO NOT CHANGE !!!",
+            "env_variable": "STEAM_APPID",
+            "default_value": "2662210",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Seed",
+            "description": "",
+            "env_variable": "SEED",
+            "default_value": "873427656732457",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Autosave Intervall",
+            "description": "",
+            "env_variable": "AUTOSAVE_INT",
+            "default_value": "300",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Autosave Count",
+            "description": "",
+            "env_variable": "AUTOSAVE_COUNT",
+            "default_value": "3",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Shared Technologies",
+            "description": "",
+            "env_variable": "SHARED_TECH",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Update",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "0",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        }
+    ]
+}
