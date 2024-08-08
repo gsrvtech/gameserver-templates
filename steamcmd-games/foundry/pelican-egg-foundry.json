@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/foundry\/pelican-egg-foundry.json"
     },
-    "exported_at": "2024-08-08T07:52:51+00:00",
+    "exported_at": "2024-08-08T08:01:12+00:00",
     "name": "Foundry",
     "author": "eggs@goover.dev",
     "uuid": "d7fe62fe-16c8-4014-aaf5-a91a9978dff5",
@@ -13,7 +13,7 @@
         "steam_disk_space"
     ],
     "docker_images": {
-        "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging"
+        "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
     },
     "file_denylist": [],
     "startup": "xvfb :0 -screen 0 1024x768x16; DISPLAY=:0.0 xvfb-run wine \/home\/container\/FoundryDedicatedServer.exe -log",
