@@ -2,12 +2,12 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/eco\/pelican-egg-eco.json"
+        "update_url": null
     },
-    "exported_at": "2024-08-08T05:55:11+00:00",
+    "exported_at": "2024-08-18T05:42:49+00:00",
     "name": "Eco",
     "author": "eggs@goover.dev",
-    "uuid": "b587b1a2-dd20-42b2-9b60-a3c40d320b0f",
+    "uuid": "61490e11-18a7-4ab9-94db-af44efd634a3",
     "description": "Eco is an online world from Strange Loop Games where players must build civilization using resources from an ecosystem that can be damaged and destroyed. The world of Eco is an incredibly reactive one, and whatever any player does in the world affects the underlying ecosystem.",
     "features": [
         "steam_disk_space"
@@ -16,7 +16,7 @@
         "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
     },
     "file_denylist": [],
-    "startup": ".\/EcoServer",
+    "startup": ".\/EcoServer --username=\"{{SLG_USER}}\" --password=\"{{SLG_PW}}\"",
     "config": {
         "files": "{\r\n    \"Configs\/Network.eco\": {\r\n        \"parser\": \"json\",\r\n        \"find\": {\r\n            \"GameServerPort\": \"{{server.allocations.default.port}}\",\r\n            \"WebServerPort\": \"{{server.environment.WEB_PORT}}\",\r\n            \"PublicServer\": \"{{server.environment.PUB_SRV}}\",\r\n            \"Password\": \"{{server.environment.SRV_PW}}\",\r\n            \"UPnPEnabled\": \"{{server.environment.UPNP}}\",\r\n            \"Description\": \"{{server.environment.SRV_NAME}}\",\r\n            \"DetailedDescription\": \"{{server.environment.DEDES}}\",\r\n            \"Playtime\": \"{{server.environment.PLAYTIME}}\",\r\n            \"MaxConnections\": \"{{server.environment.MAX_CON}}\",\r\n            \"DiscordAddress\": \"{{server.environment.DISCORD_SRV}}\",\r\n            \"RconServerPort\": \"{{server.environment.RCON_PORT}}\",\r\n            \"RconPassword\": \"{{server.environment.RCON_PW}}\",\r\n            \"ServerCategory\": \"{{server.environment.SRV_CAT}}\"\r\n        }\r\n    },\r\n    \"Configs\/Localization.eco\": {\r\n        \"parser\": \"json\",\r\n        \"find\": {\r\n            \"Language\": \"{{server.environment.LANGUAGE}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Web Server now listening on:\"\r\n}",
@@ -39,7 +39,7 @@
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|string|in:739590",
-            "sort": 16,
+            "sort": 18,
             "field_type": "text"
         },
         {
@@ -50,7 +50,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|integer|between:1024,65536",
-            "sort": 11,
+            "sort": 13,
             "field_type": "text"
         },
         {
@@ -61,7 +61,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:true,false",
-            "sort": 4,
+            "sort": 6,
             "field_type": "text"
         },
         {
@@ -72,7 +72,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string|max:20",
-            "sort": 2,
+            "sort": 4,
             "field_type": "text"
         },
         {
@@ -83,18 +83,18 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|max:50",
-            "sort": 1,
+            "sort": 3,
             "field_type": "text"
         },
         {
-            "name": "[SERVER] UPNP",
+            "name": "UPNP",
             "description": "UPNP OFF",
             "env_variable": "UPNP",
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:true,false",
-            "sort": 15,
+            "sort": 17,
             "field_type": "text"
         },
         {
@@ -105,7 +105,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "boolean",
-            "sort": 10,
+            "sort": 12,
             "field_type": "text"
         },
         {
@@ -116,7 +116,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|url",
-            "sort": 12,
+            "sort": 14,
             "field_type": "text"
         },
         {
@@ -127,7 +127,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|max:20",
-            "sort": 5,
+            "sort": 7,
             "field_type": "text"
         },
         {
@@ -138,7 +138,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
-            "sort": 9,
+            "sort": 11,
             "field_type": "text"
         },
         {
@@ -149,7 +149,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string|max:50",
-            "sort": 3,
+            "sort": 5,
             "field_type": "text"
         },
         {
@@ -160,7 +160,7 @@
             "user_viewable": true,
             "user_editable": false,
             "rules": "required|integer|between:1024,65536",
-            "sort": 13,
+            "sort": 15,
             "field_type": "text"
         },
         {
@@ -171,7 +171,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
-            "sort": 14,
+            "sort": 16,
             "field_type": "text"
         },
         {
@@ -182,7 +182,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
-            "sort": 6,
+            "sort": 8,
             "field_type": "text"
         },
         {
@@ -193,7 +193,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:None,Beginner,Established,BeginnerHard,Strange",
-            "sort": 7,
+            "sort": 9,
             "field_type": "text"
         },
         {
@@ -204,7 +204,29 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:English,French,German",
-            "sort": 8,
+            "sort": 10,
+            "field_type": "text"
+        },
+        {
+            "name": "[ACCOUNT] SLG Username",
+            "description": "",
+            "env_variable": "SLG_USER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "sort": 1,
+            "field_type": "text"
+        },
+        {
+            "name": "[ACCOUNT] SLG Pasword",
+            "description": "",
+            "env_variable": "SLG_PW",
+            "default_value": "",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "sort": 2,
             "field_type": "text"
         }
     ]
