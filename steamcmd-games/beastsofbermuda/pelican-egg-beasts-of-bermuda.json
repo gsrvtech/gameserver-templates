@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/beastsofbermuda\/pelican-egg-beasts-of-bermuda.json"
     },
-    "exported_at": "2024-08-31T07:14:21+00:00",
+    "exported_at": "2024-08-31T07:35:24+00:00",
     "name": "Beasts of Bermuda",
     "author": "eggs@goover.dev",
     "uuid": "43e24ef6-8ebc-4e4a-9e7c-2ab741f87ff4",
@@ -16,7 +16,7 @@
         "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
     },
     "file_denylist": [],
-    "startup": ".\/LinuxServer\/BeastsOfBermuda\/Binaries\/Linux\/BeastsOfBermudaServer -GameMode {{GAMEMODE}} -MapName {{MAP}} -SessionName {{SESSION_NAME}} -NumPlayers {{MAX_PLAYERS}} $(if test -n \"${SRV_PW+x}\"; then echo \"-ServerPassword ${SRV_PW}\"; fi) ?Port={{SERVER_PORT}} ?QueryPort={{QUERY_PORT}} -log",
+    "startup": ".\/LinuxServer\/BeastsOfBermuda\/Binaries\/Linux\/BeastsOfBermudaServer -GameMode {{GAMEMODE}} -MapName {{MAP}} -SessionName {{SESSION_NAME}} -NumPlayers {{MAX_PLAYERS}} $(if [ -n \"$SRV_PW\" ]; then echo \"-ServerPassword=\\\"${SRV_PW}\\\"\"; fi) ?Port={{SERVER_PORT}} ?QueryPort={{QUERY_PORT}} -log",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Finished loading server data\"\r\n}",
@@ -117,6 +117,17 @@
             "user_editable": true,
             "rules": "nullable|string",
             "sort": 8,
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Auto Update",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "sort": 9,
             "field_type": "text"
         }
     ]
