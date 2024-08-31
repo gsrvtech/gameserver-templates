@@ -8,7 +8,9 @@
     "name": "Beasts of Bermuda",
     "author": "eggs@goover.dev",
     "description": "Beasts of Bermuda is a multiplayer game with large servers where you grow up as a dinosaur or other prehistoric creature. You become part of a living, player-created ecosystem. The ultimate goal is to survive on one of the islands within the world of Bermuda.",
-    "features": null,
+    "features": [
+        "steam_disk_space"
+    ],
     "docker_images": {
         "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
     },

@@ -2,14 +2,16 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/beastsofbermuda\/pelican-egg-beasts-of-bermuda.json"
     },
-    "exported_at": "2024-08-31T07:08:57+00:00",
+    "exported_at": "2024-08-31T07:11:03+00:00",
     "name": "Beasts of Bermuda",
     "author": "eggs@goover.dev",
     "uuid": "43e24ef6-8ebc-4e4a-9e7c-2ab741f87ff4",
     "description": "Beasts of Bermuda is a multiplayer game with large servers where you grow up as a dinosaur or other prehistoric creature. You become part of a living, player-created ecosystem. The ultimate goal is to survive on one of the islands within the world of Bermuda.",
-    "features": null,
+    "features": [
+        "steam_disk_space"
+    ],
     "docker_images": {
         "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
     },
@@ -37,7 +39,7 @@
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|string",
-            "sort": null,
+            "sort": 1,
             "field_type": "text"
         },
         {
@@ -48,7 +50,7 @@
             "user_viewable": true,
             "user_editable": false,
             "rules": "required|integer|between:1024,65536",
-            "sort": null,
+            "sort": 2,
             "field_type": "text"
         },
         {
@@ -59,7 +61,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|max:50",
-            "sort": null,
+            "sort": 3,
             "field_type": "text"
         },
         {
@@ -70,7 +72,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|integer|between:1,32",
-            "sort": null,
+            "sort": 4,
             "field_type": "text"
         },
         {
@@ -81,7 +83,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
-            "sort": null,
+            "sort": 5,
             "field_type": "text"
         },
         {
@@ -92,7 +94,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:Life_Cycle,Combat,Free_Roam",
-            "sort": null,
+            "sort": 6,
             "field_type": "text"
         },
         {
@@ -103,7 +105,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:Forest_Island,Test_Performance,Bloodbath,Ancestral_Plains,Rival_Shores",
-            "sort": null,
+            "sort": 7,
             "field_type": "text"
         },
         {
@@ -114,7 +116,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
-            "sort": null,
+            "sort": 8,
             "field_type": "text"
         }
     ]
