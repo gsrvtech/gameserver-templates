@@ -1,0 +1,121 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-08-31T07:08:57+00:00",
+    "name": "Beasts of Bermuda",
+    "author": "eggs@goover.dev",
+    "uuid": "43e24ef6-8ebc-4e4a-9e7c-2ab741f87ff4",
+    "description": "Beasts of Bermuda is a multiplayer game with large servers where you grow up as a dinosaur or other prehistoric creature. You become part of a living, player-created ecosystem. The ultimate goal is to survive on one of the islands within the world of Bermuda.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/LinuxServer\/BeastsOfBermuda\/Binaries\/Linux\/BeastsOfBermudaServer -GameMode {{GAMEMODE}} -MapName {{MAP}} -SessionName {{SESSION_NAME}} -NumPlayers {{MAX_PLAYERS}} $(if test -n \"${SRV_PW+x}\"; then echo \"-ServerPassword ${SRV_PW}\"; fi) ?Port={{SERVER_PORT}} ?QueryPort={{QUERY_PORT}} -log",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Finished loading server data\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# File: Pterodactyl BEast of Bermuda Egg\r\n# Authors: gOOvER\r\n# Date: 2024\/03\/30\r\n# License: AGPL License\r\n\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Beast of Bermuda Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ \"${STEAM_SDK}\" == \"1\" ]] && printf %s '+app_update 1007' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s \"-beta ${SRCDS_BETAID}\" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s \"-betapassword ${SRCDS_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n# add below your custom commands if needed\r\n\r\nFILE=$HOME\/LinuxServer\/BeastsOfBermuda\/Saved\/Config\/LinuxServer\/Game.ini\r\n\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}Game.ini found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No Game.ini found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  cd $HOME\/LinuxServer\/BeastsOfBermuda\/Saved\/Config\/LinuxServer\/\r\n  curl -sSL -o Game.ini https:\/\/raw.githubusercontent.com\/gOOvER\/own-pterodactyl-eggs\/main\/steamcmd\/beast-of-bermuda\/Game.ini\r\n  echo -e \"${GREEN}..done..${NC}\"\r\nfi\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "SRCDS_APPID",
+            "description": "",
+            "env_variable": "SRCDS_APPID",
+            "default_value": "882430",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "QueryPort",
+            "description": "",
+            "env_variable": "QUERY_PORT",
+            "default_value": "27015",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|integer|between:1024,65536",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Session Name",
+            "description": "NO SPACES ALLOWED !!!!",
+            "env_variable": "SESSION_NAME",
+            "default_value": "goover.dev - Beast of Bermuda Egg",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:50",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "32",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,32",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Server Password",
+            "description": "NO SPACES ALLOWED !!!!",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Gamemode",
+            "description": "",
+            "env_variable": "GAMEMODE",
+            "default_value": "Life_Cycle",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:Life_Cycle,Combat,Free_Roam",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Map",
+            "description": "",
+            "env_variable": "MAP",
+            "default_value": "Forest_Island",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:Forest_Island,Test_Performance,Bloodbath,Ancestral_Plains,Rival_Shores",
+            "sort": null,
+            "field_type": "text"
+        },
+        {
+            "name": "Additional game args",
+            "description": "",
+            "env_variable": "GAME_ARGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "sort": null,
+            "field_type": "text"
+        }
+    ]
+}
