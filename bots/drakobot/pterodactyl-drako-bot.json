@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-08-17T16:10:12+02:00",
+    "exported_at": "2024-09-28T06:30:14+02:00",
     "name": "Drako Bot",
     "author": "eggs@goover.dev",
     "description": "Egg for Drako Discord Bot",
@@ -16,7 +16,7 @@
     "startup": "if [[ ! -z ${NODE_PACKAGES} ]]; then npm install ${NODE_PACKAGES}; fi; if [ -f \/home\/container\/package.json ]; then npm install; fi; node \/home\/container\/{{JS_FILE}}",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": \"Total Tickets\"\r\n}",
+        "startup": "{\r\n    \"done\": \"Bot is now online and ready!\"\r\n}",
         "logs": "{}",
         "stop": "^C"
     },
