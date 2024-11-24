@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PTDL_v2",
+        "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/eco\/pelican-egg-eco.json"
     },
-    "exported_at": "2024-08-18T05:47:15+00:00",
+    "exported_at": "2024-11-24T11:21:06+00:00",
     "name": "Eco",
     "author": "eggs@goover.dev",
     "uuid": "61490e11-18a7-4ab9-94db-af44efd634a3",
@@ -38,9 +38,12 @@
             "default_value": "739590",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|in:739590",
-            "sort": 18,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:739590"
+            ],
+            "sort": 18
         },
         {
             "name": "[SERVER] Webserver Port",
@@ -49,9 +52,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1024,65536",
-            "sort": 13,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 13
         },
         {
             "name": "[SERVER] Public Server",
@@ -60,9 +66,12 @@
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 6,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 6
         },
         {
             "name": "[SERVER] Server Password",
@@ -71,9 +80,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|max:20",
-            "sort": 4,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string",
+                "max:20"
+            ],
+            "sort": 4
         },
         {
             "name": "[SERVER] Server Name",
@@ -82,9 +94,12 @@
             "default_value": "Egg by gameserver.tech",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:50",
-            "sort": 3,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:50"
+            ],
+            "sort": 3
         },
         {
             "name": "UPNP",
@@ -93,9 +108,12 @@
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 17,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 17
         },
         {
             "name": "[SERVER] Auto Update",
@@ -104,9 +122,10 @@
             "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "boolean",
-            "sort": 12,
-            "field_type": "text"
+            "rules": [
+                "boolean"
+            ],
+            "sort": 12
         },
         {
             "name": "[SERVER] Webserver URL",
@@ -115,9 +134,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|url",
-            "sort": 14,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "url"
+            ],
+            "sort": 14
         },
         {
             "name": "[SERVER] Max Connections",
@@ -126,9 +147,12 @@
             "default_value": "-1",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20",
-            "sort": 7,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 7
         },
         {
             "name": "[SERVER] Playtime",
@@ -137,9 +161,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 11,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 11
         },
         {
             "name": "[SERVER] Detailed Description",
@@ -148,9 +174,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|max:50",
-            "sort": 5,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string",
+                "max:50"
+            ],
+            "sort": 5
         },
         {
             "name": "[SERVER] RCON Port",
@@ -159,9 +188,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": false,
-            "rules": "required|integer|between:1024,65536",
-            "sort": 15,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 15
         },
         {
             "name": "[SERVER] RCON Password",
@@ -170,9 +202,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 16,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 16
         },
         {
             "name": "[SERVER] Discord Server",
@@ -181,9 +215,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 8,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 8
         },
         {
             "name": "[SERVER] Server Category",
@@ -192,9 +228,12 @@
             "default_value": "None",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:None,Beginner,Established,BeginnerHard,Strange",
-            "sort": 9,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:None,Beginner,Established,BeginnerHard,Strange"
+            ],
+            "sort": 9
         },
         {
             "name": "[SERVER] Language",
@@ -203,9 +242,12 @@
             "default_value": "English",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:English,French,German",
-            "sort": 10,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:English,French,German"
+            ],
+            "sort": 10
         },
         {
             "name": "[ACCOUNT] SLG Username",
@@ -214,9 +256,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20",
-            "sort": 1,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 1
         },
         {
             "name": "[ACCOUNT] SLG Pasword",
@@ -225,9 +270,12 @@
             "default_value": "",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 2,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 2
         }
     ]
 }

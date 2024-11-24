@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PTDL_v2",
+        "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/sonsoftheforrest\/pelican-egg-sons-of-the-forest.json"
     },
-    "exported_at": "2024-08-08T07:13:34+00:00",
+    "exported_at": "2024-11-24T11:21:36+00:00",
     "name": "Sons Of The Forest",
     "author": "info@goover.de",
     "uuid": "7ee5f7cd-89f5-4115-8685-5029bd97801f",
@@ -38,9 +38,12 @@
             "default_value": "2465200",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 1,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 1
         },
         {
             "name": "Server Name",
@@ -49,9 +52,12 @@
             "default_value": "Pterodactyl hosted Server",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:60",
-            "sort": 2,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:60"
+            ],
+            "sort": 2
         },
         {
             "name": "QueryPort",
@@ -60,9 +66,12 @@
             "default_value": "27016",
             "user_viewable": true,
             "user_editable": false,
-            "rules": "required|integer|between:1024,65536",
-            "sort": 3,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 3
         },
         {
             "name": "BlobSyncPort",
@@ -71,9 +80,12 @@
             "default_value": "9700",
             "user_viewable": true,
             "user_editable": false,
-            "rules": "required|integer|between:1024,65536",
-            "sort": 4,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 4
         },
         {
             "name": "Max Players",
@@ -82,9 +94,12 @@
             "default_value": "4",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|min:1",
-            "sort": 5,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "min:1"
+            ],
+            "sort": 5
         },
         {
             "name": "Password",
@@ -93,9 +108,11 @@
             "default_value": "changeme",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 6,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 6
         },
         {
             "name": "Gamemode",
@@ -104,9 +121,11 @@
             "default_value": "normal",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "string|in:normal,hard,hardsurvival,peaceful,custom",
-            "sort": 7,
-            "field_type": "text"
+            "rules": [
+                "string",
+                "in:normal,hard,hardsurvival,peaceful,custom"
+            ],
+            "sort": 7
         },
         {
             "name": "WINEDEBUG",
@@ -115,9 +134,12 @@
             "default_value": "-all",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 8,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 8
         },
         {
             "name": "WINEARCH",
@@ -126,9 +148,12 @@
             "default_value": "win64",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 9,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 9
         },
         {
             "name": "WINETRICKS_RUN",
@@ -137,9 +162,11 @@
             "default_value": "mono",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "nullable|string",
-            "sort": 10,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 10
         },
         {
             "name": "WINDOWS_INSTALL",
@@ -148,9 +175,12 @@
             "default_value": "1",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 11,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 11
         },
         {
             "name": "Skip network Test",
@@ -159,9 +189,12 @@
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 12,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 12
         },
         {
             "name": "WINEPATH",
@@ -170,9 +203,12 @@
             "default_value": "\/home\/container",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|max:20",
-            "sort": 13,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 13
         }
     ]
 }

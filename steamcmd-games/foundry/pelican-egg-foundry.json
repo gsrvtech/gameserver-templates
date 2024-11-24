@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PTDL_v2",
+        "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/foundry\/pelican-egg-foundry.json"
     },
-    "exported_at": "2024-08-18T05:49:20+00:00",
+    "exported_at": "2024-11-24T11:21:51+00:00",
     "name": "Foundry",
     "author": "eggs@goover.dev",
     "uuid": "d7fe62fe-16c8-4014-aaf5-a91a9978dff5",
@@ -38,9 +38,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:40",
-            "sort": 1,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:40"
+            ],
+            "sort": 1
         },
         {
             "name": "[SERVER] Server World Name",
@@ -49,9 +52,12 @@
             "default_value": "ServerWorld",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20",
-            "sort": 2,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 2
         },
         {
             "name": "[SERVER] Server Password",
@@ -60,9 +66,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|max:20",
-            "sort": 3,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string",
+                "max:20"
+            ],
+            "sort": 3
         },
         {
             "name": "[SERVER] Pause Server When Empty",
@@ -71,9 +80,12 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 4,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 4
         },
         {
             "name": "[SERVER] Autosave Interval",
@@ -82,9 +94,11 @@
             "default_value": "300",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|numeric",
-            "sort": 5,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 5
         },
         {
             "name": "[SERVER] Server Public",
@@ -93,9 +107,12 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 6,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 6
         },
         {
             "name": "[SERVER] Steam Query Port",
@@ -104,9 +121,12 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1024,65536",
-            "sort": 7,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 7
         },
         {
             "name": "[SERVER] Map Seed",
@@ -115,9 +135,11 @@
             "default_value": "42938743982",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|numeric",
-            "sort": 8,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 8
         },
         {
             "name": "[SERVER] Server Max Players",
@@ -126,9 +148,11 @@
             "default_value": "32",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|numeric",
-            "sort": 9,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 9
         },
         {
             "name": "WINDOWS_INSTALL",
@@ -137,9 +161,11 @@
             "default_value": "1",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|in:1",
-            "sort": 10,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "in:1"
+            ],
+            "sort": 10
         },
         {
             "name": "[STEAM] Steam App ID",
@@ -148,9 +174,12 @@
             "default_value": "2915550",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|in:2915550",
-            "sort": 11,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:2915550"
+            ],
+            "sort": 11
         },
         {
             "name": "[WINE] WINETRICKS_RUN",
@@ -159,9 +188,11 @@
             "default_value": "mono",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string",
-            "sort": 12,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 12
         },
         {
             "name": "[WINE] WINEDEBUG",
@@ -170,9 +201,11 @@
             "default_value": "-all",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string",
-            "sort": 13,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 13
         },
         {
             "name": "XVFB",
@@ -181,9 +214,11 @@
             "default_value": "1",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|boolean",
-            "sort": 14,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 14
         },
         {
             "name": "Savepath",
@@ -192,9 +227,11 @@
             "default_value": "\/home\/container\/serverfiles",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string",
-            "sort": 15,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 15
         },
         {
             "name": "[SERVER] Max Transfer Rate",
@@ -203,9 +240,12 @@
             "default_value": "1024",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1024,8192",
-            "sort": 16,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,8192"
+            ],
+            "sort": 16
         }
     ]
 }

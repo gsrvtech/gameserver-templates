@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PTDL_v2",
+        "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/enshrouded\/pelican-egg-enshrouded.json"
     },
-    "exported_at": "2024-08-18T05:48:10+00:00",
+    "exported_at": "2024-11-24T11:20:23+00:00",
     "name": "Enshrouded",
     "author": "eggs@goover.dev",
     "uuid": "6e47ab37-4580-44ff-a2c9-2d19127aa7ca",
@@ -38,9 +38,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|numeric",
-            "sort": 1,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 1
         },
         {
             "name": "[SERVER] Auto Update",
@@ -49,9 +51,11 @@
             "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|boolean",
-            "sort": 2,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 2
         },
         {
             "name": "[SERVER] Server Name",
@@ -60,9 +64,11 @@
             "default_value": "My Server",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string",
-            "sort": 3,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 3
         },
         {
             "name": "[SERVER] Max Players",
@@ -71,9 +77,11 @@
             "default_value": "24",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|numeric",
-            "sort": 4,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 4
         },
         {
             "name": "[SERVER] Save Name",
@@ -82,9 +90,11 @@
             "default_value": "DedicatedSaveMP",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string",
-            "sort": 5,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 5
         },
         {
             "name": "[STEAM] Steam App ID",
@@ -93,9 +103,12 @@
             "default_value": "2278520",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|string|in:2278520",
-            "sort": 6,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:2278520"
+            ],
+            "sort": 6
         },
         {
             "name": "[SYSTEM] WINDOWS_INSTALL",
@@ -104,9 +117,11 @@
             "default_value": "1",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|boolean",
-            "sort": 7,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 7
         },
         {
             "name": "[SYSTEM] Validate",
@@ -115,9 +130,11 @@
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|boolean",
-            "sort": 8,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 8
         },
         {
             "name": "[SERVER] Difficult Preset",
@@ -126,9 +143,12 @@
             "default_value": "Default",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:Default,Relaxed,Hard,Survival,Custom",
-            "sort": 9,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:Default,Relaxed,Hard,Survival,Custom"
+            ],
+            "sort": 9
         }
     ]
 }
