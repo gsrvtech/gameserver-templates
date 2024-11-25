@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PTDL_v2",
-        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/astrocolony\/pelican-egg-astro-colony-linux.json"
+        "version": "PLCN_v1",
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/astro-colony\/pelican-egg-astro-colony-linux.json"
     },
-    "exported_at": "2024-08-08T06:19:58+00:00",
+    "exported_at": "2024-11-25T19:23:51+00:00",
     "name": "Astro Colony Linux",
     "author": "eggs@goover.dev",
     "uuid": "5c0f03f0-378b-4199-8561-82721c499c5c",
@@ -25,7 +25,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Astro Coloyny Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\ncp -v $HOME\/linux64\/steamclient.so ..\/AstroColony\/Binaries\/Linux\/steamclient.so\r\nchmod +x ..\/AstroColony\/Binaries\/Linux\/AstroColonyServer\r\n\r\nmkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\r\nFILE=$HOME\/AstroColony\/Saved\/Config\/LinuxServer\/ServerSettings.ini\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}ServerSettings.ini found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No ServerSettings.ini found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  mkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  cd $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  curl -sSL -o ServerSettings.ini https:\/\/raw.githubusercontent.com\/gOOvER\/own-pterodactyl-eggs\/main\/steamcmd\/astro-colony\/ServerSettings.ini\r\nfi\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Astro Coloyny Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/discord.goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit ## other flags may be needed depending on install. looking at you cs 1.6\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\ncp -v $HOME\/linux64\/steamclient.so ..\/AstroColony\/Binaries\/Linux\/steamclient.so\r\nchmod +x ..\/AstroColony\/Binaries\/Linux\/AstroColonyServer\r\n\r\nmkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\r\nFILE=$HOME\/AstroColony\/Saved\/Config\/LinuxServer\/ServerSettings.ini\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}ServerSettings.ini found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No ServerSettings.ini found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  mkdir -p $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  cd $HOME\/AstroColony\/Saved\/Config\/LinuxServer\/\r\n  curl -sSL -o ServerSettings.ini https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/astrocolony\/config\/ServerSettings.ini\r\nfi\r\n\r\nrm -fr $HOME\/AstroColony\/Saved\/Config\/WindowsServer\r\n\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
             "container": "ghcr.io\/goover\/installers:debian",
             "entrypoint": "bash"
         }
@@ -38,9 +38,10 @@
             "default_value": "goover.dev - Pterodactyl Egg",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required",
-            "sort": 1,
-            "field_type": "text"
+            "rules": [
+                "required"
+            ],
+            "sort": 1
         },
         {
             "name": "Server Password",
@@ -49,9 +50,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 2,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 2
         },
         {
             "name": "Mapname",
@@ -60,9 +63,12 @@
             "default_value": "mymap",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20",
-            "sort": 3,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 3
         },
         {
             "name": "Max Players",
@@ -71,9 +77,12 @@
             "default_value": "5",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|integer|between:1,20",
-            "sort": 4,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "integer",
+                "between:1,20"
+            ],
+            "sort": 4
         },
         {
             "name": "Should load latest Savegame?",
@@ -82,9 +91,12 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 5,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 5
         },
         {
             "name": "Admin List",
@@ -93,9 +105,11 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string",
-            "sort": 6,
-            "field_type": "text"
+            "rules": [
+                "nullable",
+                "string"
+            ],
+            "sort": 6
         },
         {
             "name": "Oxygen Consumption",
@@ -104,9 +118,12 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 7,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 7
         },
         {
             "name": "Free Construction",
@@ -115,9 +132,12 @@
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 8,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 8
         },
         {
             "name": "STEAM_APPID",
@@ -126,9 +146,11 @@
             "default_value": "2934900",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|in:2934900",
-            "sort": 14,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "in:2934900"
+            ],
+            "sort": 14
         },
         {
             "name": "Seed",
@@ -137,9 +159,12 @@
             "default_value": "873427656732457",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20",
-            "sort": 9,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 9
         },
         {
             "name": "Autosave Intervall",
@@ -148,9 +173,11 @@
             "default_value": "300",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string",
-            "sort": 10,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 10
         },
         {
             "name": "Autosave Count",
@@ -159,9 +186,11 @@
             "default_value": "3",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string",
-            "sort": 11,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 11
         },
         {
             "name": "Shared Technologies",
@@ -170,9 +199,12 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:true,false",
-            "sort": 12,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 12
         },
         {
             "name": "Auto Update",
@@ -181,9 +213,11 @@
             "default_value": "0",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "required|boolean",
-            "sort": 13,
-            "field_type": "text"
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 13
         }
     ]
 }
