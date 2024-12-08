@@ -1,0 +1,143 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
+    "meta": {
+        "version": "PLCN_v1",
+        "update_url": null
+    },
+    "exported_at": "2024-12-08T13:13:48+00:00",
+    "name": "QANGA",
+    "author": "eggs@goover.dev",
+    "uuid": "610c5517-3dbd-4b72-8750-08aa9fea08af",
+    "description": "Dive into the universe of QANGA, a vast space sandbox where you can explore the entire solar system with no loading screens. Fly freely between planets and land seamlessly. Mars, Venus, the Moon, Jupiter and its moons, Saturn and its rings of asteroids, numerous orbital stations, and much more. Every planet and moon is an open playground, ready to be explored and exploited as you see fit.\r\n\r\nIn QANGA, space is both your playground and battlefield. You can craft your own adventure solo or with friends, create your own game servers to build communities, and experiment with alternative gameplay modes.",
+    "features": [
+        "steam_disk_space"
+    ],
+    "docker_images": {
+        "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/Qanga\/Binaries\/Linux\/QangaServer-Linux-Shipping Qanga \/Game\/Maps\/Universe\/{{MAP}}? -server -log -port={{SERVER_PORT}} -map={{MAP}} -sessionName=\"{{SRV_NAME}}\" -QueryPort={{QUERY_PORT}} -MaxNetTickRate={{TICKRATE}} -NetServerMaxTickRate={{TICKRATE}} -NetClientTicksPerSecond={{TICKRATE}} -password=\"{{SRV_PW}}\"",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Steam Session Ready\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Qanga Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/discord.goover.dev${NC}\"\r\necho -e \"${YELLOW}Egg released under AGPL Licence${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#apt -y update\r\n#apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ \"${STEAM_SDK}\" == \"1\" ]] && printf %s '+app_update 1007' ) +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n# add below your custom commands if needed\r\n#FILE=$HOME\/ServerConf.ini\r\n#if [ -f \"$FILE\" ]; then\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${GREEN}ServerConf.ini found.${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#else  \r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${RED}ServerConf.ini not found. Downloading default...${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  cd $HOME\r\n#  curl -sSL -o ServerConf.ini https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/qanga\/config\/ServerConf.ini\r\n#  echo -e \"${GREEN}..done..${NC}\"\r\n#fi\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "[SETAM] AppID",
+            "description": "",
+            "env_variable": "STEAM_APPID",
+            "default_value": "1652070",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "in:1652070"
+            ],
+            "sort": 7
+        },
+        {
+            "name": "[SERVER] Auto Update",
+            "description": "Auto update the server on startup",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 6
+        },
+        {
+            "name": "[SERVER] Map",
+            "description": "dont change this",
+            "env_variable": "MAP",
+            "default_value": "L_Persistent_Universe",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 3
+        },
+        {
+            "name": "[SERVER] Server Name",
+            "description": "",
+            "env_variable": "SRV_NAME",
+            "default_value": "Survival",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "min:5",
+                "max:50"
+            ],
+            "sort": 2
+        },
+        {
+            "name": "[SERVER] Query Port",
+            "description": "The Query port",
+            "env_variable": "QUERY_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "integer",
+                "between:1024,65536"
+            ],
+            "sort": 1
+        },
+        {
+            "name": "[STEAM] STEAM SDK",
+            "description": "dont change this",
+            "env_variable": "STEAM_SDK",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 8
+        },
+        {
+            "name": "[SERVER] Server password",
+            "description": "",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "nullable",
+                "max:20"
+            ],
+            "sort": 4
+        },
+        {
+            "name": "[SERVER] Tickrate",
+            "description": "",
+            "env_variable": "TICKRATE",
+            "default_value": "60",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 5
+        }
+    ]
+}
