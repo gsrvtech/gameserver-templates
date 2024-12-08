@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/qanga\/egg-pelican-qanga.json"
     },
-    "exported_at": "2024-12-08T13:13:48+00:00",
+    "exported_at": "2024-12-08T13:15:03+00:00",
     "name": "QANGA",
     "author": "eggs@goover.dev",
     "uuid": "610c5517-3dbd-4b72-8750-08aa9fea08af",
