@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aska\/egg-pelican-aska-wine.json"
     },
-    "exported_at": "2024-12-21T10:23:47+00:00",
+    "exported_at": "2024-12-21T10:29:46+00:00",
     "name": "Aska Wine",
     "author": "info@goover.de",
     "uuid": "59c07510-19dd-48e4-86e8-e79ca483ae0c",
