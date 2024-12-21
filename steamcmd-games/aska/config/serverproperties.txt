@@ -1,0 +1,109 @@
+
+
+//save id is what comes after "savegame_" on a save file and can be 
+//provided to make the server load that save, the save file will be 
+//searched in the "server" folder next to the normal game save folders, 
+//in this case the session display name, seed and other new session
+//customization will be ignored, moreover, when creating a new save the 
+//save id will be filled in by the server once the session opens so to be able to
+//seemlesly load this save again after the first time
+save id =
+
+//display name is the name the session displays in the session list for new saves,
+//for old saves it will take the name from the save itself
+display name = Default Session
+
+//override for the host name that is displayed in the session list
+//if left blank it will use what would normally be used when hosting from this machine
+server name = My Aska Server
+
+//the seed of the new save
+seed =
+
+//the password this session will have
+password =
+
+//the port that clients will connect to for gameplay
+steam game port = 27015
+
+//the port that will manage server browser related duties and info 
+//pings from clients.
+steam query port = 27016
+
+//the token needed for an authentication without a Steam client
+//should come from https://steamcommunity.com/dev/managegameservers
+//for the Aska game app (id: 1898300)
+authentication token =
+
+//the region to open this session on
+//possible options: default, asia, japan, europe, south america, south korea
+//usa east, usa west, australia, canada east, hong kong, india, turkey,
+//united arab emirates, usa south central
+//leave default to ping the best region
+region = default
+
+//if set to true when the session is open, the world is also updating, even
+//without players, if set to false, the world loads when the first player joins
+//and the world unloads when the last player leaves
+keep server world alive = false
+
+//the style in which the server should save, possible options: every morning
+//disabled, every 5 minutes, every 10 minutes, every 15 minutes, every 20 minutes 
+autosave style = every morning
+
+//set to normal for the standard way of playing or to custom to be able to
+//customize certain aspects of gameplay
+mode = normal
+
+//possible options: smooth, normal, rocky
+//only works in custom mode
+terrain aspect = normal
+
+//possible options: flat, normal, varied
+//only works in custom mode
+terrain height = normal
+
+//possible options: spring, summer, autumn, winter
+//only works in custom mode
+starting season = spring
+
+//possible options: minimum, reduced, default, extended, maximum
+//only works in custom mode
+year length = default
+
+//possible options: everything from 0 (sunny) to 6 (soggy)
+//only works in custom mode
+precipitation = 3
+
+//possible options: minimum, reduced, default, extended, maximum
+//only works in custom mode
+day length = default
+
+//possible options: low, medium, high
+//only works in custom mode
+structure decay = medium
+
+//possible options: off, easy, normal, hard
+//only works in custom mode
+invasion dificulty = normal
+
+//possible options: off, low, medium, high
+//only works in custom mode
+monster density = medium
+
+//possible options: low, medium, high
+//only works in custom mode
+monster population = medium
+
+//possible options: low, medium, high
+//only works in custom mode
+wulfar population = medium
+
+//possible options: low, medium, high
+//only works in custom mode
+herbivore population = medium
+
+//possible options: low, medium, high
+//only works in custom mode
+bear population = medium
+
