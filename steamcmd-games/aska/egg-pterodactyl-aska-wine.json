@@ -1,0 +1,194 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-12-21T11:19:11+01:00",
+    "name": "Aska Wine",
+    "author": "info@goover.de",
+    "description": "Lay claim to unspoiled lands and pave the way for a fierce Viking tribe. Craft the ultimate settlement solo or together with up to x3 friends. Trust in the Gods and the power of the Eye of Odin and summon intelligent NPC villagers to provide camaraderie and relief from the toils of survival.",
+    "features": [
+        "steam_disk_space"
+    ],
+    "docker_images": {
+        "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging"
+    },
+    "file_denylist": [],
+    "startup": "xvfb-run wine .\/AskaServer.exe -propertiesPath \"server properties.txt\"",
+    "config": {
+        "files": "{\r\n    \"server properties.txt\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"steam game port =\": \"steam game port = {{server.build.default.port}}\",\r\n            \"steam query port =\": \"steam query port = {{env.QUERY_PORT}}\",\r\n            \"display name =\": \"display name = {{env.DISPLAY_NAME}}\",\r\n            \"server name =\": \"server name = {{env.SRV_NAME}}\",\r\n            \"password =\": \"password = {{env.SRV_PASSWORD}}\",\r\n            \"region =\": \"region = {{env.SRV_REGION}}\",\r\n            \"keep server world alive =\": \"keep server world alive = {{env.KEEP_ALIVE}}\",\r\n            \"autosave style =\": \"autosave style = {{env.AUTO_SAVE}}\",\r\n            \"authentication token =\": \"authentication token = {{env.STEAM_GSLT_TOKEN}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Activating game state: GameState_Boot\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# THIS EGG IS LICENCED UNDER AGPLv3\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}ASKA Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER (https:\/\/dicord.goover.dev) | Licence: AGPLv3${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n## add below your custom commands if needed\r\n\r\n#FILE=\"$HOME\/server properties.txt\"\r\n#if [ -f \"$FILE\" ]; then\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${GREEN}server properties.txt found.${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#else  \r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${RED}server properties.txt found. Downloading default...${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  cd $HOME\r\n#  curl -sSL -o \"server properties.txt\" https:\/\/raw.githubusercontent.com\/gOOvER\/GameServerConfigs\/main\/sotf\/serverproperties.txt\r\n#  echo -e \"${GREEN}..done..${NC}\"\r\n#fi\r\n\r\n#delete old wine dirs to prevent errors\r\n#echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#echo -e \"${RED}deleting old wine dirs... please wait...${NC}\"\r\n#echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n#if [ ! -d \"\/mnt\/server\/.wine\" ]; then\r\n#    rm -fR \/mnt\/server\/.wine\r\n#    rm -fR \/mnt\/server\/.config\r\n#    rm -fR \/mnt\/server\/.cache\r\n#    rm -fR \/mnt\/server\/.local\r\n#    rm -fR \/mnt\/server\/appcache\r\n#fi\r\n#echo -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+          "name": "[SERVER] SteamQueryPort",
+          "description": "the port that will manage server browser related duties and info pings from clients.",
+          "env_variable": "QUERY_PORT",
+          "default_value": "",
+          "user_viewable": true,
+          "user_editable": false,
+          "rules": "required|integer|between:1024,65536",
+          "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Server Name",
+            "description": "override for the host name that is displayed in the session list. if left blank it will use what would normally be used when hosting from this machine",
+            "env_variable": "SRV_NAME",
+            "default_value": "egg by goover.dev",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:60",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Server Password",
+            "description": "the password this session will have",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+          "name": "[STEAM] Steam GSLT",
+          "description": "the token needed for an authentication without a Steam client\r\nshould come from https:\/\/steamcommunity.com\/dev\/managegameservers\r\nfor the Aska game app (id: 1898300)",
+          "env_variable": "STEAM_GSLT_TOKEN",
+          "default_value": "",
+          "user_viewable": true,
+          "user_editable": true,
+          "rules": "required|string|max:60",
+          "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Server Region",
+            "description": "",
+            "env_variable": "SRV_REGION",
+            "default_value": "default",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:default,asia,japan,europe,south america,south korea,usa east,usa west,australia,canada east,hong kong,india,turkey,united arab emirates,usa south central",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Keep Server alive?",
+            "description": "if set to true when the session is open, the world is also updating, even without players, if set to false, the world loads when the first player joins and the world unloads when the last player leaves",
+            "env_variable": "KEEP_ALIVE",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Display Name",
+            "description": "display name is the name the session displays in the session list for new saves, for old saves it will take the name from the save itself",
+            "env_variable": "DISPLAY_NAME",
+            "default_value": "egg by discord.goover.dev",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:40",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Autosave Style",
+            "description": "the style in which the server should save, possible options: every morning, disabled, every 5 minutes, every 10 minutes, every 15 minutes, every 20 minutes",
+            "env_variable": "AUTO_SAVE",
+            "default_value": "disabled",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:disabled,every morning,every 5 minutes,every 10 minutes,every 15 minutes,every 20 minutes",
+            "field_type": "text"
+        },
+        {
+          "name": "[STEAM] STEAM_APPID",
+          "description": "",
+          "env_variable": "STEAM_APPID",
+          "default_value": "3246670",
+          "user_viewable": false,
+          "user_editable": false,
+          "rules": "required|numeric|in:3246670",
+          "field_type": "text"
+        },
+        {
+            "name": "[STEAM] WINDOWS_INSTALL",
+            "description": "",
+            "env_variable": "WINDOWS_INSTALL",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] WINEPATH",
+            "description": "",
+            "env_variable": "WINEPATH",
+            "default_value": "\/home\/container",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] WINEDEBUG",
+            "description": "",
+            "env_variable": "WINEDEBUG",
+            "default_value": "-all",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] WINEARCH",
+            "description": "",
+            "env_variable": "WINEARCH",
+            "default_value": "win64",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] WINETRICKS_RUN",
+            "description": "",
+            "env_variable": "WINETRICKS_RUN",
+            "default_value": "",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM] SteamAppid",
+            "description": "",
+            "env_variable": "SteamAppId",
+            "default_value": "1898300",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|numeric|in:1898300",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] XVFB",
+            "description": "",
+            "env_variable": "XVFB",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        }
+    ]
+}
