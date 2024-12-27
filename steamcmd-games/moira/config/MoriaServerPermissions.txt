@@ -1,0 +1,11 @@
+; The list of players that are blocked.
+; You should only modify this list when the server is closed.
+; This list will be overwritten when players are blocked in-game.
+; 
+; Format:
+; name = Blocked
+; Will block anyone with an account with that name
+; 
+; Example:
+; durin = Blocked
+
