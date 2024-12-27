@@ -11,7 +11,7 @@ save id =
 
 //display name is the name the session displays in the session list for new saves,
 //for old saves it will take the name from the save itself
-display name = Default Session
+display name = default
 
 //override for the host name that is displayed in the session list
 //if left blank it will use what would normally be used when hosting from this machine
