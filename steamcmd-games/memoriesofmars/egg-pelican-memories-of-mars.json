@@ -1,0 +1,186 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
+    "meta": {
+        "version": "PLCN_v1",
+        "update_url": null
+    },
+    "exported_at": "2024-12-23T16:30:05+00:00",
+    "name": "Memories of Mars",
+    "author": "info@goover.de",
+    "uuid": "160c2bb8-933f-4a91-bf37-3bd8f4aa6dab",
+    "description": "Survive the extreme conditions on Mars. Compete or cooperate with others to gather resources, 3D print your equipment and build your base, unveil the story behind the abandoned mining operations and, ultimately, escape the Red Planet.",
+    "features": [
+        "steam_disk_space"
+    ],
+    "docker_images": {
+        "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/Game\/Binaries\/Linux\/MemoriesOfMarsServer  MemoriesGame ?listen -Port={{SERVER_PORT}} -ServerQueryPort={{QUERY_PORT}} -BeaconPort={{BEACON_PORT}} -maxplayers={{MAX_PLAYERS}} -MULTIHOME={{SERVER_IP}} -unattended -log",
+    "config": {
+        "files": "{\r\n    \"DedicatedServerConfig.cfg\": {\r\n        \"parser\": \"json\",\r\n        \"find\": {\r\n            \"ServerName\": \"{{server.environment.SERVER_NAME}}\",\r\n            \"ServerPassword\": \"{{server.environment.SERVER_PASSWORD}}\",\r\n            \"ServerID\": \"{{server.environment.SERVER_ID}}\",\r\n            \"MapName\": \"{{server.environment.MAP_NAME}}\",\r\n            \"EnablePVP\": \"{{server.environment.PVP}}\",\r\n            \"Headless\": \"true\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Server initialization completely done!\"\r\n}",
+        "logs": "{}",
+        "stop": "^^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n# Image to install with is 'ghcr.io\/parkervcp\/installers:debian'\r\n\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n\r\n## install game using steamcmd\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH}  +app_update ${SRCDS_APPID}  validate +quit\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n## add below your custom commands if needed\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
+            "container": "ghcr.io\/parkervcp\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server name",
+            "description": "The name of the server",
+            "env_variable": "SERVER_NAME",
+            "default_value": "My Private Server",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "max:32"
+            ],
+            "sort": 3
+        },
+        {
+            "name": "Server password",
+            "description": "Server password",
+            "env_variable": "SERVER_PASSWORD",
+            "default_value": "password123",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "nullable",
+                "string",
+                "max:32"
+            ],
+            "sort": 4
+        },
+        {
+            "name": "Server ID",
+            "description": "By changing this, you can switch between different versions of the database\r\n\r\nThe files for the database will be stored in the following folder: .Game\/Saved\/DB\/{ServerID}\/{SeasonID}",
+            "env_variable": "SERVER_ID",
+            "default_value": "mom_dedicated_01",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 5
+        },
+        {
+            "name": "Map name",
+            "description": "",
+            "env_variable": "MAP_NAME",
+            "default_value": "Main",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "max:32"
+            ],
+            "sort": 6
+        },
+        {
+            "name": "Max players",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "64",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "numeric",
+                "max:72"
+            ],
+            "sort": 7
+        },
+        {
+            "name": "PVP",
+            "description": "",
+            "env_variable": "PVP",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 8
+        },
+        {
+            "name": "Restart time",
+            "description": "Daily Restart UTC Hour",
+            "env_variable": "RESTART_HOUR",
+            "default_value": "12",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "numeric"
+            ],
+            "sort": 9
+        },
+        {
+            "name": "Auto update",
+            "description": "Auto update the server on start",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "boolean"
+            ],
+            "sort": 10
+        },
+        {
+            "name": "QUERY port",
+            "description": "Port for Steam.",
+            "env_variable": "QUERY_PORT",
+            "default_value": "27015",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string"
+            ],
+            "sort": 1
+        },
+        {
+            "name": "Beacon Port",
+            "description": "",
+            "env_variable": "BEACON_PORT",
+            "default_value": "25000",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ],
+            "sort": 2
+        },
+        {
+            "name": "Steam AppID",
+            "description": "",
+            "env_variable": "SRCDS_APPID",
+            "default_value": "897590",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "in:897590"
+            ],
+            "sort": 11
+        }
+    ]
+}
