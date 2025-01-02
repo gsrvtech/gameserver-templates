@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aska\/egg-pelican-aska-wine.json"
     },
-    "exported_at": "2025-01-02T07:27:39+00:00",
+    "exported_at": "2025-01-02T10:44:20+00:00",
     "name": "Aska Wine",
     "author": "info@goover.de",
     "uuid": "59c07510-19dd-48e4-86e8-e79ca483ae0c",
@@ -18,7 +18,7 @@
     "file_denylist": [],
     "startup": "xvfb-run wine .\/AskaServer.exe -propertiesPath \"server properties.txt\"",
     "config": {
-        "files": "{\n    \"server properties.txt\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"steam game port =\": \"steam game port = {{server.build.default.port}}\",\n            \"save id\": \"save id = {{env.SAVE_ID}}\",\n            \"steam query port =\": \"steam query port = {{env.QUERY_PORT}}\",\n            \"display name =\": \"display name = {{env.DISPLAY_NAME}}\",\n            \"server name =\": \"server name = {{env.SRV_NAME}}\",\n            \"password =\": \"password = {{env.SRV_PW}}\",\n            \"region =\": \"region = {{env.SRV_REGION}}\",\n            \"keep server world alive =\": \"keep server world alive = {{env.KEEP_ALIVE}}\",\n            \"autosave style =\": \"autosave style = {{env.AUTO_SAVE}}\",\n            \"authentication token =\": \"authentication token = {{env.STEAM_GSLT_TOKEN}}\"\n        }\n    }\n}",
+        "files": "{\n    \"server properties.txt\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"steam game port =\": \"steam game port = {{server.allocations.default.port}}\",\n            \"save id\": \"save id = {{env.SAVE_ID}}\",\n            \"steam query port =\": \"steam query port = {{env.QUERY_PORT}}\",\n            \"display name =\": \"display name = {{env.DISPLAY_NAME}}\",\n            \"server name =\": \"server name = {{env.SRV_NAME}}\",\n            \"password =\": \"password = {{env.SRV_PW}}\",\n            \"region =\": \"region = {{env.SRV_REGION}}\",\n            \"keep server world alive =\": \"keep server world alive = {{env.KEEP_ALIVE}}\",\n            \"autosave style =\": \"autosave style = {{env.AUTO_SAVE}}\",\n            \"authentication token =\": \"authentication token = {{env.STEAM_GSLT_TOKEN}}\"\n        }\n    }\n}",
         "startup": "{\r\n    \"done\": \"Activating game state: GameState_Boot\"\r\n}",
         "logs": "{}",
         "stop": "^C"
