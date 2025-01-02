@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aska\/egg-pelican-aska-wine.json"
     },
-    "exported_at": "2025-01-02T10:44:20+00:00",
+    "exported_at": "2025-01-02T10:55:04+00:00",
     "name": "Aska Wine",
     "author": "info@goover.de",
     "uuid": "59c07510-19dd-48e4-86e8-e79ca483ae0c",
@@ -216,7 +216,7 @@
             "name": "[WINE] WINETRICKS_RUN",
             "description": "",
             "env_variable": "WINETRICKS_RUN",
-            "default_value": "",
+            "default_value": "vcrun2022 mono",
             "user_viewable": false,
             "user_editable": false,
             "rules": [
