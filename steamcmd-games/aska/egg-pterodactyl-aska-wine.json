@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-12-21T11:55:28+01:00",
+    "exported_at": "2025-01-02T08:25:19+01:00",
     "name": "Aska Wine",
     "author": "eggs@goover.dev",
     "description": "Lay claim to unspoiled lands and pave the way for a fierce Viking tribe. Craft the ultimate settlement solo or together with up to x3 friends. Trust in the Gods and the power of the Eye of Odin and summon intelligent NPC villagers to provide camaraderie and relief from the toils of survival.",
@@ -15,9 +15,9 @@
         "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging"
     },
     "file_denylist": [],
-    "startup": "xvfb-run wine .\/AskaServer.exe -propertiesPath \"server properties.txt\"",
+    "startup": "export SteamAppId=1898300; xvfb-run wine .\/AskaServer.exe -propertiesPath \"server properties.txt\"",
     "config": {
-        "files": "{\r\n    \"server properties.txt\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"steam game port =\": \"steam game port = {{server.build.default.port}}\",\r\n            \"steam query port =\": \"steam query port = {{env.QUERY_PORT}}\",\r\n            \"display name =\": \"display name = {{env.DISPLAY_NAME}}\",\r\n            \"server name =\": \"server name = {{env.SRV_NAME}}\",\r\n            \"password =\": \"password = {{env.SRV_PW}}\",\r\n            \"region =\": \"region = {{env.SRV_REGION}}\",\r\n            \"keep server world alive =\": \"keep server world alive = {{env.KEEP_ALIVE}}\",\r\n            \"autosave style =\": \"autosave style = {{env.AUTO_SAVE}}\",\r\n            \"authentication token =\": \"authentication token = {{env.STEAM_GSLT_TOKEN}}\"\r\n        }\r\n    }\r\n}",
+        "files": "{\r\n    \"server properties.txt\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"steam game port =\": \"steam game port = {{server.build.default.port}}\",\r\n            \"save id\": \"save id = {{env.SAVE_ID}}\",\r\n            \"steam query port =\": \"steam query port = {{env.QUERY_PORT}}\",\r\n            \"display name =\": \"display name = {{env.DISPLAY_NAME}}\",\r\n            \"server name =\": \"server name = {{env.SRV_NAME}}\",\r\n            \"password =\": \"password = {{env.SRV_PW}}\",\r\n            \"region =\": \"region = {{env.SRV_REGION}}\",\r\n            \"keep server world alive =\": \"keep server world alive = {{env.KEEP_ALIVE}}\",\r\n            \"autosave style =\": \"autosave style = {{env.AUTO_SAVE}}\",\r\n            \"authentication token =\": \"authentication token = {{env.STEAM_GSLT_TOKEN}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Activating game state: GameState_Boot\"\r\n}",
         "logs": "{}",
         "stop": "^C"
@@ -164,7 +164,7 @@
             "name": "[WINE] WINETRICKS_RUN",
             "description": "",
             "env_variable": "WINETRICKS_RUN",
-            "default_value": "",
+            "default_value": "vcrun2022 mono",
             "user_viewable": false,
             "user_editable": false,
             "rules": "nullable|string",
@@ -188,6 +188,16 @@
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Save ID",
+            "description": "Start Server one time , go to settingsfile; copy save ID and add it here",
+            "env_variable": "SAVE_ID",
+            "default_value": "set_saveid_after_first_start",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
             "field_type": "text"
         }
     ]
