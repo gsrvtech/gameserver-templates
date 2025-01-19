@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aloft\/pelican-egg-aloft-wine.json"
     },
-    "exported_at": "2025-01-19T06:02:15+00:00",
+    "exported_at": "2025-01-19T06:10:29+00:00",
     "name": "Aloft Wine",
     "author": "eggs@goover.dev",
     "uuid": "7f9ea855-4c1e-485e-900b-1ab38ef0937e",
@@ -173,7 +173,9 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": [
-                "required|string|in:true,false"
+                "required",
+                "string",
+                "in:true,false"
             ],
             "sort": 8
         },
