@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2025-01-16T10:42:33-06:00",
+    "exported_at": "2025-01-18T23:59:08-06:00",
     "name": "Aloft Wine",
     "author": "eggs@goover.dev",
     "description": "Soar the skies in Aloft, the co-op sandbox survival game set in a world of floating islands. Build any island into a skyship, your home in the clouds. Find lost knowledge, cure the fungal corruption, and brave the hurricane to restore the ecosystem.",
@@ -15,7 +15,7 @@
         "ghcr.io\/goover\/games:aloft": "ghcr.io\/goover\/games:aloft"
     },
     "file_denylist": [],
-    "startup": "if [ -f \"\/home\/container\/ServerRoomCode.txt\" ]; then wine .\/Aloft.exe -batchmode -nographics -server -logFile server.log load#{{MAP_NAME}}# servername#{{SRV_NAME}}# log#{{LOG_LEVEL}}# isvisible#{{SERVER_VISIBLE}}# privateislands#false# playercount#{{MAX_PLAYERS}}# serverport#{{SERVER_PORT}}# {{ADMINS}} & AL_PID=$! ; tail -c0 -F .\/server.log --pid=$AL_PID; else wine .\/Aloft.exe -batchmode -nographics -server -logFile serverinstall.log create#{{MAP_NAME}}#{{ISLANDS}}#{{CREATIVE}}# log#{{LOG_LEVEL}}# & AL_PID=$! ; tail -c0 -F .\/serverinstall.log --pid=$AL_PID; fi",
+    "startup": "if [ -f \"\/home\/container\/ServerRoomCode.txt\" ]; then wine .\/Aloft.exe -batchmode -nographics -server -logFile server.log load#{{MAP_NAME}}# servername#{{SRV_NAME}}# log#{{LOG_LEVEL}}# isvisible#{{SRV_VISIBLE}}# privateislands#{{PRV_ISLANDS}}# playercount#{{MAX_PLAYERS}}# serverport#{{SERVER_PORT}}# {{ADMINS}} & AL_PID=$! ; tail -c0 -F .\/server.log --pid=$AL_PID; else wine .\/Aloft.exe -batchmode -nographics -server -logFile serverinstall.log create#{{MAP_NAME}}#{{ISLANDS}}#{{CREATIVE}}# log#{{LOG_LEVEL}}# & AL_PID=$! ; tail -c0 -F .\/serverinstall.log --pid=$AL_PID; fi",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Server Ready\"\r\n}",
@@ -37,7 +37,7 @@
             "default_value": "PelicanEggBygOOvER",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:60",
+            "rules": "required|string|max:22",
             "field_type": "text"
         },
         {
@@ -131,16 +131,6 @@
             "field_type": "text"
         },
         {
-            "name": "Server Visible in Ingame-Browser?",
-            "description": "If set, the server will be visible in the in-game lobby browser. Otherwise, the server will only be accessible via its game code",
-            "env_variable": "SRV_VISIBLE",
-            "default_value": "1",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|boolean",
-            "field_type": "text"
-        },
-        {
             "name": "Max Players",
             "description": "Sets the maximum number of players allowed on the server at one time. MAX is atm 8",
             "env_variable": "MAX_PLAYERS",
@@ -178,6 +168,26 @@
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Visible in Ingame-Browser?",
+            "description": "If set, the server will be visible in the in-game lobby browser. Otherwise, the server will only be accessible via its game code",
+            "env_variable": "SRV_VISIBLE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Private Islands",
+            "description": "",
+            "env_variable": "PRV_ISLAND",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
             "field_type": "text"
         }
     ]

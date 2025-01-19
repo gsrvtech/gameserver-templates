@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aloft\/pelican-egg-aloft-wine.json"
     },
-    "exported_at": "2025-01-16T16:46:07+00:00",
+    "exported_at": "2025-01-19T06:02:15+00:00",
     "name": "Aloft Wine",
     "author": "eggs@goover.dev",
     "uuid": "7f9ea855-4c1e-485e-900b-1ab38ef0937e",
@@ -16,7 +16,7 @@
         "ghcr.io\/goover\/games:aloft": "ghcr.io\/goover\/games:aloft"
     },
     "file_denylist": [],
-    "startup": "if [ -f \"\/home\/container\/ServerRoomCode.txt\" ]; then wine .\/Aloft.exe -batchmode -nographics -server -logFile server.log load#{{MAP_NAME}}# servername#{{SRV_NAME}}# log#{{LOG_LEVEL}}# isvisible#{{SERVER_VISIBLE}}# privateislands#false# playercount#{{MAX_PLAYERS}}# serverport#{{SERVER_PORT}}# {{ADMINS}} & AL_PID=$! ; tail -c0 -F .\/server.log --pid=$AL_PID; else wine .\/Aloft.exe -batchmode -nographics -server -logFile serverinstall.log create#{{MAP_NAME}}#{{ISLANDS}}#{{CREATIVE}}# log#{{LOG_LEVEL}}# & AL_PID=$! ; tail -c0 -F .\/serverinstall.log --pid=$AL_PID; fi",
+    "startup": "if [ -f \"\/home\/container\/ServerRoomCode.txt\" ]; then wine .\/Aloft.exe -batchmode -nographics -server -logFile server.log load#{{MAP_NAME}}# servername#{{SRV_NAME}}# log#{{LOG_LEVEL}}# isvisible#{{SRV_VISIBLE}}# privateislands#{{PRV_ISLANDS}}# playercount#{{MAX_PLAYERS}}# serverport#{{SERVER_PORT}}# {{ADMINS}} & AL_PID=$! ; tail -c0 -F .\/server.log --pid=$AL_PID; else wine .\/Aloft.exe -batchmode -nographics -server -logFile serverinstall.log create#{{MAP_NAME}}#{{ISLANDS}}#{{CREATIVE}}# log#{{LOG_LEVEL}}# & AL_PID=$! ; tail -c0 -F .\/serverinstall.log --pid=$AL_PID; fi",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Server Ready\"\r\n}",
@@ -173,8 +173,7 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": [
-                "required",
-                "boolean"
+                "required|string|in:true,false"
             ],
             "sort": 8
         },
@@ -231,6 +230,20 @@
                 "boolean"
             ],
             "sort": 15
+        },
+        {
+            "name": "Private Islands",
+            "description": "",
+            "env_variable": "PRV_ISLANDS",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "in:true,false"
+            ],
+            "sort": 16
         }
     ]
 }
