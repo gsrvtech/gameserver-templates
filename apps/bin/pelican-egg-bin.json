@@ -2,14 +2,14 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/apps\/bin\/pelican-egg-bin.json"
     },
-    "exported_at": "2025-01-23T07:07:53+00:00",
+    "exported_at": "2025-01-23T07:13:53+00:00",
     "name": "BIN",
     "author": "eggs@goover.dev",
     "uuid": "0d1186ff-d3e6-47f4-892d-82c6fab1e6d1",
     "description": "A minimal pastebin which also accepts binary files like Images, PDFs and ships multiple clients.",
-    "features": null,
+    "features": [],
     "docker_images": {
         "ghcr.io\/goover\/debian:12-bookworm": "ghcr.io\/goover\/debian:12-bookworm"
     },
