@@ -2,14 +2,14 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/apps\/wastebin\/pelican-egg-wastebin.json"
     },
-    "exported_at": "2025-01-23T07:20:01+00:00",
+    "exported_at": "2025-01-23T07:21:09+00:00",
     "name": "Wastebin",
     "author": "eggs@goover.dev",
     "uuid": "0f3dbed2-5547-4f7b-b974-ed931c8e5e10",
     "description": "A minimal pastebin with a design shamelessly copied from bin.",
-    "features": null,
+    "features": [],
     "docker_images": {
         "ghcr.io\/goover\/debian:12-bookworm": "ghcr.io\/goover\/debian:12-bookworm"
     },
@@ -40,7 +40,7 @@
                 "required",
                 "string"
             ],
-            "sort": null
+            "sort": 1
         },
         {
             "name": "WASTEBIN_ADDRESS_PORT",
@@ -53,7 +53,7 @@
                 "required",
                 "string"
             ],
-            "sort": null
+            "sort": 2
         },
         {
             "name": "WASTEBIN_BASE_URL",
@@ -66,7 +66,7 @@
                 "required",
                 "string"
             ],
-            "sort": null
+            "sort": 3
         },
         {
             "name": "WASTEBIN_CACHE_SIZE",
@@ -79,7 +79,7 @@
                 "required",
                 "string"
             ],
-            "sort": null
+            "sort": 4
         },
         {
             "name": "WASTEBIN_MAX_BODY_SIZE",
@@ -93,7 +93,7 @@
                 "string",
                 "max:20"
             ],
-            "sort": null
+            "sort": 5
         }
     ]
 }
