@@ -1,0 +1,82 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-01-23T08:18:52+01:00",
+    "name": "Wastebin",
+    "author": "eggs@goover.dev",
+    "description": "A minimal pastebin with a design shamelessly copied from bin.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/goover\/debian:12-bookworm": "ghcr.io\/goover\/debian:12-bookworm"
+    },
+    "file_denylist": [],
+    "startup": ".\/wastebin",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \" Database migrated to version\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Wastebin Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER | https:\/\/discord.goover.dev${NC}\"\r\necho -e \"${RED}Egg is licensed under AGPLv3${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\napt update\r\napt install -y curl jq\r\n\r\ncd \/mnt\/server\r\nrm -f wastebin\r\nrm -f LICENSE\r\nrm -f README.md\r\n\r\nVERSION=$(curl -I https:\/\/github.com\/matze\/wastebin\/releases\/latest | awk -F '\/' '\/^location\/ {print  substr($NF, 1, length($NF)-1)}')\r\ncurl -sSL -o waste.tar.zst https:\/\/github.com\/matze\/wastebin\/releases\/download\/${VERSION}\/wastebin_${VERSION}_x86_64-unknown-linux-musl.tar.zst\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}ignore output...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n7zz x waste.tar.zst -aoa\r\nrm -f waste.tar.zst\r\n\r\nchmod +x wastebin\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Repo",
+            "description": "",
+            "env_variable": "REPO",
+            "default_value": "matze\/wastebin",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "WASTEBIN_ADDRESS_PORT",
+            "description": "Add primary port here",
+            "env_variable": "WASTEBIN_ADDRESS_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "WASTEBIN_BASE_URL",
+            "description": "string that determines the base URL for the QR code display. If not set, the user agent's Host header field is used as an approximation.",
+            "env_variable": "WASTEBIN_BASE_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "WASTEBIN_CACHE_SIZE",
+            "description": "number of rendered syntax highlight items to cache. Defaults to 128 and can be disabled by setting to 0.",
+            "env_variable": "WASTEBIN_CACHE_SIZE",
+            "default_value": "128",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "WASTEBIN_MAX_BODY_SIZE",
+            "description": "number of bytes to accept for POST requests. Defaults to 1 MB.",
+            "env_variable": "WASTEBIN_MAX_BODY_SIZE",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        }
+    ]
+}
