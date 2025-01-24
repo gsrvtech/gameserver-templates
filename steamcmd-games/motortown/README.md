@@ -36,12 +36,16 @@ The MotorTown server requires two ports. One as Gameport; one as QueryPort. You 
 - At least 12GB RAM (Windows Server needs lesser RAM)
 - Minimum 4GB hard disk space
 
-  
 
 ## Support
 Support only in my Discordserver
 
 [![Join our Discord server!](https://invidget.switchblade.xyz/raurR4vshX)](http://discord.gg/raurR4vshX)
+
+## Homehosting
+
+I cannot and will not provide support for servers that are hosted at home. The reason is that 99% of the errors are due to incorrect network settings and there are many different configurations.
+Unfortunately, I don't have the time to debug such errors, because it takes many hours.
 
 ## Licence
 This Egg is licensed under the AGPLv3 licence.
