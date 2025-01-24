@@ -1,0 +1,27 @@
+{
+    "ServerName": "My Server",
+    "ServerMessage": "Welcome!\nHave fun!",
+    "Password": "",
+    "MaxPlayers": 10,
+    "MaxVehiclePerPlayer": 5,
+    "bAllowPlayerToJoinWithCompanyVehicles": false,
+    "bAllowCompanyAIDriver": true,
+    "MaxHousingPlotRentalPerPlayer": 1,
+    "MaxHousingPlotRentalDays": 7,
+    "HousingPlotRentalPriceRatio": 0.1,
+    "bAllowModdedVehicle": false,
+    "__bAllowModdedVehicle__Comment": "Set this to 'false' to despawn vehicles altered by an external program",
+    "bEnableHostWebAPIServer": false,
+    "HostWebAPIServerPassword": "ENTER PASSWORD HERE",
+    "HostWebAPIServerPort": 8080,
+    "Admins": [
+      {
+        "UniqueNetId": "SampleNetId1",
+        "Nickname": "AdminCharacterName1"
+      },
+      {
+        "UniqueNetId": "SampleNetId2",
+        "Nickname": "AdminCharacterName2"
+      }
+    ]
+  }
