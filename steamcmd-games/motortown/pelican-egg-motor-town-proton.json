@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/motortown\/pelican-egg-motor-town-proton.json"
     },
-    "exported_at": "2025-01-24T10:03:07+00:00",
+    "exported_at": "2025-01-24T10:14:03+00:00",
     "name": "MotorTown - Proton",
     "author": "eggs@goover.dev",
     "uuid": "5cce938c-20d9-4617-acc1-4396ecc8775c",
