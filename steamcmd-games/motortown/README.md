@@ -7,8 +7,8 @@
 | gOOvER | https://github.com/gOOvER |[Buy me a Coffee](https://donate.goover.dev) | |
 
 ## Game infos
-Steam Shop Link: [https://store.steampowered.com/app/1369670/Motor_Town_Behind_The_Wheel/](https://store.steampowered.com/app/1369670/Motor_Town_Behind_The_Wheel/)
- SteamDB Link: [https://steamdb.info/app/1369670/)](https://steamdb.info/app/1369670/
+- Steam Shop Link: [https://store.steampowered.com/app/1369670/Motor_Town_Behind_The_Wheel/](https://store.steampowered.com/app/1369670/Motor_Town_Behind_The_Wheel/)
+- SteamDB Link: [https://steamdb.info/app/1369670/)](https://steamdb.info/app/1369670/
   
 ## PLEASE NOTE !!!!!
 
