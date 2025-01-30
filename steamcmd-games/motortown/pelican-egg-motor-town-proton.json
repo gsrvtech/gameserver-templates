@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/motortown\/pelican-egg-motor-town-proton.json"
     },
-    "exported_at": "2025-01-24T10:14:03+00:00",
+    "exported_at": "2025-01-24T12:18:49+00:00",
     "name": "MotorTown - Proton",
     "author": "eggs@goover.dev",
     "uuid": "5cce938c-20d9-4617-acc1-4396ecc8775c",
@@ -19,7 +19,7 @@
     "startup": "proton run .\/MotorTown\/Binaries\/Win64\/MotorTownServer-Win64-Shipping.exe Jeju_World?listen?- server -log -useperfthreads -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}}",
     "config": {
         "files": "{\r\n    \"DedicatedServerConfig.json\": {\r\n        \"parser\": \"json\",\r\n        \"find\": {\r\n            \"ServerName\": \"{{env.SRV_NAME}}\",\r\n            \"Password\": \"{{env.SRV_PW}}\",\r\n            \"MaxPlayers\": \"{{env.MAX_PLAYERS}}\"\r\n        }\r\n    }\r\n}",
-        "startup": "{\r\n    \"done\": \"esync: up and running.\"\r\n}",
+        "startup": "{\n    \"done\": \"fsync: up and running.\"\n}",
         "logs": "{}",
         "stop": "^C"
     },
@@ -96,7 +96,7 @@
                 "required",
                 "string"
             ],
-            "sort": 2
+            "sort": 1
         },
         {
             "name": "[STEAM] Steam Password",
@@ -109,7 +109,7 @@
                 "required",
                 "string"
             ],
-            "sort": 1
+            "sort": 2
         },
         {
             "name": "[STEAM] WINDOWS_INSTALL",
