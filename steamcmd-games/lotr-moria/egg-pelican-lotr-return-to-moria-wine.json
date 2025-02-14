@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/da590147e52ba21f965e736a8106c25aae07216d\/steamcmd-games\/lotr-moria\/egg-pelican-lotr-return-to-moria-wine.json"
     },
-    "exported_at": "2025-02-14T14:22:21+00:00",
+    "exported_at": "2025-02-14T14:24:44+00:00",
     "name": "The Lord of the Rings: Return to Moria - Wine",
     "author": "eggs@goover.dev",
     "uuid": "a294e71d-cb35-42a1-89e0-4688c8199d53",
