@@ -1,0 +1,122 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-02-25T16:04:46+01:00",
+    "name": "Reign of Kings",
+    "author": "info@goover.de",
+    "description": "Struggle to survive in a harsh medieval world. Hunt wildlife, mine resources, build structures, and craft weapons and armor in order to protect yourself. You may form a guild, bring war to all opposition, and try to seize the throne and become king!",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
+    },
+    "file_denylist": [],
+    "startup": "wine .\/ROK.exe -batchmode -nographics",
+    "config": {
+        "files": "{\r\n    \"Configuration\/ServerSettings.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"serverName =\": \"serverName = '{{server.build.env.SRV_NAME}}'\",\r\n            \"portNumber =\": \"portNumber = '{{server.build.default.port}}'\",\r\n            \"password =\": \"password = '{{server.build.env.SRV_PW}}'\",\r\n            \"steamAuthPort =\": \"steamAuthPort ='{{server.build.env.AUTH_PORT}}'\",\r\n            \"pingPort =\": \"pingPort ='{{server.build.default.port}}'\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"ALSA lib\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# THIS EGG IS LICENCED UNDER AGPLv3\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Reign of Kings Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER (https:\/\/dicord.goover.dev) | License: AGPLv3${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n# Setup Envs\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n\r\n## check is steamuser is set\r\nif [ \"${STEAM_USER}\" == \"\" ]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nfi\r\n\r\n## when steam_user is set, use DepotDownloader, if its anonymous, use steamcmd\r\nif [ \"${STEAM_USER}\" == \"anonymous\" ]; then\r\n    ## download and install steamcmd\r\n    cd \/tmp\r\n    mkdir -p \/mnt\/server\/steamcmd\r\n    curl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\n    tar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\n    mkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\n    cd \/mnt\/server\/steamcmd\r\n\r\n    ## install game using steamcmd\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    echo -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n    .\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ \"${STEAM_SDK}\" == \"1\" ]] && printf %s '+app_update 1007' ) +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\n    echo -e \"${GREEN}..done..${NC}\"\r\n\r\n    ## set up 32 bit libraries\r\n    mkdir -p \/mnt\/server\/.steam\/sdk32\r\n    cp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n    ## set up 64 bit libraries\r\n    mkdir -p \/mnt\/server\/.steam\/sdk64\r\n    cp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\nelse\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    echo -e \"${YELLOW}download and install DepotDownloader. please wait...${NC}\"\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    ## download DepotDownloader\r\n    cd $HOME\r\n    curl -sLOJ $(curl -s https:\/\/api.github.com\/repos\/SteamRE\/DepotDownloader\/releases\/latest | grep browser_download_url | cut -d\\\" -f4 | egrep linux-x64.zip)\r\n    unzip -o DepotDownloader-linux-x64.zip -d \/mnt\/server\r\n    chmod +x \/mnt\/server\/DepotDownloader\r\n    rm -f \/mnt\/server\/DepotDownloader-linux-x64.zip\r\n    echo -e \"${GREEN}..done..${NC}\"\r\n\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    echo -e \"${YELLOW}Depotdonloader Version: ${. \/$HOME\/DepotDownloader --version}${NC}\"\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n    ## install game using DepotDownloader\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    echo -e \"${YELLOW}downloading game using DepotDownloader. please wait...${NC}\"\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n    .\/DepotDownloader -dir \/mnt\/server $( [[ -z ${STEAM_USER} ]] || printf %s \"-username ${STEAM_USER} -password ${STEAM_PASS} -remember-password\" ) $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '-os windows' ) -app ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) -validate\r\n    echo -e \"${GREEN}..done..${NC}\"\r\n    mkdir -p \/mnt\/server\/.steam\/sdk64\r\n    .\/DepotDownloader -dir \/mnt\/server\/.steam\/sdk64 $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '-os windows' ) -app 1007\r\n    chmod +x $HOME\/*\r\n\r\n    ## install game using DepotDownloader\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n    echo -e \"${YELLOW}installing new server. please wait...${NC}\"\r\n    echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\nfi\r\n\r\n## add below your custom commands if needed\r\n\r\n#FILE=\"$HOME\/Icarus\/Saved\/Config\/WindowsServer\/ServerSettings.ini\"\r\n#if [ -f \"$FILE\" ]; then\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${GREEN} $FILE found.${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#else  \r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  echo -e \"${RED} $FILE not found. Downloading default...${NC}\"\r\n#  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n#  cd $HOME\r\n#  mkdir -p \/mnt\/server\/\/Icarus\/Saved\/Config\/WindowsServer\/\r\n#  cd \/mnt\/server\/Icarus\/Saved\/Config\/WindowsServer\/\r\n#  curl -sSL -o ServerSettings.ini https:\/\/raw.githubusercontent.com\/RocketWerkz\/IcarusDedicatedServer\/main\/ServerSettings.ini \r\n#  echo -e \"${GREEN}..done..${NC}\"\r\n#fi\r\n#echo -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${GREEN}Find my Egg usefull? Spend me a Coffee:${NC}\"\r\necho -e \"${GREEN}https:\/\/donate.goover.dev${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "STEAM_APPID",
+            "description": "don't delete",
+            "env_variable": "STEAM_APPID",
+            "default_value": "381690",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:8",
+            "field_type": "text"
+        },
+        {
+            "name": "WINDOWS_INSTALL",
+            "description": "don't delete",
+            "env_variable": "WINDOWS_INSTALL",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Update",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "XVFB",
+            "description": "don't delete",
+            "env_variable": "XVFB",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "WINETRICKS_RUN",
+            "description": "don't delete",
+            "env_variable": "WINETRICKS_RUN",
+            "default_value": "mono",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Name",
+            "description": "",
+            "env_variable": "SRV_NAME",
+            "default_value": "egg by goover.dev",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:40",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Password",
+            "description": "",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "SteamAuthPort",
+            "description": "The port the steam authenticator will use to communicate with steam.",
+            "env_variable": "AUTH_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1024,65536",
+            "field_type": "text"
+        },
+        {
+            "name": "[WINE] WINEDEBUG",
+            "description": "",
+            "env_variable": "WINEDEBUG",
+            "default_value": "-all",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        }
+    ]
+}
