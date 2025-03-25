@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/aboiticfactor\/egg-pelican-abiotic-factor.json"
     },
-    "exported_at": "2025-03-25T16:07:37+00:00",
+    "exported_at": "2025-03-25T16:09:35+00:00",
     "name": "Abiotic Factor",
     "author": "eggs@goover.dev",
     "uuid": "86aa18b2-65df-4a42-a572-980e6913de4b",
