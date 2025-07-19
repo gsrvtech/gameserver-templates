@@ -1,0 +1,93 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-07-19T04:58:30+00:00",
+    "name": "Nightingale",
+    "author": "eggs@goover.dev",
+    "description": "Nightingale is a shared world survival-crafting game set in a rich gaslamp Victorian fantasy setting. Players venture through portals where adventure and mystery awaits across a myriad of beautiful and increasingly-dangerous worlds.",
+    "tags": [],
+    "features": [],
+    "docker_images": {
+        "SteamCMD": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/",
+    "config": {
+        "files": "{\n    \"NWX\/Config\/ServerSettings.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"StartingDifficulty=\": \"StartingDifficulty={{env.STARTING_DIFFICULTY}}\",\n            \"Password=\": \"Password={{env.SRV_PW}}\",\n            \"AdminPassword=\": \"AdminPassword={{env.ADMIN_PW}}\"\n        }\n    }\n}",
+        "startup": "{\n    \"done\": \"GameModeAwaiter became ready.\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# THIS EGG IS LICENCED UNDER AGPLv3\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\nexport HOME=\/mnt\/server\r\n\r\necho -e \"${BLUE}--------------------------------------------------------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Nightingale Installscript${NC}\"\r\necho -e \"${YELLOW}Egg by gOOvER (https:\/\/dicord.goover.dev) | Licence: AGPLv3${NC}\"\r\necho -e \"${YELLOW}Donations: (https:\/\/donate.goover.dev)${NC}\"\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s \"-beta ${STEAM_BETAID}\" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s \"-betapassword ${STEAM_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n## add below your custom commands if needed\r\n\r\nFILE=\"$HOME\/NWX\/Config\/ServerSettings.ini\"\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN} $FILE found.${NC}\"\r\n  echo -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n  echo -e \"${RED}$FILE not found. creating default...${NC}\"\r\n  echo -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\n  cd $HOME\r\n  mv $HOME\/NWX\/Config\/ExampleServerSettings.ini $HOME\/NWX\/Config\/ServerSettings.ini\r\n  echo -e \"${GREEN}..done..${NC}\"\r\nfi\r\n\r\n#echo -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${GREEN}Want to spend me a Coffee: (https:\/\/donate.goover.dev)${NC}\"\r\necho -e \"${BLUE}}--------------------------------------------------------------------------------------------------${NC}\"\r\nexit 1",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "[SERVER] Admin Password",
+            "description": "",
+            "env_variable": "ADMIN_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Max Players",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "10",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Password",
+            "description": "",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Starting Difficulty",
+            "description": "",
+            "env_variable": "STARTING_DIFFICULTY",
+            "default_value": "easy",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|in:easy,medium,hard,extreme|string",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM] AutoUdate",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM] Steam AppID",
+            "description": "",
+            "env_variable": "STEAM_APPID",
+            "default_value": "3796810",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|in:3796810",
+            "field_type": "text"
+        }
+    ]
+}
