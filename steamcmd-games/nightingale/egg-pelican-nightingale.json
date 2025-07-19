@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/nightingale\/egg-pelican-nightingale.json"
     },
-    "exported_at": "2025-07-19T06:22:14+00:00",
+    "exported_at": "2025-07-19T07:08:19+00:00",
     "name": "Nightingale",
     "author": "eggs@goover.dev",
     "uuid": "978cd97a-524b-4240-b925-b321cd4af644",
@@ -15,7 +15,7 @@
         "SteamCMD": "ghcr.io\/goover\/steamcmd:debian"
     },
     "file_denylist": [],
-    "startup": ".\/",
+    "startup": ".\/NWX\/Binaries\/Linux\/NWXServer-Linux-Shipping  -port={{SERVER_PORT}} -multihome=0.0.0.0  -ini:Game:[\/Script\/Engine.GameSession]:MaxPlayers={{MAX_PLAYERS}} ",
     "config": {
         "files": "{\n    \"NWX\/Config\/ServerSettings.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"StartingDifficulty=\": \"StartingDifficulty={{env.STARTING_DIFFICULTY}}\",\n            \"Password=\": \"Password={{env.SRV_PW}}\",\n            \"AdminPassword=\": \"AdminPassword={{env.ADMIN_PW}}\"\n        }\n    }\n}",
         "startup": "{\n    \"done\": \"GameModeAwaiter became ready.\"\n}",
