@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2025-07-19T06:22:14+00:00",
+    "exported_at": "2025-07-19T07:08:19+00:00",
     "name": "Nightingale",
     "author": "eggs@goover.dev",
     "description": "Nightingale is a shared world survival-crafting game set in a rich gaslamp Victorian fantasy setting. Players venture through portals where adventure and mystery awaits across a myriad of beautiful and increasingly-dangerous worlds.",
@@ -14,7 +14,7 @@
         "SteamCMD": "ghcr.io\/goover\/steamcmd:debian"
     },
     "file_denylist": [],
-    "startup": ".\/",
+    "startup": ".\/NWX\/Binaries\/Linux\/NWXServer-Linux-Shipping  -port={{SERVER_PORT}} -multihome=0.0.0.0  -ini:Game:[\/Script\/Engine.GameSession]:MaxPlayers={{MAX_PLAYERS}} ",
     "config": {
         "files": "{\n    \"NWX\/Config\/ServerSettings.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"StartingDifficulty=\": \"StartingDifficulty={{env.STARTING_DIFFICULTY}}\",\n            \"Password=\": \"Password={{env.SRV_PW}}\",\n            \"AdminPassword=\": \"AdminPassword={{env.ADMIN_PW}}\"\n        }\n    }\n}",
         "startup": "{\n    \"done\": \"GameModeAwaiter became ready.\"\n}",
