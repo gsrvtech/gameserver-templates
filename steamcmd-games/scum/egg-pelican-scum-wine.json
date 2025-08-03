@@ -4,13 +4,15 @@
         "version": "PLCN_v1",
         "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/scum\/egg-pelican-scum-wine.json"
     },
-    "exported_at": "2025-08-03T09:43:39+00:00",
+    "exported_at": "2025-08-03T09:45:42+00:00",
     "name": "Scum Wine",
     "author": "eggs@goover.de",
     "uuid": "52d86f8b-0878-4568-85dd-e24ab71748a1",
     "description": null,
     "tags": [],
-    "features": [],
+    "features": [
+        "steam_disk_space"
+    ],
     "docker_images": {
         "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging",
         "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
