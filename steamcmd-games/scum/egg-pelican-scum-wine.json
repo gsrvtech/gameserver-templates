@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v1",
-        "update_url": null
+        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/scum\/egg-pelican-scum-wine.json"
     },
-    "exported_at": "2025-08-03T09:40:58+00:00",
+    "exported_at": "2025-08-03T09:43:39+00:00",
     "name": "Scum Wine",
     "author": "eggs@goover.de",
     "uuid": "52d86f8b-0878-4568-85dd-e24ab71748a1",
