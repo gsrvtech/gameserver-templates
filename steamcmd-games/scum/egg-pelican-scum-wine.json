@@ -4,7 +4,7 @@
         "version": "PLCN_v1",
         "update_url": null
     },
-    "exported_at": "2025-06-19T05:03:14+00:00",
+    "exported_at": "2025-08-03T09:40:58+00:00",
     "name": "Scum Wine",
     "author": "eggs@goover.de",
     "uuid": "52d86f8b-0878-4568-85dd-e24ab71748a1",
@@ -12,7 +12,8 @@
     "tags": [],
     "features": [],
     "docker_images": {
-        "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging"
+        "ghcr.io\/goover\/wine:staging": "ghcr.io\/goover\/wine:staging",
+        "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
     },
     "file_denylist": [],
     "startup": "wine .\/SCUM\/Binaries\/Win64\/SCUMServer.exe -log -port={{SERVER_PORT}} -MaxPlayers={{MAX_PLAYERS}} & SCUM_PID=$! ; tail -c0 -F .\/SCUM\/Saved\/Logs\/SCUM.log --pid=$SCUM_PID",
@@ -135,7 +136,7 @@
             "name": "[WINE] WINETRICKS_RUN",
             "description": "",
             "env_variable": "WINETRICKS_RUN",
-            "default_value": "vcrun2022",
+            "default_value": "win11 vcrun2022",
             "user_viewable": false,
             "user_editable": false,
             "rules": [],
