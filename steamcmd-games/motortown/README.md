@@ -12,9 +12,19 @@
   
 ## PLEASE NOTE !!!!!
 
-You **MUST** disable SteamGuard completely (also no email auth), because steamcmd does not push the requests to the mobile phone and email code cannot be entered in the Ptero Install console.
+If you have Steam Guard enabled you will need to provide the code via command line. To do so follow these steps:
 
-As soon as DepotDownloader supports private repos or the server is hosted in public, I will use DepotDownloader.
+Once the Pterodactyl install console shows
+```
+Enter the current code from your Steam Guard Mobile Authenticator app
+Two-factor code:
+```
+
+Then run the following commands: 
+1. `docker ps` (to get your container id) 
+2. `docker attach <container id>` (replace `<container id>` with the id from the previous command)
+
+Once you have attached to the container you can then type the code and press enter. You should then see `OK` and installation will continue.
 
 ## Proton or Wine?
 The repo contains a Proton and a Wine Egg.
