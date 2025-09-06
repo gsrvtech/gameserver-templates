@@ -3,7 +3,7 @@
 ## Author & Contributers
 | Name        | Github Profile  | Buy me a Coffee |
 | ------------- |-------------|-------------|
-|   gOOvER   | https://github.com/gOOvER | [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B351D0Q) |
+|   gOOvER   | https://github.com/gOOvER | [![donate](https://donate.goover.dev)](https://donate.goover.dev) |
 
 
 ## AthenaBot
