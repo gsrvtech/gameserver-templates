@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write   # allow the workflow to push back to the repo
+
 jobs:
   generate-metadata:
     runs-on: ubuntu-latest
@@ -25,11 +28,9 @@ jobs:
         run: node merge-json.js
 
       - name: Commit merged.json
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add merged.json
           git commit -m "Auto-generated merged.json with path and metadata" || echo "No changes to commit"
-          git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }} HEAD:main
+          git push
