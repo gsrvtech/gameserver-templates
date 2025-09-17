@@ -1,0 +1,206 @@
+{
+  "package.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "package-lock.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/sonsoftheforest/pterodactyl-egg-sons-of-the-forest.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/sonsoftheforest/pelican-egg-sons-of-the-forest.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/scum/egg-pelican-scum-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/reign-of-kings/egg-pterodactyl-reign-of-kings.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/reign-of-kings/egg-pelican-reign-of-kings.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/qanga/egg-pterodactyl-qanga.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/qanga/egg-pelican-qanga.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/nightingale/egg-pterodactyl-nightingale.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/nightingale/egg-pelican-nightingale.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/motortown/pterodactyl-egg-motor-town-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/motortown/pterodactyl-egg-motor-town-proton.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/motortown/pelican-egg-motor-town-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/motortown/pelican-egg-motor-town-proton.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/motortown/config/DedicatedServerConfig.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/memoriesofmars/egg-pterodactyl-memories-of-mars.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/memoriesofmars/egg-pelican-memories-of-mars.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/lotr-moria/egg-pterodactyl-lotr-return-to-moria-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/lotr-moria/egg-pelican-lotr-return-to-moria-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/foundry/pterodactyl-egg-foundry.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/foundry/pelican-egg-foundry.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/enshrouded/pterodactyl-egg-enshrouded.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/enshrouded/pelican-egg-enshrouded.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/enshrouded/enshrouded_server.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/enshrouded/config/enshrouded_server.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/eco/pterodactyl-egg-eco.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/eco/pelican-egg-eco.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/beastsofbermuda/egg-pterodactyl-beasts-of-bermuda.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/beastsofbermuda/egg-pelican-beasts-of-bermuda.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/astrocolony/pterodactyl-egg-astro-colony-linux.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/astrocolony/pelican-egg-astro-colony-linux.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/aska/egg-pterodactyl-aska-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/aska/egg-pelican-aska-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/aloft/pterodactyl-egg-aloft-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/aloft/pelican-egg-aloft-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/aloft/jexcatyl-egg-aloft-wine.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/abionicfactor/egg-pterodactyl-abiotic-factor.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/abionicfactor/egg-pelican-abiotic-factor.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/7d2d/pterodactyl-egg-7-days-to-die.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "steamcmd-games/7d2d/pelican-egg-7-days-to-die.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "games/Spellbreak/egg-pterodactyl-spellbreak-community-version.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "games/Spellbreak/egg-pelican-spellbreak-community-version.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "bots/drakobot/pterodactyl-drako-bot.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "bots/drakobot/pelican-drako-bot.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "bots/athenabot/egg-pterodactyl-athena-bot.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "bots/athenabot/egg-pelican-athena-bot.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "apps/wastebin/pterodactal-egg-wastebin.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "apps/wastebin/pelican-egg-wastebin.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "apps/bin/pterodactyl-egg-bin.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  },
+  "apps/bin/pelican-egg-bin.json": {
+    "name": "Wastebin",
+    "exported_at": "2025-01-23T07:21:09+00:00"
+  }
+}
