@@ -1,6 +1,4 @@
-// merge-json.js
 const fs = require('fs');
-const path = require('path');
 const glob = require('glob');
 
 const NAME = "Wastebin";
@@ -10,15 +8,10 @@ const output = {};
 const files = glob.sync('**/*.json', { ignore: ['node_modules/**', 'merged.json'] });
 
 files.forEach(file => {
-  try {
-    const content = fs.readFileSync(file, 'utf8');
-    const parsed = JSON.parse(content);
-    parsed.name = NAME;
-    parsed.exported_at = EXPORTED_AT;
-    output[file] = parsed;
-  } catch (err) {
-    console.error(`Fehler beim Lesen von ${file}:`, err.message);
-  }
+  output[file] = {
+    name: NAME,
+    exported_at: EXPORTED_AT
+  };
 });
 
 fs.writeFileSync('merged.json', JSON.stringify(output, null, 2));
