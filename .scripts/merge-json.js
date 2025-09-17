@@ -10,7 +10,8 @@ const files = glob.sync('**/*.json', {
     'node_modules/**',
     'merged.json',
     'package-lock.json',
-    'package.json'
+    'package.json',
+    './package.json'
   ]
 });
 
