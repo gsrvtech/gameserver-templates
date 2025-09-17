@@ -5,7 +5,14 @@ const NAME = "Wastebin";
 const EXPORTED_AT = "2025-01-23T07:21:09+00:00";
 
 const output = {};
-const files = glob.sync('**/*.json', { ignore: ['node_modules/**', 'merged.json', 'package-lock.json'] });
+const files = glob.sync('**/*.json', { 
+  ignore: [
+    'node_modules/**',
+    'merged.json',
+    'package-lock.json',
+    'package.json'
+  ]
+});
 
 files.forEach(file => {
   output[file] = {
