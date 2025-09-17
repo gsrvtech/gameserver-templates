@@ -1,0 +1,32 @@
+name: Merge JSON Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🛠 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: 📦 Install dependencies
+        run: npm install fs path glob
+
+      - name: 🧩 Merge JSON files with metadata
+        run: |
+          node <<EOF
+          const fs = require('fs');
+          const path = require('path');
+          const glob = require('glob');
+
+          const NAME = "Wastebin";
+          const EXPORTED_AT = "
