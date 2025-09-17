@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:   # 👈 allows manual trigger from the Actions tab
+  workflow_dispatch:   # manual trigger
 
 permissions:
-  contents: write   # allow the workflow to push back to the repo
+  contents: write
 
 jobs:
   generate-metadata:

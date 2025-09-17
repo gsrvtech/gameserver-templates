@@ -1,8 +1,18 @@
 const fs = require('fs');
 const glob = require('glob');
 
-const NAME = "Wastebin";
-const EXPORTED_AT = "2025-01-23T07:21:09+00:00";
+// Read "name" from package.json
+let NAME = "Unknown";
+try {
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  if (pkg.name) {
+    NAME = pkg.name;
+  }
+} catch (err) {
+  console.error("Could not read package.json:", err.message);
+}
+
+const EXPORTED_AT = new Date().toISOString(); // dynamic timestamp
 
 const output = {};
 const files = glob.sync('**/*.json', { 
