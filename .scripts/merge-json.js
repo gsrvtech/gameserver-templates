@@ -30,9 +30,9 @@ files.forEach(file => {
       exported_at: EXPORTED_AT
     };
   } catch (err) {
-    console.error(`Fehler beim Lesen von ${file}:`, err.message);
+    console.error(`Errors when reading ${file}:`, err.message);
   }
 });
 
 fs.writeFileSync('merged.json', JSON.stringify(output, null, 2));
-console.log(`merged.json mit ${Object.keys(output).length} Einträgen erstellt`);
+console.log(`merged.json with ${Object.keys(output).length} Entries created`);
