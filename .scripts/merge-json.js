@@ -4,11 +4,16 @@ const glob = require('glob');
 const EXPORTED_AT = new Date().toISOString();
 const output = {};
 
-// Alle JSON-Dateien finden (außer node_modules und merged.json selbst)
-const files = glob.sync('**/*.json', { 
+const files = glob.sync('**/*.json', {
   ignore: [
     'node_modules/**',
-    'merged.json'
+    '**/node_modules/**',
+    'merged.json',
+    '**/merged.json',
+    'package-lock.json',
+    '**/package-lock.json',
+    'package.json',
+    '**/package.json'
   ]
 });
 
@@ -16,22 +21,12 @@ files.forEach(file => {
   try {
     const content = JSON.parse(fs.readFileSync(file, 'utf8'));
 
-    // Name auslesen
-    const nameValue = content.name || "Unknown";
-
-    // Version rudimentär prüfen
-    let versionValue = "Unknown";
-    if (typeof content.version === "string") {
-      if (content.version.startsWith("PLCN")) {
-        versionValue = "pelican";
-      } else if (content.version.startsWith("PTDL")) {
-        versionValue = "pterodactyl";
-      }
-    }
+    const nameValue = typeof content.name === 'string' && content.name.trim()
+      ? content.name
+      : "Unknown";
 
     output[file] = {
       name: nameValue,
-      version: versionValue,
       exported_at: EXPORTED_AT
     };
   } catch (err) {
