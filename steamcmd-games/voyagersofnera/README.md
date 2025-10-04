@@ -8,7 +8,7 @@
 
 ## Game infos
 - Steam Shop Link: [https://store.steampowered.com/app/2686630/Voyagers_of_Nera/](https://store.steampowered.com/app/2686630/Voyagers_of_Nera/)
-- SteamDB Link: [https://steamdb.info/app/2686630/)](https://steamdb.info/app/2686630/
+- SteamDB Link: [https://steamdb.info/app/2686630/)](https://steamdb.info/app/2686630/)
   
 
 ## Server Ports
