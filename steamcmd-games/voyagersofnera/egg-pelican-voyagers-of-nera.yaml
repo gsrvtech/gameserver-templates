@@ -1,0 +1,326 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v2
+  update_url: null
+exported_at: '2025-10-04T07:32:55+00:00'
+name: 'Voyagers of Nera'
+author: eggs@goover.dev
+uuid: ebd9edb6-5d05-4459-956e-736e8c52ad46
+description: |-
+  Voyagers of Nera is a cooperative survival-crafting game set in a magical ocean world teeming with
+  lost spirits and monstrous creatures. Players—known as Echoes—sail to distant islands, build
+  customizable bases, and awaken ancient spirits who grant powerful abilities, teach crafting recipes,
+  and guide your journey. Play solo or with up to 10 friends as you explore underwater ruins, battle
+  the Deep, and restore balance to the world of Nera.
+tags:
+  - goover.dev
+features:
+  - steam_disk_space
+docker_images:
+  'ghcr.io/goover/wine:staging': 'ghcr.io/goover/wine:staging'
+file_denylist: {  }
+startup: 'xvfb-run --auto-servernum wine ./BoatGame/Binaries/Win64/BoatGameServer-Win64-Shipping.exe -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}} -MultiHome=0.0.0.0 -log -LoggingInShippingEnabled=true & VON_PID=$! ; tail -c0 -F ./BoatGame/Saved/Logs/BoatGame.log --pid=$VON_PID'
+config:
+  files:
+    BoatGame/Saved/PersistedData/CustomConfig/CustomHostServerUserSettings.ini:
+      parser: file
+      find:
+        HostServerDisplayName=: 'HostServerDisplayName={{server.environment.SRV_NAME}}'
+        HostServerPassword=: 'HostServerPassword={{server.environment.SRV_PW}}'
+        MaxPlayers=: 'MaxPlayers={{server.environment.MAX_PLAYERS}}'
+  startup:
+    done: 'Successfully created session '
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |
+      #!/bin/bash
+      # ------------------------------------------------
+      # Generic Installscript Template for Pelican Eggs (Linux)
+      # License: AGPLv3
+      # Author: gOOvER (https://discord.goover.dev)
+      # Donate: https://donate.goover.dev
+      # ------------------------------------------------
+
+      # ----------------------------
+      # Environment Setup
+      # ----------------------------
+      HOME=/mnt/server
+      export HOME
+
+      # Ensure /mnt is owned by root
+      chown -R root:root /mnt
+
+      GAME_NAME="Voyagers of Nera"   # <--- name of the game (internal placeholder)
+      CONFIG_FILE_NAME="CustomHostServerUserSettings.ini"      # <--- configurable config filename (internal)
+      CONFIG_DIR="$HOME/BoatGame/Saved/PersistedData/CustomConfig/" # <--- adjustable per game
+      CONFIG_URL="https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/voyagersofnera/config/$CONFIG_FILE_NAME"                  # <--- adjustable per game
+      STEAMCMD_DIR="$HOME/steamcmd"              # <--- SteamCMD directory
+
+      STEAM_USER="${STEAM_USER:-anonymous}"
+      STEAM_PASS="${STEAM_PASS:-}"
+      STEAM_AUTH="${STEAM_AUTH:-}"
+      DEPOTDOWNLOADER="${DEPOTDOWNLOADER:-0}"
+      : "${STEAM_APPID:?Environment variable STEAM_APPID must be set for $GAME_NAME}"  # mandatory
+
+      # ----------------------------
+      # Locale Setup to suppress warnings
+      # ----------------------------
+      export LANG=en_US.UTF-8
+      export LANGUAGE=en_US:en
+      export LC_ALL=en_US.UTF-8
+
+      # ----------------------------
+      # Logging Setup
+      # ----------------------------
+      SAFE_NAME="${GAME_NAME// /_}_install.log"
+      INSTALL_LOG="$HOME/$SAFE_NAME"
+
+      # Redirect all output to log while still mirroring to console
+      if command -v tee >/dev/null 2>&1; then
+          exec 3>&1
+          exec > >(tee -a "$INSTALL_LOG" >&3) 2> >(tee -a "$INSTALL_LOG" >&2)
+      else
+          exec > "$INSTALL_LOG" 2>&1
+      fi
+
+      # ----------------------------
+      # Colors
+      # ----------------------------
+      RED=$(tput setaf 1)
+      GREEN=$(tput setaf 2)
+      YELLOW=$(tput setaf 3)
+      BLUE=$(tput setaf 4)
+      CYAN=$(tput setaf 6)
+      NC=$(tput sgr0)
+
+      LINE="${BLUE}-------------------------------------------------${NC}"
+
+      # ----------------------------
+      # Logging Functions
+      # ----------------------------
+      log_info()    { echo "${BLUE}[INFO]${NC} $*"; }
+      log_warn()    { echo "${YELLOW}[WARN]${NC} $*"; }
+      log_error()   { echo "${RED}[ERROR]${NC} $*" >&2; }
+      log_success() { echo "${GREEN}[ OK ]${NC} $*"; }
+
+      # ----------------------------
+      # Safe command execution
+      # ----------------------------
+      run_or_fail() {
+          local desc="$1"; shift
+          if "$@"; then
+              log_success "$desc"
+          else
+              log_error "$desc failed!"
+              exit 1
+          fi
+      }
+
+      # ----------------------------
+      # Start Script Output
+      # ----------------------------
+      clear
+      log_info "$LINE"
+      log_info "${YELLOW}$GAME_NAME Installscript${NC}"
+      log_info "$LINE"
+
+      if [ "$STEAM_USER" = "anonymous" ]; then
+          log_warn "Using anonymous Steam login for $GAME_NAME."
+      else
+          log_info "Using Steam user: $STEAM_USER for $GAME_NAME."
+      fi
+
+      # ----------------------------
+      # Game Installation via DepotDownloader
+      # ----------------------------
+      if [ "$DEPOTDOWNLOADER" = "1" ]; then
+          log_info "Installing $GAME_NAME via DepotDownloader (Linux)..."
+          mkdir -p "$HOME/depotdownloader"
+          cd "$HOME/depotdownloader"
+
+          if [ ! -f DepotDownloader ]; then
+              log_info "Fetching DepotDownloader Linux binary..."
+              run_or_fail "Download DepotDownloader" curl -sSL -o DepotDownloader https://github.com/SteamRE/DepotDownloader/releases/latest/download/DepotDownloader-Linux-x64
+              run_or_fail "Make DepotDownloader executable" chmod +x DepotDownloader
+          fi
+
+          log_info "Running DepotDownloader..."
+          ./DepotDownloader \
+              -app $STEAM_APPID \
+              -dir $HOME \
+              $( [[ -n "${STEAM_BETAID:-}" ]] && printf %s "-beta $STEAM_BETAID" ) \
+              $( [[ -n "${STEAM_BETAPASS:-}" ]] && printf %s "-betapassword $STEAM_BETAPASS" ) \
+              ${INSTALL_FLAGS:-} \
+              -username $STEAM_USER \
+              -password $STEAM_PASS \
+              ${STEAM_AUTH:+-remember-password $STEAM_AUTH} || \
+              log_warn "DepotDownloader returned non-zero exit code, but installation may still be OK."
+          log_success "DepotDownloader installation finished."
+      fi
+
+      # ----------------------------
+      # Game Installation via SteamCMD
+      # ----------------------------
+      if [ "$DEPOTDOWNLOADER" != "1" ]; then
+          log_info "Installing $GAME_NAME via SteamCMD..."
+          mkdir -p "$STEAMCMD_DIR" "$HOME/steamapps"
+
+          run_or_fail "Download SteamCMD" curl -sSL -o /tmp/steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+          run_or_fail "Extract SteamCMD" tar -xzvf /tmp/steamcmd.tar.gz -C "$STEAMCMD_DIR"
+
+          cd "$STEAMCMD_DIR"
+
+          log_info "Running SteamCMD..."
+          ./steamcmd.sh +force_install_dir $HOME \
+              +login $STEAM_USER $STEAM_PASS $STEAM_AUTH \
+              $( [[ "${WINDOWS_INSTALL:-0}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) \
+              +app_update $STEAM_APPID \
+              +app_update 1007 \
+              $( [[ -n "${STEAM_BETAID:-}" ]] && printf %s "-beta $STEAM_BETAID" ) \
+              $( [[ -n "${STEAM_BETAPASS:-}" ]] && printf %s "-betapassword $STEAM_BETAPASS" ) \
+              ${INSTALL_FLAGS:-} validate +quit || \
+              log_warn "SteamCMD returned a non-zero exit code, but installation may still be OK."
+          log_success "SteamCMD installation finished."
+      fi
+
+      # ----------------------------
+      # Steam Libraries Setup
+      # ----------------------------
+      log_info "Setting up Steam libraries..."
+      mkdir -p "$HOME/.steam/sdk32" "$HOME/.steam/sdk64"
+      cp -v "$STEAMCMD_DIR/linux32/steamclient.so" "$HOME/.steam/sdk32/steamclient.so" || true
+      cp -v "$STEAMCMD_DIR/linux64/steamclient.so" "$HOME/.steam/sdk64/steamclient.so" || true
+      log_success "Steam libraries setup complete."
+
+      # ----------------------------
+      # Game-specific Hooks
+      # ----------------------------
+      log_info "Executing $GAME_NAME game-specific hooks..."
+      # <--- add game-specific commands here
+
+      # ----------------------------
+      # Config Setup
+      # ----------------------------
+      if [ -f "$CONFIG_DIR/$CONFIG_FILE_NAME" ]; then
+          log_success "$GAME_NAME $CONFIG_FILE_NAME found."
+      else
+          log_warn "$GAME_NAME $CONFIG_FILE_NAME not found. Fetching default..."
+          mkdir -p "$CONFIG_DIR"
+          run_or_fail "Download default $CONFIG_FILE_NAME" curl -sSL -o "$CONFIG_DIR/$CONFIG_FILE_NAME" https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/reown/config/$CONFIG_FILE_NAME
+      fi
+
+      # ----------------------------
+      # Done
+      # ----------------------------
+      log_info "$LINE"
+      log_success "$GAME_NAME installation completed successfully."
+      log_info "$LINE"
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+  -
+    sort: 6
+    name: '[STEAM] AutoUpdate'
+    description: ''
+    env_variable: AUTO_UPDATE
+    default_value: 1
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - boolean
+  -
+    sort: 4
+    name: '[SERVER] Max Players'
+    description: ''
+    env_variable: MAX_PLAYERS
+    default_value: ''
+    user_viewable: false
+    user_editable: false
+    rules: {  }
+  -
+    sort: 1
+    name: '[SERVER] QueryPort'
+    description: ''
+    env_variable: QUERY_PORT
+    default_value: ''
+    user_viewable: true
+    user_editable: false
+    rules:
+      - required
+      - string
+  -
+    sort: 2
+    name: '[SERVER] Sever Name'
+    description: ''
+    env_variable: SRV_NAME
+    default_value: ''
+    user_viewable: false
+    user_editable: false
+    rules: {  }
+  -
+    sort: 3
+    name: '[SERVER] Server Password'
+    description: ''
+    env_variable: SRV_PW
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - nullable
+  -
+    sort: 5
+    name: '[STEAM] STEAM_APPID'
+    description: ''
+    env_variable: STEAM_APPID
+    default_value: 3937860
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+  -
+    sort: 7
+    name: '[STEAM] WINDOWS_INSTALL'
+    description: ''
+    env_variable: WINDOWS_INSTALL
+    default_value: 1
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - boolean
+  -
+    sort: 10
+    name: '[WINE] WINEARCH'
+    description: ''
+    env_variable: WINEARCH
+    default_value: win64
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
+  -
+    sort: 8
+    name: '[WINE] WINEDEBUG'
+    description: ''
+    env_variable: WINEDEBUG
+    default_value: '-all'
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
+  -
+    sort: 9
+    name: '[WINE] WINETRICKS_RUN'
+    description: ''
+    env_variable: WINETRICKS_RUN
+    default_value: 'win11 vcrun2022'
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
