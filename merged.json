@@ -1,202 +1,206 @@
 {
+  "steamcmd-games/voyagersofnera/egg-pelican-voyagers-of-nera.json": {
+    "name": "Voyagers of Nera",
+    "exported_at": "2025-10-04T07:33:56.049Z"
+  },
   "steamcmd-games/spaceengineers/torch/egg-pelican-space-engineers--torch-server.json": {
     "name": "Space Engineers - Torch Server",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/sonsoftheforest/pterodactyl-egg-sons-of-the-forest.json": {
     "name": "Sons Of The Forest",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/sonsoftheforest/pelican-egg-sons-of-the-forest.json": {
     "name": "Sons Of The Forest",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/scum/egg-pelican-scum-wine.json": {
     "name": "Scum Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/reign-of-kings/egg-pterodactyl-reign-of-kings.json": {
     "name": "Reign of Kings",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/reign-of-kings/egg-pelican-reign-of-kings.json": {
     "name": "Reign of Kings",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/qanga/egg-pterodactyl-qanga.json": {
     "name": "QANGA",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/qanga/egg-pelican-qanga.json": {
     "name": "QANGA",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/nightingale/egg-pterodactyl-nightingale.json": {
     "name": "Nightingale",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/nightingale/egg-pelican-nightingale.json": {
     "name": "Nightingale",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/motortown/pterodactyl-egg-motor-town-wine.json": {
     "name": "MotorTown - Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/motortown/pterodactyl-egg-motor-town-proton.json": {
     "name": "MotorTown - Proton",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/motortown/pelican-egg-motor-town-wine.json": {
     "name": "MotorTown - Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/motortown/pelican-egg-motor-town-proton.json": {
     "name": "MotorTown - Proton",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/motortown/config/DedicatedServerConfig.json": {
     "name": "Unknown",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/memoriesofmars/egg-pterodactyl-memories-of-mars.json": {
     "name": "Memories of Mars",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/memoriesofmars/egg-pelican-memories-of-mars.json": {
     "name": "Memories of Mars",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/lotr-moria/egg-pterodactyl-lotr-return-to-moria-wine.json": {
     "name": "The Lord of the Rings: Return to Moria - Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/lotr-moria/egg-pelican-lotr-return-to-moria-wine.json": {
     "name": "The Lord of the Rings: Return to Moria - Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/foundry/pterodactyl-egg-foundry.json": {
     "name": "Foundry",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/foundry/pelican-egg-foundry.json": {
     "name": "Foundry",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/enshrouded/pterodactyl-egg-enshrouded.json": {
     "name": "Enshrouded",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/enshrouded/pelican-egg-enshrouded.json": {
     "name": "Enshrouded",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/enshrouded/enshrouded_server.json": {
     "name": "Enshrouded Server",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/enshrouded/config/enshrouded_server.json": {
     "name": "Enshrouded Server",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/eco/pterodactyl-egg-eco.json": {
     "name": "Eco",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/eco/pelican-egg-eco.json": {
     "name": "Eco",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/beastsofbermuda/egg-pterodactyl-beasts-of-bermuda.json": {
     "name": "Beasts of Bermuda",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/beastsofbermuda/egg-pelican-beasts-of-bermuda.json": {
     "name": "Beasts of Bermuda",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/astrocolony/pterodactyl-egg-astro-colony-linux.json": {
     "name": "Astro Colony Linux",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/astrocolony/pelican-egg-astro-colony-linux.json": {
     "name": "Astro Colony Linux",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/aska/egg-pterodactyl-aska-wine.json": {
     "name": "Aska Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/aska/egg-pelican-aska-wine.json": {
     "name": "Aska Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/aloft/pterodactyl-egg-aloft-wine.json": {
     "name": "Aloft Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/aloft/pelican-egg-aloft-wine.json": {
     "name": "Aloft Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/aloft/jexcatyl-egg-aloft-wine.json": {
     "name": "Aloft Wine",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/abionicfactor/egg-pterodactyl-abiotic-factor.json": {
     "name": "Abiotic Factor",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/abionicfactor/egg-pelican-abiotic-factor.json": {
     "name": "Abiotic Factor",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/7d2d/pterodactyl-egg-7-days-to-die.json": {
     "name": "7 Days To Die",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "steamcmd-games/7d2d/pelican-egg-7-days-to-die.json": {
     "name": "7 Days To Die",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "games/Spellbreak/egg-pterodactyl-spellbreak-community-version.json": {
     "name": "Spellbreak- Community Version",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "games/Spellbreak/egg-pelican-spellbreak-community-version.json": {
     "name": "Spellbreak- Community Version",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "bots/drakobot/pterodactyl-drako-bot.json": {
     "name": "Drako Bot",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "bots/drakobot/pelican-drako-bot.json": {
     "name": "Drako Bot",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "bots/athenabot/egg-pterodactyl-athena-bot.json": {
     "name": "Athena Bot",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "bots/athenabot/egg-pelican-athena-bot.json": {
     "name": "Athena Bot",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "apps/wastebin/pterodactal-egg-wastebin.json": {
     "name": "Wastebin",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "apps/wastebin/pelican-egg-wastebin.json": {
     "name": "Wastebin",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "apps/bin/pterodactyl-egg-bin.json": {
     "name": "BIN",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   },
   "apps/bin/pelican-egg-bin.json": {
     "name": "BIN",
-    "exported_at": "2025-10-04T07:19:54.169Z"
+    "exported_at": "2025-10-04T07:33:56.049Z"
   }
 }
