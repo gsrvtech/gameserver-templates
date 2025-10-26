@@ -1,10 +1,10 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PLCN_v2",
+        "version": "PLCN_v3",
         "update_url": null
     },
-    "exported_at": "2025-10-04T07:32:25+00:00",
+    "exported_at": "2025-10-26T06:04:19+00:00",
     "name": "Voyagers of Nera",
     "author": "eggs@goover.dev",
     "uuid": "ebd9edb6-5d05-4459-956e-736e8c52ad46",
@@ -19,9 +19,11 @@
         "ghcr.io/goover/wine:staging": "ghcr.io/goover/wine:staging"
     },
     "file_denylist": [],
-    "startup": "xvfb-run --auto-servernum wine ./BoatGame/Binaries/Win64/BoatGameServer-Win64-Shipping.exe -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}} -MultiHome=0.0.0.0 -log -LoggingInShippingEnabled=true & VON_PID=$! ; tail -c0 -F ./BoatGame/Saved/Logs/BoatGame.log --pid=$VON_PID",
+    "startup_commands": {
+        "Default": "xvfb-run --auto-servernum wine ./BoatGame/Binaries/Win64/BoatGameServer-Win64-Shipping.exe -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}} -MultiHome=0.0.0.0 -log -LoggingInShippingEnabled=true & VON_PID=$! ; tail -c0 -F ./BoatGame/Saved/Logs/BoatGame.log --pid=$VON_PID"
+    },
     "config": {
-        "files": "{\n    \"BoatGame/Saved/PersistedData/CustomConfig/CustomHostServerUserSettings.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"HostServerDisplayName=\": \"HostServerDisplayName={{server.environment.SRV_NAME}}\",\n            \"HostServerPassword=\": \"HostServerPassword={{server.environment.SRV_PW}}\",\n            \"MaxPlayers=\": \"MaxPlayers={{server.environment.MAX_PLAYERS}}\"\n        }\n    }\n}",
+        "files": "{\n    \"BoatGame\\/Saved\\/PersistedData\\/CustomConfig\\/CustomHostServerUserSettings.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"HostServerDisplayName=\": \"HostServerDisplayName={{server.environment.SRV_NAME}}\",\n            \"HostServerPassword=\": \"HostServerPassword={{server.environment.SRV_PW}}\",\n            \"MaxPlayers=\": \"MaxPlayers={{server.environment.MAX_PLAYERS}}\"\n        }\n    }\n}",
         "startup": "{\n    \"done\": \"Successfully created session \"\n}",
         "logs": "{}",
         "stop": "^C"
@@ -35,7 +37,7 @@
     },
     "variables": [
         {
-            "sort": 6,
+            "sort": 5,
             "name": "[STEAM] AutoUpdate",
             "description": "",
             "env_variable": "AUTO_UPDATE",
@@ -53,9 +55,12 @@
             "description": "",
             "env_variable": "MAX_PLAYERS",
             "default_value": "",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": []
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "numeric"
+            ]
         },
         {
             "sort": 1,
@@ -76,9 +81,12 @@
             "description": "",
             "env_variable": "SRV_NAME",
             "default_value": "",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": []
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string"
+            ]
         },
         {
             "sort": 3,
@@ -93,7 +101,7 @@
             ]
         },
         {
-            "sort": 5,
+            "sort": 6,
             "name": "[STEAM] STEAM_APPID",
             "description": "",
             "env_variable": "STEAM_APPID",
