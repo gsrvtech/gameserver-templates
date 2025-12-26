@@ -43,13 +43,8 @@ export LC_ALL=en_US.UTF-8
 SAFE_NAME="${GAME_NAME// /_}_install.log"
 INSTALL_LOG="$HOME/$SAFE_NAME"
 
-# Redirect all output to log while still mirroring to console
-if command -v tee >/dev/null 2>&1; then
-    exec 3>&1 4>&2
-    exec > >(tee -a "$INSTALL_LOG" >&3) 2> >(tee -a "$INSTALL_LOG" >&2)
-else
-    exec > "$INSTALL_LOG" 2>&1
-fi
+# Initialize log file
+: > "$INSTALL_LOG"
 
 # ----------------------------
 # Colors
@@ -66,10 +61,22 @@ LINE="${BLUE}-------------------------------------------------${NC}"
 # ----------------------------
 # Logging Functions
 # ----------------------------
-log_info()    { echo "$(date '+%Y-%m-%d %H:%M:%S') ${BLUE}[INFO]${NC} $*"; }
-log_warn()    { echo "$(date '+%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${NC} $*"; }
-log_error()   { echo "$(date '+%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${NC} $*" >&2; }
-log_success() { echo "$(date '+%Y-%m-%d %H:%M:%S') ${GREEN}[ OK ]${NC} $*"; }
+log_info()    { 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') ${BLUE}[INFO]${NC} $*"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] $*" >> "$INSTALL_LOG"
+}
+log_warn()    { 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${NC} $*"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+}
+log_error()   { 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${NC} $*" >&2
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+}
+log_success() { 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') ${GREEN}[ OK ]${NC} $*"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [ OK ] $*" >> "$INSTALL_LOG"
+}
 
 # ----------------------------
 # Validation Functions
@@ -128,7 +135,7 @@ validate_path() {
     fi
     
     # Ensure path starts with $HOME
-    if [[ ! "$path" =~ ^$HOME ]]; then
+    if [[ ! "$path" =~ ^"$HOME" ]]; then
         log_error "Path $name must start with HOME directory: $path"
         exit 1
     fi
@@ -158,7 +165,7 @@ check_dependencies() {
     done
     
     # Try to install missing dependencies automatically
-    if [ ${#missing[@]} -gt 0 ] || [ "$curl_https_support" = "false" ]; then
+    if [ "${#missing[@]}" -gt 0 ] || [ "$curl_https_support" = "false" ]; then
         log_warn "Attempting to install missing dependencies..."
         
         # Alpine Linux
@@ -200,7 +207,7 @@ check_dependencies() {
         fi
     done
     
-    if [ ${#missing[@]} -gt 0 ]; then
+    if [ "${#missing[@]}" -gt 0 ]; then
         log_error "Still missing dependencies after installation: ${missing[*]}"
         exit 1
     fi
@@ -218,7 +225,7 @@ check_dependencies() {
     fi
     
     local available_memory
-    available_memory=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 0)
+    available_memory="$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 0)"
     if [ "$available_memory" -lt 1024 ]; then
         log_warn "Less than 1GB available memory - installation may fail"
     fi
@@ -246,48 +253,53 @@ download_with_retry() {
     local curl_supports_https=true
     if ! curl --version 2>/dev/null | grep -q "https"; then
         curl_supports_https=false
-        log_warn "HTTPS not supported by curl, will use HTTP if available"
-    fi
-    
-    # Convert HTTPS to HTTP if HTTPS is not supported
-    local download_url="$url"
-    if [[ "$url" =~ ^https:// ]] && [[ "$curl_supports_https" == "false" ]]; then
-        download_url="${url/https:/http:}"
-        log_warn "Converting HTTPS URL to HTTP: $download_url"
+        log_warn "HTTPS not supported by curl, will try HTTP fallback"
     fi
     
     for i in $(seq 1 "$retries"); do
         log_info "Downloading $desc (attempt $i/$retries)..."
         
-        # Try with original URL first, then HTTP fallback if needed
-        local urls_to_try=("$url")
-        if [[ "$url" =~ ^https:// ]] && [[ "$url" != "$download_url" ]]; then
-            urls_to_try=("$url" "$download_url")
+        # Determine which URLs to try based on HTTPS support
+        local urls_to_try=()
+        if [[ "$url" =~ ^https:// ]]; then
+            if [[ "$curl_supports_https" == "true" ]]; then
+                # Try HTTPS first, then HTTP as fallback
+                urls_to_try=("$url" "${url/https:/http:}")
+            else
+                # Only try HTTP if HTTPS is not supported
+                urls_to_try=("${url/https:/http:}")
+                log_warn "Using HTTP instead of HTTPS: ${url/https:/http:}"
+            fi
+        else
+            # URL is already HTTP
+            urls_to_try=("$url")
         fi
         
         local success=false
+        local last_error=""
+        
         for try_url in "${urls_to_try[@]}"; do
             # Use appropriate curl options based on protocol
             local curl_opts=(
                 -fsSL
                 --connect-timeout 30
                 --max-time 300
-                --retry 2
+                --retry 1
                 --retry-delay 1
-                --retry-max-time 60
                 --location
                 -H "User-Agent: GameServer-Installer/1.0"
                 -o "$output"
             )
             
-            # Add protocol and TLS options only if supported
-            if [[ "$try_url" =~ ^https:// ]] && [[ "$curl_supports_https" == "true" ]]; then
-                curl_opts+=(--proto '=https,=http' --tlsv1.2)
+            # Add protocol restrictions based on URL and support
+            if [[ "$try_url" =~ ^https:// ]]; then
+                curl_opts+=(--proto '=https' --tlsv1.2)
             else
                 curl_opts+=(--proto '=http')
             fi
             
-            if curl "${curl_opts[@]}" "$try_url"; then
+            last_error=$(curl "${curl_opts[@]}" "$try_url" 2>&1)
+            if [ "$?" -eq 0 ]; then
                 success=true
                 break
             fi
@@ -297,7 +309,7 @@ download_with_retry() {
             # Verify download
             if [[ -f "$output" ]]; then
                 local file_size
-                file_size=$(stat -f%z "$output" 2>/dev/null || stat -c%s "$output" 2>/dev/null || echo 0)
+                file_size="$(stat -f%z "$output" 2>/dev/null || stat -c%s "$output" 2>/dev/null || echo 0)"
                 
                 if [[ "$file_size" -gt 0 ]]; then
                     if [[ -n "$expected_size" ]] && [[ "$file_size" -lt "$expected_size" ]]; then
@@ -309,6 +321,10 @@ download_with_retry() {
                     log_error "Downloaded file is empty"
                     rm -f "$output"
                 fi
+            fi
+        else
+            if [ -n "$last_error" ]; then
+                log_warn "Download failed: $last_error"
             fi
         fi
         
@@ -343,7 +359,11 @@ run_or_fail() {
 # ----------------------------
 cleanup() {
     local exit_code=$?
-    log_info "Cleaning up temporary files..."
+    
+    # Only log cleanup on errors
+    if [ "$exit_code" -ne 0 ]; then
+        log_info "Cleaning up temporary files..."
+    fi
     
     # Remove temporary files
     rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log
@@ -355,18 +375,12 @@ cleanup() {
     # Clear sensitive variables
     unset STEAM_PASS STEAM_AUTH
     
-    # Restore original file descriptors if they were changed
-    if [ -n "${original_stdout:-}" ]; then
-        exec 1>&3 2>&4
-        exec 3>&- 4>&-
-    fi
-    
-    if [ $exit_code -ne 0 ]; then
+    if [ "$exit_code" -ne 0 ]; then
         log_error "Script exited with error code $exit_code"
         log_info "Check the installation log at: $INSTALL_LOG"
     fi
     
-    exit $exit_code
+    exit "$exit_code"
 }
 
 trap cleanup EXIT
@@ -399,19 +413,19 @@ run_steam_command() {
         "${cmd_array[@]}" || exit_code=$?
     fi
     
-    case $exit_code in
+    case "$exit_code" in
         0) log_success "$desc completed successfully" ;;
         2) log_error "Steam login failed - check credentials" ;;
         5) log_error "App not found or access denied for AppID: $STEAM_APPID" ;;
         7) log_error "Steam is updating, please try again later" ;;
         *) 
-            if [ $exit_code -ne 0 ]; then
+            if [ "$exit_code" -ne 0 ]; then
                 log_warn "$desc exited with code $exit_code, but installation may still be OK"
             fi
             ;;
     esac
     
-    return $exit_code
+    return "$exit_code"
 }
 
 # ----------------------------
@@ -643,15 +657,15 @@ fi
 # Check if basic Steam files exist
 steam_files_found=0
 if [ -f "$HOME/.steam/sdk32/steamclient.so" ]; then
-    ((steam_files_found++))
+    steam_files_found=$((steam_files_found + 1))
 fi
 if [ -f "$HOME/.steam/sdk64/steamclient.so" ]; then
-    ((steam_files_found++))
+    steam_files_found=$((steam_files_found + 1))
 fi
 
-if [ $steam_files_found -eq 0 ]; then
+if [ "$steam_files_found" -eq 0 ]; then
     log_warn "No Steam library files found - installation may be incomplete"
-elif [ $steam_files_found -eq 1 ]; then
+elif [ "$steam_files_found" -eq 1 ]; then
     log_warn "Only one Steam library found - some games may require both 32-bit and 64-bit libraries"
 else
     log_success "Steam libraries installed correctly"
@@ -660,7 +674,7 @@ fi
 # Check if game files were downloaded (safe version)
 game_files=0
 if command -v find >/dev/null 2>&1; then
-    game_files=$(find "$HOME" -maxdepth 3 -type f \( -name "*.exe" -o -name "*.so" -o -name "*.bin" \) 2>/dev/null | wc -l || echo 0)
+    game_files="$(find "$HOME" -maxdepth 3 -type f \( -name "*.exe" -o -name "*.so" -o -name "*.bin" \) 2>/dev/null | wc -l || echo 0)"
 fi
 
 if [ "$game_files" -gt 0 ]; then
@@ -684,6 +698,12 @@ else
 fi
 
 log_success "Installation verification completed"
+
+# ----------------------------
+# Cleanup
+# ----------------------------
+log_info "Cleaning up temporary files..."
+rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log
 
 # ----------------------------
 # Done
