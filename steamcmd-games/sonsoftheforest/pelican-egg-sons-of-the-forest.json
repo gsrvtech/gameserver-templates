@@ -1,94 +1,83 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PLCN_v1",
-        "update_url": "https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/main\/steamcmd-games\/sonsoftheforrest\/pelican-egg-sons-of-the-forest.json"
+        "version": "PLCN_v3",
+        "update_url": "https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/sonsoftheforrest/pelican-egg-sons-of-the-forest.json"
     },
-    "exported_at": "2024-11-24T11:21:36+00:00",
+    "exported_at": "2025-12-26T19:23:53+00:00",
     "name": "Sons Of The Forest",
     "author": "eggs@goover.dev",
     "uuid": "7ee5f7cd-89f5-4115-8685-5029bd97801f",
     "description": "Sons of the Forest is a horror survival game and sequel to The Forest by Endnight Games, Ltd.. Sent to find a missing billionaire on a remote island, you find yourself in a cannibal-infested hellscape. Craft, build, and struggle to survive, alone or with friends.",
+    "image": "data:image/webp;base64,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",
+    "tags": [],
     "features": [
         "steam_disk_space"
     ],
     "docker_images": {
-        "ghcr.io\/goover\/wine:stable": "ghcr.io\/goover\/wine:stable"
+        "ghcr.io/goover/wine:staging": "ghcr.io/goover/wine:staging"
     },
     "file_denylist": [],
-    "startup": "wine .\/SonsOfTheForestDS.exe -nographics -batchmode -userdatapath \"\/home\/container\/serverconfig\" -dedicatedserver.IpAddress \"0.0.0.0\" -dedicatedserver.GamePort \"{{SERVER_PORT}}\" -dedicatedserver.QueryPort \"{{QUERY_PORT}}\" -dedicatedserver.BlobSyncPort \"{{BLOBSYNC_PORT}}\" -dedicatedserver.ServerName \"{{SRV_NAME}}\" -dedicatedserver.MaxPlayers \"{{MAX_PLAYERS}}\" -dedicatedserver.Password \"{{SRV_PW}}\" -dedicatedserver.GameMode \"{{GAME_MODE}}\" -dedicatedserver.SkipNetworkAccessibilityTest \"{{SKIP_TESTS}}\" -dedicatedserver.LogFilesEnabled \"true\" -dedicatedserver.TimestampLogFilenames \"true\"",
+    "startup_commands": {
+        "Default": "wine ./SonsOfTheForestDS.exe -nographics -batchmode -userdatapath \"/home/container/serverconfig\" -dedicatedserver.IpAddress \"0.0.0.0\" -dedicatedserver.GamePort \"{{SERVER_PORT}}\" -dedicatedserver.QueryPort \"{{QUERY_PORT}}\" -dedicatedserver.BlobSyncPort \"{{BLOBSYNC_PORT}}\" -dedicatedserver.ServerName \"{{SRV_NAME}}\" -dedicatedserver.MaxPlayers \"{{MAX_PLAYERS}}\" -dedicatedserver.Password \"{{SRV_PW}}\" -dedicatedserver.GameMode \"{{GAME_MODE}}\" -dedicatedserver.SkipNetworkAccessibilityTest \"{{SKIP_TESTS}}\" -dedicatedserver.LogFilesEnabled \"true\" -dedicatedserver.TimestampLogFilenames \"true\""
+    },
     "config": {
-        "files": "{\n    \"serverconfig\/dedicatedserver.cfg\": {\n        \"parser\": \"json\",\n        \"find\": {\n            \"Port\": \"{{server.allocations.default.port}}\",\n            \"SlotCount\": \"{{server.environment.MAX_PLAYERS}}\",\n            \"Password\": \"{{server.environment.SRV_PW}}\"\n        }\n    }\n}",
-        "startup": "{\r\n    \"done\": \"#DSL Dedicated server loaded.\"\r\n}",
+        "files": "{\n    \"serverconfig\\/dedicatedserver.cfg\": {\n        \"parser\": \"json\",\n        \"find\": {\n            \"Port\": \"{{server.allocations.default.port}}\",\n            \"SlotCount\": \"{{server.environment.MAX_PLAYERS}}\",\n            \"Password\": \"{{server.environment.SRV_PW}}\"\n        }\n    }\n}",
+        "startup": "{\n    \"done\": \"#DSL Dedicated server loaded.\"\n}",
         "logs": "{}",
         "stop": "^C"
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Sons of the Forrest Installscript${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}download and install steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n## just in case someone removed the defaults.\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"steam user is not set.\\n\"\r\n    echo -e \"Using anonymous user.\\n\"\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nelse\r\n    echo -e \"user set to ${STEAM_USER}\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install game using steamcmd\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}install game using steamcmd. please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ \"${WINDOWS_INSTALL}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s \"-beta ${SRCDS_BETAID}\" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s \"-betapassword ${SRCDS_BETAPASS}\" ) ${INSTALL_FLAGS} validate +quit ## other flags may be needed depending on install. looking at you cs 1.6\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\n\r\n## add below your custom commands if needed\r\n\r\nmkdir -p \/mnt\/server\/serverconfig\r\nFILE=$HOME\/serverconfig\/dedicatedserver.cfg\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}dedicatedserver.cfg found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No dedicatedserver.cfg found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  cd $HOME\/serverconfig\/\r\n  curl -sSL -o dedicatedserver.cfg https:\/\/raw.githubusercontent.com\/gOOvER\/GameServerConfigs\/main\/sotf\/dedicatedserver.cfg\r\n  echo -e \"${GREEN}..done..${NC}\"\r\nfi\r\n\r\nFILE=$HOME\/serverconfig\/ownerswhitelist.txt\r\nif [ -f \"$FILE\" ]; then\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${GREEN}ownerswhitelist.txt found.${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\nelse  \r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  echo -e \"${RED}No ownerswhitelist.txt found. Downloading default...${NC}\"\r\n  echo -e \"${BLUE}-------------------------------------------------${NC}\"\r\n  cd $HOME\/serverconfig\/\r\n  curl -sSL -o ownerswhitelist.txt https:\/\/raw.githubusercontent.com\/gOOvER\/GameServerConfigs\/main\/sotf\/ownerswhitelist.txt\r\n  echo -e \"${GREEN}..done..${NC}\"\r\nfi\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${RED}deleting old wine dirs... please wait...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\nif [ ! -d \"\/mnt\/server\/.wine\" ]; then\r\n    rm -fR \/mnt\/server\/.wine\r\n    rm -fR \/mnt\/server\/.config\r\n    rm -fR \/mnt\/server\/.cache\r\n    rm -fR \/mnt\/server\/.local\r\n    rm -fR \/mnt\/server\/appcache\r\nfi\r\necho -e \"${GREEN}..done..${NC}\"\r\n\r\n## install end\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${GREEN}Installation completed...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"",
-            "container": "ghcr.io\/goover\/installers:debian",
+            "script": "#!/bin/bash\r\n# ------------------------------------------------\r\n# Generic Installscript Template for Pelican Eggs (Linux)\r\n# License: AGPLv3\r\n# Author: gOOvER (https://discord.goover.dev)\r\n# Donate: https://donate.goover.dev\r\n# ------------------------------------------------\r\n\r\nset -euo pipefail  # Strict error handling\r\n\r\n# ----------------------------\r\n# Environment Setup\r\n# ----------------------------\r\nHOME=/mnt/server\r\nexport HOME\r\n\r\n# Ensure /mnt is owned by root\r\nchown -R root:root /mnt\r\n\r\nGAME_NAME=\"Sons of the Forrest\"   # <--- name of the game (internal placeholder)\r\nCONFIG_INIT=0\r\nCONFIG_FILE_NAME=\"dedicatedserver.cfg\"      # <--- configurable config filename (internal)\r\nCONFIG_DIR=\"$HOME/serverconfig\" # <--- adjustable per game\r\nCONFIG_URL=\"https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/sonsoftheforest/config/dedicatedserver.cfg\"                  # <--- adjustable per game\r\nSTEAMCMD_DIR=\"$HOME/steamcmd\"              # <--- SteamCMD directory\r\n\r\nSTEAM_USER=\"${STEAM_USER:-anonymous}\"\r\nSTEAM_PASS=\"${STEAM_PASS:-}\"\r\nSTEAM_AUTH=\"${STEAM_AUTH:-}\"\r\nDEPOTDOWNLOADER=\"${DEPOTDOWNLOADER:-0}\"\r\n: \"${STEAM_APPID:?Environment variable STEAM_APPID must be set for $GAME_NAME}\"  # mandatory\r\n\r\n# ----------------------------\r\n# Locale Setup to suppress warnings\r\n# ----------------------------\r\nexport LANG=en_US.UTF-8\r\nexport LANGUAGE=en_US:en\r\nexport LC_ALL=en_US.UTF-8\r\n\r\n# ----------------------------\r\n# Logging Setup\r\n# ----------------------------\r\nSAFE_NAME=\"${GAME_NAME// /_}_install.log\"\r\nINSTALL_LOG=\"$HOME/$SAFE_NAME\"\r\n\r\n# Redirect all output to log while still mirroring to console\r\nif command -v tee >/dev/null 2>&1; then\r\n    exec 3>&1 4>&2\r\n    exec > >(tee -a \"$INSTALL_LOG\" >&3) 2> >(tee -a \"$INSTALL_LOG\" >&2)\r\nelse\r\n    exec > \"$INSTALL_LOG\" 2>&1\r\nfi\r\n\r\n# ----------------------------\r\n# Colors\r\n# ----------------------------\r\nRED=$(tput setaf 1 2>/dev/null || echo \"\")\r\nGREEN=$(tput setaf 2 2>/dev/null || echo \"\")\r\nYELLOW=$(tput setaf 3 2>/dev/null || echo \"\")\r\nBLUE=$(tput setaf 4 2>/dev/null || echo \"\")\r\nCYAN=$(tput setaf 6 2>/dev/null || echo \"\")\r\nNC=$(tput sgr0 2>/dev/null || echo \"\")\r\n\r\nLINE=\"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n# ----------------------------\r\n# Logging Functions\r\n# ----------------------------\r\nlog_info()    { echo \"$(date '+%Y-%m-%d %H:%M:%S') ${BLUE}[INFO]${NC} $*\"; }\r\nlog_warn()    { echo \"$(date '+%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${NC} $*\"; }\r\nlog_error()   { echo \"$(date '+%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${NC} $*\" >&2; }\r\nlog_success() { echo \"$(date '+%Y-%m-%d %H:%M:%S') ${GREEN}[ OK ]${NC} $*\"; }\r\n\r\n# ----------------------------\r\n# Validation Functions\r\n# ----------------------------\r\nvalidate_steam_appid() {\r\n    if [[ ! \"$STEAM_APPID\" =~ ^[0-9]+$ ]]; then\r\n        log_error \"STEAM_APPID must be numeric: $STEAM_APPID\"\r\n        exit 1\r\n    fi\r\n}\r\n\r\nvalidate_config_url() {\r\n    # Only validate if CONFIG_INIT is enabled\r\n    if [[ \"${CONFIG_INIT:-0}\" -eq 1 ]] && [[ -n \"$CONFIG_URL\" ]]; then\r\n        if [[ ! \"$CONFIG_URL\" =~ ^https?://[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(/.*)?$ ]]; then\r\n            log_error \"CONFIG_URL must be a valid HTTP/HTTPS URL: $CONFIG_URL\"\r\n            exit 1\r\n        fi\r\n        \r\n        # Check for suspicious URLs\r\n        if [[ \"$CONFIG_URL\" =~ (localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|::1) ]]; then\r\n            log_warn \"CONFIG_URL points to localhost - this may be intentional but could be suspicious\"\r\n        fi\r\n    fi\r\n}\r\n\r\n# New function for additional security checks\r\nvalidate_steam_credentials() {\r\n    # Check for suspicious characters in Steam credentials\r\n    local suspicious_chars='[;&|`$()]'\r\n    \r\n    if [[ \"$STEAM_USER\" =~ $suspicious_chars ]]; then\r\n        log_error \"STEAM_USER contains suspicious characters\"\r\n        exit 1\r\n    fi\r\n    \r\n    if [[ -n \"$STEAM_PASS\" ]] && [[ \"$STEAM_PASS\" =~ $suspicious_chars ]]; then\r\n        log_error \"STEAM_PASS contains suspicious characters\"\r\n        exit 1\r\n    fi\r\n    \r\n    if [[ -n \"$STEAM_AUTH\" ]] && [[ \"$STEAM_AUTH\" =~ $suspicious_chars ]]; then\r\n        log_error \"STEAM_AUTH contains suspicious characters\"\r\n        exit 1\r\n    fi\r\n}\r\n\r\nvalidate_path() {\r\n    local path=\"$1\"\r\n    local name=\"$2\"\r\n    \r\n    # Check for path traversal attempts\r\n    if [[ \"$path\" =~ \\.\\./\\.\\. ]] || [[ \"$path\" =~ ^/etc ]] || [[ \"$path\" =~ ^/root ]]; then\r\n        log_error \"Invalid or dangerous path for $name: $path\"\r\n        exit 1\r\n    fi\r\n    \r\n    # Ensure path starts with $HOME\r\n    if [[ ! \"$path\" =~ ^$HOME ]]; then\r\n        log_error \"Path $name must start with HOME directory: $path\"\r\n        exit 1\r\n    fi\r\n}\r\n\r\ncheck_dependencies() {\r\n    local deps=(\"curl\" \"tar\")\r\n    local missing=()\r\n    local optional_deps=(\"wget\" \"unzip\")\r\n    \r\n    # Check if curl supports HTTPS\r\n    local curl_https_support=false\r\n    if command -v curl >/dev/null 2>&1; then\r\n        if curl --version 2>/dev/null | grep -q \"https\"; then\r\n            curl_https_support=true\r\n        else\r\n            log_warn \"curl found but HTTPS support is missing\"\r\n        fi\r\n    else\r\n        missing+=(\"curl\")\r\n    fi\r\n    \r\n    for dep in \"${deps[@]}\"; do\r\n        if ! command -v \"$dep\" >/dev/null 2>&1; then\r\n            missing+=(\"$dep\")\r\n        fi\r\n    done\r\n    \r\n    # Try to install missing dependencies automatically\r\n    if [ ${#missing[@]} -gt 0 ] || [ \"$curl_https_support\" = \"false\" ]; then\r\n        log_warn \"Attempting to install missing dependencies...\"\r\n        \r\n        # Alpine Linux\r\n        if command -v apk >/dev/null 2>&1; then\r\n            log_info \"Detected Alpine Linux, installing packages...\"\r\n            apk add --no-cache curl ca-certificates openssl tar wget 2>/dev/null || {\r\n                log_error \"Failed to install packages via apk\"\r\n                log_error \"Missing required dependencies: ${missing[*]}\"\r\n                exit 1\r\n            }\r\n        # Debian/Ubuntu\r\n        elif command -v apt-get >/dev/null 2>&1; then\r\n            log_info \"Detected Debian/Ubuntu, installing packages...\"\r\n            export DEBIAN_FRONTEND=noninteractive\r\n            apt-get update >/dev/null 2>&1 || true\r\n            apt-get install -y curl ca-certificates openssl tar wget gnupg2 2>/dev/null || {\r\n                log_error \"Failed to install packages via apt-get\"\r\n                log_error \"Missing required dependencies: ${missing[*]}\"\r\n                exit 1\r\n            }\r\n            # Update CA certificates to ensure HTTPS works properly\r\n            update-ca-certificates >/dev/null 2>&1 || true\r\n        else\r\n            log_error \"Unsupported Linux distribution\"\r\n            log_error \"This script only supports Alpine Linux and Debian/Ubuntu\"\r\n            log_error \"Missing required dependencies: ${missing[*]}\"\r\n            log_error \"Please install them manually before running this script\"\r\n            exit 1\r\n        fi\r\n        \r\n        log_success \"Dependencies installed successfully\"\r\n    fi\r\n    \r\n    # Re-check dependencies after installation\r\n    missing=()\r\n    for dep in \"${deps[@]}\"; do\r\n        if ! command -v \"$dep\" >/dev/null 2>&1; then\r\n            missing+=(\"$dep\")\r\n        fi\r\n    done\r\n    \r\n    if [ ${#missing[@]} -gt 0 ]; then\r\n        log_error \"Still missing dependencies after installation: ${missing[*]}\"\r\n        exit 1\r\n    fi\r\n    \r\n    # Check optional dependencies\r\n    for dep in \"${optional_deps[@]}\"; do\r\n        if ! command -v \"$dep\" >/dev/null 2>&1; then\r\n            log_warn \"Optional dependency missing: $dep (recommended for better functionality)\"\r\n        fi\r\n    done\r\n    \r\n    # Check system requirements\r\n    if [ \"$(nproc 2>/dev/null || echo 1)\" -lt 2 ]; then\r\n        log_warn \"System has less than 2 CPU cores - installation may be slow\"\r\n    fi\r\n    \r\n    local available_memory\r\n    available_memory=\"$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 0)\"\r\n    if [ \"$available_memory\" -lt 1024 ]; then\r\n        log_warn \"Less than 1GB available memory - installation may fail\"\r\n    fi\r\n    \r\n    log_success \"All required dependencies found\"\r\n}\r\n\r\n# ----------------------------\r\n# Download with Retry Function\r\n# ----------------------------\r\ndownload_with_retry() {\r\n    local url=\"$1\" \r\n    local output=\"$2\" \r\n    local retries=\"${3:-3}\"\r\n    local desc=\"${4:-file}\"\r\n    local expected_size=\"${5:-}\"\r\n    \r\n    # Validate URL format\r\n    if [[ ! \"$url\" =~ ^https?://[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(/.*)?$ ]]; then\r\n        log_error \"Invalid URL format: $url\"\r\n        return 1\r\n    fi\r\n    \r\n    # Check if HTTPS is supported by curl\r\n    local curl_supports_https=true\r\n    if ! curl --version 2>/dev/null | grep -q \"https\"; then\r\n        curl_supports_https=false\r\n        log_warn \"HTTPS not supported by curl, will use HTTP if available\"\r\n    fi\r\n    \r\n    # Convert HTTPS to HTTP if HTTPS is not supported\r\n    local download_url=\"$url\"\r\n    if [[ \"$url\" =~ ^https:// ]] && [[ \"$curl_supports_https\" == \"false\" ]]; then\r\n        download_url=\"${url/https:/http:}\"\r\n        log_warn \"Converting HTTPS URL to HTTP: $download_url\"\r\n    fi\r\n    \r\n    for i in $(seq 1 \"$retries\"); do\r\n        log_info \"Downloading $desc (attempt $i/$retries)...\"\r\n        \r\n        # Try with original URL first, then HTTP fallback if needed\r\n        local urls_to_try=(\"$url\")\r\n        if [[ \"$url\" =~ ^https:// ]] && [[ \"$url\" != \"$download_url\" ]]; then\r\n            urls_to_try=(\"$url\" \"$download_url\")\r\n        fi\r\n        \r\n        local success=false\r\n        for try_url in \"${urls_to_try[@]}\"; do\r\n            # Use appropriate curl options based on protocol\r\n            local curl_opts=(\r\n                -fsSL\r\n                --connect-timeout 30\r\n                --max-time 300\r\n                --retry 2\r\n                --retry-delay 1\r\n                --retry-max-time 60\r\n                --location\r\n                -H \"User-Agent: GameServer-Installer/1.0\"\r\n                -o \"$output\"\r\n            )\r\n            \r\n            # Add protocol and TLS options only if supported\r\n            if [[ \"$try_url\" =~ ^https:// ]] && [[ \"$curl_supports_https\" == \"true\" ]]; then\r\n                curl_opts+=(--proto '=https,=http' --tlsv1.2)\r\n            else\r\n                curl_opts+=(--proto '=http')\r\n            fi\r\n            \r\n            if curl \"${curl_opts[@]}\" \"$try_url\"; then\r\n                success=true\r\n                break\r\n            fi\r\n        done\r\n        \r\n        if [[ \"$success\" == \"true\" ]]; then\r\n            # Verify download\r\n            if [[ -f \"$output\" ]]; then\r\n                local file_size\r\n                file_size=$(stat -f%z \"$output\" 2>/dev/null || stat -c%s \"$output\" 2>/dev/null || echo 0)\r\n                \r\n                if [[ \"$file_size\" -gt 0 ]]; then\r\n                    if [[ -n \"$expected_size\" ]] && [[ \"$file_size\" -lt \"$expected_size\" ]]; then\r\n                        log_warn \"Downloaded file seems too small ($file_size bytes, expected at least $expected_size)\"\r\n                    fi\r\n                    log_success \"Downloaded $desc successfully ($file_size bytes)\"\r\n                    return 0\r\n                else\r\n                    log_error \"Downloaded file is empty\"\r\n                    rm -f \"$output\"\r\n                fi\r\n            fi\r\n        fi\r\n        \r\n        if [ \"$i\" -lt \"$retries\" ]; then\r\n            log_warn \"Download attempt $i failed, retrying in 5 seconds...\"\r\n            sleep 5\r\n        fi\r\n    done\r\n    \r\n    log_error \"Failed to download $desc after $retries attempts\"\r\n    return 1\r\n}\r\n\r\n# ----------------------------\r\n# Safe command execution\r\n# ----------------------------\r\nrun_or_fail() {\r\n    local desc=\"$1\"; shift\r\n    log_info \"Starting: $desc\"\r\n    \r\n    if \"$@\"; then\r\n        log_success \"$desc\"\r\n    else\r\n        local exit_code=$?\r\n        log_error \"$desc failed with exit code $exit_code\"\r\n        exit 1\r\n    fi\r\n}\r\n\r\n# ----------------------------\r\n# Cleanup Function\r\n# ----------------------------\r\ncleanup() {\r\n    local exit_code=$?\r\n    log_info \"Cleaning up temporary files...\"\r\n    \r\n    # Remove temporary files\r\n    rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log\r\n    \r\n    # Clean up any leftover processes\r\n    pkill -f \"steamcmd\" 2>/dev/null || true\r\n    pkill -f \"DepotDownloader\" 2>/dev/null || true\r\n    \r\n    # Clear sensitive variables\r\n    unset STEAM_PASS STEAM_AUTH\r\n    \r\n    # Restore original file descriptors if they were changed\r\n    if [ -n \"${original_stdout:-}\" ]; then\r\n        exec 1>&3 2>&4\r\n        exec 3>&- 4>&-\r\n    fi\r\n    \r\n    if [ $exit_code -ne 0 ]; then\r\n        log_error \"Script exited with error code $exit_code\"\r\n        log_info \"Check the installation log at: $INSTALL_LOG\"\r\n    fi\r\n    \r\n    exit $exit_code\r\n}\r\n\r\ntrap cleanup EXIT\r\n\r\n# ----------------------------\r\n# Secure Steam Command Execution\r\n# ----------------------------\r\nrun_steam_command() {\r\n    local -a cmd_array=()\r\n    local desc=\"$2\"\r\n    \r\n    # Parse command array from first argument\r\n    eval \"cmd_array=($1)\"\r\n    \r\n    log_info \"Executing: $desc\"\r\n    \r\n    local exit_code=0\r\n    local log_file=\"/tmp/steam_output.log\"\r\n    \r\n    # Execute command with proper output handling\r\n    if [[ -n \"$STEAM_PASS\" ]]; then\r\n        # Redirect sensitive output to temp file\r\n        \"${cmd_array[@]}\" > \"$log_file\" 2>&1 || exit_code=$?\r\n        # Log non-sensitive parts only\r\n        if [[ $exit_code -eq 0 ]]; then\r\n            grep -v \"password\\|auth\" \"$log_file\" | tail -20 || true\r\n        fi\r\n        rm -f \"$log_file\"\r\n    else\r\n        \"${cmd_array[@]}\" || exit_code=$?\r\n    fi\r\n    \r\n    case $exit_code in\r\n        0) log_success \"$desc completed successfully\" ;;\r\n        2) log_error \"Steam login failed - check credentials\" ;;\r\n        5) log_error \"App not found or access denied for AppID: $STEAM_APPID\" ;;\r\n        7) log_error \"Steam is updating, please try again later\" ;;\r\n        *) \r\n            if [ $exit_code -ne 0 ]; then\r\n                log_warn \"$desc exited with code $exit_code, but installation may still be OK\"\r\n            fi\r\n            ;;\r\n    esac\r\n    \r\n    return $exit_code\r\n}\r\n\r\n# ----------------------------\r\n# Start Script Output\r\n# ----------------------------\r\nclear\r\nlog_info \"$LINE\"\r\nlog_info \"${YELLOW}$GAME_NAME Installscript${NC}\"\r\nlog_info \"$LINE\"\r\n\r\n# ----------------------------\r\n# Pre-flight Checks\r\n# ----------------------------\r\nlog_info \"Running pre-flight checks...\"\r\ncheck_dependencies\r\nvalidate_steam_appid\r\nvalidate_config_url\r\nvalidate_steam_credentials\r\nvalidate_path \"$CONFIG_DIR\" \"CONFIG_DIR\"\r\nvalidate_path \"$STEAMCMD_DIR\" \"STEAMCMD_DIR\"\r\n\r\n# Check network connectivity\r\nlog_info \"Testing network connectivity...\"\r\nif ! curl -s --connect-timeout 10 --max-time 15 \"https://steamcdn-a.akamaihd.net\" >/dev/null 2>&1; then\r\n    log_warn \"HTTPS connection to Steam servers failed, trying HTTP...\"\r\n    if ! curl -s --connect-timeout 10 --max-time 15 \"http://steamcdn-a.akamaihd.net\" >/dev/null 2>&1; then\r\n        log_error \"Cannot reach Steam servers via HTTP or HTTPS. Check your internet connection.\"\r\n        exit 1\r\n    else\r\n        log_warn \"Network connectivity verified via HTTP (HTTPS unavailable)\"\r\n    fi\r\nelse\r\n    log_success \"Network connectivity verified via HTTPS\"\r\nfi\r\n\r\nif [ \"$STEAM_USER\" = \"anonymous\" ]; then\r\n    log_warn \"Using anonymous Steam login for $GAME_NAME.\"\r\nelse\r\n    log_info \"Using Steam user: $STEAM_USER for $GAME_NAME.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Game Installation via DepotDownloader\r\n# ----------------------------\r\nif [ \"$DEPOTDOWNLOADER\" = \"1\" ]; then\r\n    log_info \"Installing $GAME_NAME via DepotDownloader (Linux)...\"\r\n    mkdir -p \"$HOME/depotdownloader\"\r\n    cd \"$HOME/depotdownloader\"\r\n\r\n    if [ ! -f DepotDownloader ]; then\r\n        log_info \"Fetching DepotDownloader Linux binary...\"\r\n        run_or_fail \"Download DepotDownloader\" \\\r\n            download_with_retry \\\r\n            \"https://github.com/SteamRE/DepotDownloader/releases/latest/download/DepotDownloader-Linux-x64\" \\\r\n            \"DepotDownloader\" \\\r\n            3 \\\r\n            \"DepotDownloader binary\"\r\n        \r\n        run_or_fail \"Make DepotDownloader executable\" chmod +x DepotDownloader\r\n    fi\r\n\r\n    # Build DepotDownloader command array\r\n    declare -a dd_cmd=(\r\n        \"./DepotDownloader\"\r\n        \"-app\" \"$STEAM_APPID\"\r\n        \"-dir\" \"$HOME\"\r\n    )\r\n    \r\n    if [[ -n \"${STEAM_BETAID:-}\" ]]; then\r\n        dd_cmd+=(\"-beta\" \"$STEAM_BETAID\")\r\n    fi\r\n    \r\n    if [[ -n \"${STEAM_BETAPASS:-}\" ]]; then\r\n        dd_cmd+=(\"-betapassword\" \"$STEAM_BETAPASS\")\r\n    fi\r\n    \r\n    # Add install flags if provided\r\n    if [[ -n \"${INSTALL_FLAGS:-}\" ]]; then\r\n        read -ra flags <<< \"$INSTALL_FLAGS\"\r\n        dd_cmd+=(\"${flags[@]}\")\r\n    fi\r\n    \r\n    dd_cmd+=(\"-username\" \"$STEAM_USER\")\r\n    \r\n    if [[ -n \"$STEAM_PASS\" ]]; then\r\n        dd_cmd+=(\"-password\" \"$STEAM_PASS\")\r\n    fi\r\n    \r\n    if [[ -n \"$STEAM_AUTH\" ]]; then\r\n        dd_cmd+=(\"-remember-password\" \"$STEAM_AUTH\")\r\n    fi\r\n\r\n    # Convert array to string for run_steam_command\r\n    cmd_string=\"\"\r\n    printf -v cmd_string '%q ' \"${dd_cmd[@]}\"\r\n    \r\n    run_steam_command \"$cmd_string\" \"DepotDownloader installation\"\r\n    log_success \"DepotDownloader installation finished.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Game Installation via SteamCMD\r\n# ----------------------------\r\nif [ \"$DEPOTDOWNLOADER\" != \"1\" ]; then\r\n    log_info \"Installing $GAME_NAME via SteamCMD...\"\r\n    mkdir -p \"$STEAMCMD_DIR\" \"$HOME/steamapps\"\r\n\r\n    run_or_fail \"Download SteamCMD\" \\\r\n        download_with_retry \\\r\n        \"http://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz\" \\\r\n        \"/tmp/steamcmd.tar.gz\" \\\r\n        3 \\\r\n        \"SteamCMD archive\"\r\n    \r\n    run_or_fail \"Extract SteamCMD\" tar -xzf /tmp/steamcmd.tar.gz -C \"$STEAMCMD_DIR\"\r\n\r\n    cd \"$STEAMCMD_DIR\"\r\n\r\n    # Build SteamCMD command array\r\n    declare -a steam_cmd=(\r\n        \"./steamcmd.sh\"\r\n        \"+force_install_dir\" \"$HOME\"\r\n        \"+login\" \"$STEAM_USER\"\r\n    )\r\n    \r\n    if [[ -n \"$STEAM_PASS\" ]]; then\r\n        steam_cmd+=(\"$STEAM_PASS\")\r\n    fi\r\n    \r\n    if [[ -n \"$STEAM_AUTH\" ]]; then\r\n        steam_cmd+=(\"$STEAM_AUTH\")\r\n    fi\r\n    \r\n    if [[ \"${WINDOWS_INSTALL:-0}\" == \"1\" ]]; then\r\n        steam_cmd+=(\"+@sSteamCmdForcePlatformType\" \"windows\")\r\n    fi\r\n    \r\n    steam_cmd+=(\"+app_update\" \"$STEAM_APPID\" \"+app_update\" \"1007\")\r\n    \r\n    if [[ -n \"${STEAM_BETAID:-}\" ]]; then\r\n        steam_cmd+=(\"-beta\" \"$STEAM_BETAID\")\r\n    fi\r\n    \r\n    if [[ -n \"${STEAM_BETAPASS:-}\" ]]; then\r\n        steam_cmd+=(\"-betapassword\" \"$STEAM_BETAPASS\")\r\n    fi\r\n    \r\n    # Add install flags if provided\r\n    if [[ -n \"${INSTALL_FLAGS:-}\" ]]; then\r\n        read -ra flags <<< \"$INSTALL_FLAGS\"\r\n        steam_cmd+=(\"${flags[@]}\")\r\n    fi\r\n    \r\n    steam_cmd+=(\"validate\" \"+quit\")\r\n\r\n    # Convert array to string for run_steam_command\r\n    cmd_string=\"\"\r\n    printf -v cmd_string '%q ' \"${steam_cmd[@]}\"\r\n    \r\n    run_steam_command \"$cmd_string\" \"SteamCMD installation\"\r\n    log_success \"SteamCMD installation finished.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Steam Libraries Setup\r\n# ----------------------------\r\nlog_info \"Setting up Steam libraries...\"\r\nmkdir -p \"$HOME/.steam/sdk32\" \"$HOME/.steam/sdk64\"\r\n\r\nif [ -f \"$STEAMCMD_DIR/linux32/steamclient.so\" ]; then\r\n    if cp -v \"$STEAMCMD_DIR/linux32/steamclient.so\" \"$HOME/.steam/sdk32/steamclient.so\"; then\r\n        log_success \"32-bit Steam library copied successfully\"\r\n    else\r\n        log_warn \"Failed to copy 32-bit Steam library\"\r\n    fi\r\nelse\r\n    log_warn \"32-bit Steam library not found\"\r\nfi\r\n\r\nif [ -f \"$STEAMCMD_DIR/linux64/steamclient.so\" ]; then\r\n    if cp -v \"$STEAMCMD_DIR/linux64/steamclient.so\" \"$HOME/.steam/sdk64/steamclient.so\"; then\r\n        log_success \"64-bit Steam library copied successfully\"\r\n    else\r\n        log_warn \"Failed to copy 64-bit Steam library\"\r\n    fi\r\nelse\r\n    log_warn \"64-bit Steam library not found\"\r\nfi\r\n\r\nlog_success \"Steam libraries setup complete.\"\r\n\r\n# ----------------------------\r\n# Game-specific Hooks\r\n# ----------------------------\r\nlog_info \"Executing $GAME_NAME game-specific hooks...\"\r\n# <--- add game-specific commands here\r\n\r\n# ----------------------------\r\n# Config Setup\r\n# ----------------------------\r\nif [ \"${CONFIG_INIT:-0}\" -eq 1 ]; then\r\n    if [ -f \"$CONFIG_DIR/$CONFIG_FILE_NAME\" ]; then\r\n        log_success \"$GAME_NAME $CONFIG_FILE_NAME found.\"\r\n    else\r\n        log_warn \"$GAME_NAME $CONFIG_FILE_NAME not found. Fetching default...\"\r\n        mkdir -p \"$CONFIG_DIR\"\r\n        \r\n        run_or_fail \"Download default $CONFIG_FILE_NAME\" \\\r\n            download_with_retry \\\r\n            \"$CONFIG_URL\" \\\r\n            \"$CONFIG_DIR/$CONFIG_FILE_NAME\" \\\r\n            3 \\\r\n            \"config file\"\r\n    fi\r\nelse\r\n    log_info \"Skipping config setup (CONFIG_INIT != 1)\"\r\nfi\r\n\r\n# ----------------------------\r\n# Final Verification\r\n# ----------------------------\r\nlog_info \"Running post-installation verification...\"\r\n\r\n# Check if Steam libraries were installed correctly\r\nif [ ! -d \"$HOME/.steam\" ]; then\r\n    log_warn \"Steam directory not found - some games may not work correctly\"\r\nfi\r\n\r\n# Check if basic Steam files exist\r\nsteam_files_found=0\r\nif [ -f \"$HOME/.steam/sdk32/steamclient.so\" ]; then\r\n    ((steam_files_found++))\r\nfi\r\nif [ -f \"$HOME/.steam/sdk64/steamclient.so\" ]; then\r\n    ((steam_files_found++))\r\nfi\r\n\r\nif [ $steam_files_found -eq 0 ]; then\r\n    log_warn \"No Steam library files found - installation may be incomplete\"\r\nelif [ $steam_files_found -eq 1 ]; then\r\n    log_warn \"Only one Steam library found - some games may require both 32-bit and 64-bit libraries\"\r\nelse\r\n    log_success \"Steam libraries installed correctly\"\r\nfi\r\n\r\n# Check if game files were downloaded (safe version)\r\ngame_files=0\r\nif command -v find >/dev/null 2>&1; then\r\n    game_files=$(find \"$HOME\" -maxdepth 3 -type f \\( -name \"*.exe\" -o -name \"*.so\" -o -name \"*.bin\" \\) 2>/dev/null | wc -l || echo 0)\r\nfi\r\n\r\nif [ \"$game_files\" -gt 0 ]; then\r\n    log_success \"Found $game_files potential game executable files\"\r\nelse\r\n    log_warn \"No executable files found - this is normal if STEAM_APPID was not set or installation failed\"\r\nfi\r\n\r\n# Check permissions (non-fatal)\r\nif [ ! -w \"$HOME\" ]; then\r\n    log_warn \"HOME directory is not writable - this may cause issues\"\r\nelse\r\n    log_success \"HOME directory permissions are correct\"\r\nfi\r\n\r\n# Check if SteamCMD was extracted successfully\r\nif [ -f \"$STEAMCMD_DIR/steamcmd.sh\" ]; then\r\n    log_success \"SteamCMD extracted successfully\"\r\nelse\r\n    log_warn \"SteamCMD executable not found - installation may have failed\"\r\nfi\r\n\r\nlog_success \"Installation verification completed\"\r\n\r\n# ----------------------------\r\n# Done\r\n# ----------------------------\r\nlog_info \"$LINE\"\r\nlog_success \"$GAME_NAME installation completed successfully.\"\r\nlog_info \"Installation log saved to: $INSTALL_LOG\"\r\nlog_info \"If you like my work -> https://donate.goover.dev\"\r\nlog_info \"$LINE\"\r\n\r\nexit 0\r\n\r\n",
+            "container": "ghcr.io/goover/installers:debian",
             "entrypoint": "bash"
         }
     },
     "variables": [
         {
-            "name": "SRCDS_APPID",
+            "sort": 8,
+            "name": "[SERVER] Auto Update",
             "description": "",
-            "env_variable": "SRCDS_APPID",
-            "default_value": "2465200",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": [
-                "required",
-                "string",
-                "max:20"
-            ],
-            "sort": 1
-        },
-        {
-            "name": "Server Name",
-            "description": "Name of the server visible in the server list, and in the Steam contacts.",
-            "env_variable": "SRV_NAME",
-            "default_value": "Pterodactyl hosted Server",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
             "rules": [
                 "required",
-                "string",
-                "max:60"
-            ],
-            "sort": 2
+                "boolean"
+            ]
         },
         {
-            "name": "QueryPort",
-            "description": "UDP port used by Steam to list the server and enable the discovery services.",
-            "env_variable": "QUERY_PORT",
-            "default_value": "27016",
-            "user_viewable": true,
-            "user_editable": false,
-            "rules": [
-                "required",
-                "integer",
-                "between:1024,65536"
-            ],
-            "sort": 3
-        },
-        {
-            "name": "BlobSyncPort",
+            "sort": 2,
+            "name": "[SERVER] BlobSyncPort",
             "description": "BlobSyncPort UDP port used by the BlobSync system to initialize game systems and exchange data.",
             "env_variable": "BLOBSYNC_PORT",
-            "default_value": "9700",
+            "default_value": "",
             "user_viewable": true,
             "user_editable": false,
             "rules": [
                 "required",
                 "integer",
                 "between:1024,65536"
-            ],
-            "sort": 4
+            ]
         },
         {
-            "name": "Max Players",
+            "sort": 6,
+            "name": "[SERVER] Gamemode",
+            "description": "Sets the difficulty game mode when creating a new save. This parameter is ignored if loading a save (save mode set to \u201ccontinue\u201d with a save that exists on the slot). If the game mode is set to \u201ccustom\u201d, then the custom game mode settings will be read from CustomGameModeSettings option, described later.",
+            "env_variable": "GAME_MODE",
+            "default_value": "normal",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "string",
+                "in:normal,hard,hardsurvival,peaceful,custom"
+            ]
+        },
+        {
+            "sort": 4,
+            "name": "[SERVER] Max Players",
             "description": "The maximum number of players allowed simultaneously on the server.",
             "env_variable": "MAX_PLAYERS",
             "default_value": "4",
@@ -98,92 +87,25 @@
                 "required",
                 "integer",
                 "min:1"
-            ],
-            "sort": 5
+            ]
         },
         {
-            "name": "Password",
-            "description": "",
-            "env_variable": "SRV_PW",
-            "default_value": "changeme",
+            "sort": 1,
+            "name": "[SERVER] QueryPort",
+            "description": "UDP port used by Steam to list the server and enable the discovery services.",
+            "env_variable": "QUERY_PORT",
+            "default_value": "",
             "user_viewable": true,
-            "user_editable": true,
-            "rules": [
-                "nullable",
-                "string"
-            ],
-            "sort": 6
-        },
-        {
-            "name": "Gamemode",
-            "description": "Sets the difficulty game mode when creating a new save. This parameter is ignored if loading a save (save mode set to \u201ccontinue\u201d with a save that exists on the slot). If the game mode is set to \u201ccustom\u201d, then the custom game mode settings will be read from CustomGameModeSettings option, described later.",
-            "env_variable": "GAME_MODE",
-            "default_value": "normal",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": [
-                "string",
-                "in:normal,hard,hardsurvival,peaceful,custom"
-            ],
-            "sort": 7
-        },
-        {
-            "name": "WINEDEBUG",
-            "description": "",
-            "env_variable": "WINEDEBUG",
-            "default_value": "-all",
-            "user_viewable": false,
             "user_editable": false,
             "rules": [
                 "required",
-                "string",
-                "max:20"
-            ],
-            "sort": 8
+                "integer",
+                "between:1024,65536"
+            ]
         },
         {
-            "name": "WINEARCH",
-            "description": "",
-            "env_variable": "WINEARCH",
-            "default_value": "win64",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": [
-                "required",
-                "string",
-                "max:20"
-            ],
-            "sort": 9
-        },
-        {
-            "name": "WINETRICKS_RUN",
-            "description": "",
-            "env_variable": "WINETRICKS_RUN",
-            "default_value": "mono",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": [
-                "nullable",
-                "string"
-            ],
-            "sort": 10
-        },
-        {
-            "name": "WINDOWS_INSTALL",
-            "description": "",
-            "env_variable": "WINDOWS_INSTALL",
-            "default_value": "1",
-            "user_viewable": false,
-            "user_editable": false,
-            "rules": [
-                "required",
-                "string",
-                "max:20"
-            ],
-            "sort": 11
-        },
-        {
-            "name": "Skip network Test",
+            "sort": 7,
+            "name": "[SERVER] Skip network Test",
             "description": "if you have problems to connect to the server, set this to true",
             "env_variable": "SKIP_TESTS",
             "default_value": "false",
@@ -193,22 +115,103 @@
                 "required",
                 "string",
                 "in:true,false"
-            ],
-            "sort": 12
+            ]
         },
         {
-            "name": "WINEPATH",
+            "sort": 3,
+            "name": "[SERVER] Server Name",
+            "description": "Name of the server visible in the server list, and in the Steam contacts.",
+            "env_variable": "SRV_NAME",
+            "default_value": "Pterodactyl hosted Server",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "required",
+                "string",
+                "max:60"
+            ]
+        },
+        {
+            "sort": 5,
+            "name": "[SERVER] Password",
             "description": "",
-            "env_variable": "WINEPATH",
-            "default_value": "\/home\/container",
+            "env_variable": "SRV_PW",
+            "default_value": "changeme",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "nullable",
+                "string"
+            ]
+        },
+        {
+            "sort": 13,
+            "name": "[STEAM] STEAM_APPID",
+            "description": "",
+            "env_variable": "STEAM_APPID",
+            "default_value": "2465200",
             "user_viewable": false,
             "user_editable": false,
             "rules": [
                 "required",
                 "string",
                 "max:20"
-            ],
-            "sort": 13
+            ]
+        },
+        {
+            "sort": 12,
+            "name": "[STEAM] WINDOWS_INSTALL",
+            "description": "",
+            "env_variable": "WINDOWS_INSTALL",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ]
+        },
+        {
+            "sort": 10,
+            "name": "[WINE] WINEARCH",
+            "description": "",
+            "env_variable": "WINEARCH",
+            "default_value": "win64",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ]
+        },
+        {
+            "sort": 9,
+            "name": "[WINE] WINEDEBUG",
+            "description": "",
+            "env_variable": "WINEDEBUG",
+            "default_value": "-all",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "required",
+                "string",
+                "max:20"
+            ]
+        },
+        {
+            "sort": 11,
+            "name": "[WINE] WINETRICKS_RUN",
+            "description": "",
+            "env_variable": "WINETRICKS_RUN",
+            "default_value": "mono",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": [
+                "nullable",
+                "string"
+            ]
         }
     ]
 }
