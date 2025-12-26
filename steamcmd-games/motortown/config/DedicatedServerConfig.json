@@ -1,27 +1,43 @@
 {
-    "ServerName": "My Server",
-    "ServerMessage": "Welcome!\nHave fun!",
-    "Password": "",
-    "MaxPlayers": 10,
-    "MaxVehiclePerPlayer": 5,
-    "bAllowPlayerToJoinWithCompanyVehicles": false,
-    "bAllowCompanyAIDriver": true,
-    "MaxHousingPlotRentalPerPlayer": 1,
-    "MaxHousingPlotRentalDays": 7,
-    "HousingPlotRentalPriceRatio": 0.1,
-    "bAllowModdedVehicle": false,
-    "__bAllowModdedVehicle__Comment": "Set this to 'false' to despawn vehicles altered by an external program",
-    "bEnableHostWebAPIServer": false,
-    "HostWebAPIServerPassword": "ENTER PASSWORD HERE",
-    "HostWebAPIServerPort": 8080,
-    "Admins": [
-      {
-        "UniqueNetId": "SampleNetId1",
-        "Nickname": "AdminCharacterName1"
-      },
-      {
-        "UniqueNetId": "SampleNetId2",
-        "Nickname": "AdminCharacterName2"
-      }
-    ]
-  }
+  "ServerName": "My Server",
+  "ServerMessage": "Welcome!\nHave fun!",
+  "Password": "",
+  "MaxPlayers": 10,
+  "MaxVehiclePerPlayer": 10,
+  "bAllowPlayerToJoinWithCompanyVehicles": false,
+  "bAllowCompanyAIDriver": true,
+  "bAllowCorporation": true,
+  "bAllowCorporationAIDriver": true,
+  "MaxHousingPlotRentalPerPlayer": 1,
+  "MaxHousingPlotRentalDays": 7,
+  "HousingPlotRentalPriceRatio": 0.1,
+  "bAllowModdedVehicle": false,
+  "Rain": 2,
+  "Fire": 2,
+  "NPCVehicleDensity": 1.0,
+  "NPCPoliceDensity": 1.0, 
+  "bEnableHostWebAPIServer": false,
+  "HostWebAPIServerPassword": "ENTER PASSWORD HERE",
+  "HostWebAPIServerPort": 8080,
+  "HostWebAPIDisabledCommands": [
+    "/chat_sample"
+  ],
+  "Admins": [
+    {
+      "UniqueNetId": "SampleNetId1",
+      "Nickname": "AdminCharacterName1"
+    },
+    {
+      "UniqueNetId": "SampleNetId2",
+      "Nickname": "AdminCharacterName2"
+    }
+  ],
+  "bAllowPoliceVehicleByPlayerRole": false,
+  "PoliceRolePlayers": [
+    {
+      "UniqueNetId": "SampleNetId3",
+      "Nickname": "PoliceCharacterName1"
+    }
+  ],
+  "bAllowAdminToRemoveAdmin": false
+}
