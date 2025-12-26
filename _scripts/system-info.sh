@@ -117,61 +117,52 @@ upload_to_wastebin() {
     echo ""
     echo "${CYAN}Lade Report zu Wastebin hoch...${NC}"
     
-    # Create temporary file for JSON payload
-    local temp_file="/tmp/wastebin-payload-$$.json"
+    # Create temporary file with plain content
+    local temp_file="/tmp/wastebin-content-$$.txt"
+    echo "$content" > "$temp_file"
     
-    # Escape content for JSON (simple approach)
-    local escaped_content
-    escaped_content=$(echo "$content" | sed 's/\\/\\\\/g; s/"/\\"/g' | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
-    
-    # Create JSON payload
-    echo "{\"text\":\"${escaped_content}\",\"extension\":\"txt\"}" > "$temp_file"
-    
-    # Upload to Wastebin
+    # Upload using multipart form data (simpler than JSON escaping)
     local response
     response=$(curl -s -X POST "${WASTEBIN_URL}/api/pastes" \
-        -H "Content-Type: application/json" \
-        -d @"$temp_file" 2>&1)
+        -F "text=<${temp_file}" \
+        -F "extension=txt" \
+        2>&1)
     
     local curl_exit=$?
     rm -f "$temp_file"
     
-    if [ $curl_exit -eq 0 ]; then
-        # Try to extract path from response
-        local paste_path
-        paste_path=$(echo "$response" | grep -oP '"path"\s*:\s*"\K[^"]+' 2>/dev/null || echo "")
-        
-        if [ -n "$paste_path" ]; then
-            local paste_url="${WASTEBIN_URL}${paste_path}"
-            echo ""
-            echo "${GREEN}╔════════════════════════════════════════════════════════════════════════════════╗${NC}"
-            echo "${GREEN}║  Report erfolgreich hochgeladen!                                               ║${NC}"
-            echo "${GREEN}╚════════════════════════════════════════════════════════════════════════════════╝${NC}"
-            echo ""
-            echo "${CYAN}URL:${NC} ${YELLOW}${paste_url}${NC}"
-            echo ""
-            return 0
-        else
-            # Fallback: try to parse the raw response
-            echo ""
-            echo "${YELLOW}Upload-Antwort:${NC} $response"
-            echo ""
-            
-            # Try alternate pattern
-            local alt_path
-            alt_path=$(echo "$response" | grep -o '/[a-zA-Z0-9_-]\+' | head -n1)
-            if [ -n "$alt_path" ]; then
-                local paste_url="${WASTEBIN_URL}${alt_path}"
-                echo "${CYAN}URL:${NC} ${YELLOW}${paste_url}${NC}"
-                echo ""
-                return 0
-            fi
-            
-            return 1
-        fi
-    else
+    if [ $curl_exit -ne 0 ]; then
         echo ""
-        echo "${RED}Fehler beim Hochladen: $response${NC}"
+        echo "${RED}Fehler beim Hochladen (curl exit code: $curl_exit)${NC}"
+        echo "${YELLOW}Response: $response${NC}"
+        return 1
+    fi
+    
+    # Debug: Show raw response
+    echo "${CYAN}Server-Antwort:${NC} $response"
+    echo ""
+    
+    # Try to extract path from response
+    local paste_path
+    paste_path=$(echo "$response" | grep -oP '"path"\s*:\s*"\K[^"]+' 2>/dev/null)
+    
+    if [ -z "$paste_path" ]; then
+        # Try alternative pattern
+        paste_path=$(echo "$response" | grep -oP '{"path":"\K[^"]+' 2>/dev/null)
+    fi
+    
+    if [ -n "$paste_path" ]; then
+        local paste_url="${WASTEBIN_URL}${paste_path}"
+        echo ""
+        echo "${GREEN}╔════════════════════════════════════════════════════════════════════════════════╗${NC}"
+        echo "${GREEN}║  Report erfolgreich hochgeladen!                                               ║${NC}"
+        echo "${GREEN}╚════════════════════════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo "${CYAN}URL:${NC} ${YELLOW}${paste_url}${NC}"
+        echo ""
+        return 0
+    else
+        echo "${RED}Fehler: Konnte URL nicht aus Antwort extrahieren${NC}"
         return 1
     fi
 }
