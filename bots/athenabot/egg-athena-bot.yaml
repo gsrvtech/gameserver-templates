@@ -1,0 +1,170 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/bots/athenabot/egg-pelican-athena-bot.json'
+exported_at: '2025-12-29T14:15:17+00:00'
+name: 'Athena Bot'
+author: eggs@goover.dev
+uuid: bddb292c-2b83-4fc2-9c5f-7070190ca71e
+description: 'Egg for Lynx Athena Bot'
+image: null
+tags:
+  - discord.js
+  - bot
+  - nodejs
+features: {  }
+docker_images:
+  'ghcr.io/goover/bots:nodemongo7': 'ghcr.io/goover/bots:nodemongo7'
+  'ghcr.io/goover/bots:nodemongo8': 'ghcr.io/goover/bots:nodemongo8'
+  'ghcr.io/goover/bots:nodemongo': 'ghcr.io/goover/bots:nodemongo'
+file_denylist: {  }
+startup_commands:
+  Default: 'if [ -f /home/container/package.json ]; then npm install; fi; node /home/container/{{JS_FILE}}'
+  'Clear dashboard': 'npm run clear_dashboard'
+config:
+  files: {  }
+  startup:
+    done: 'AthenaBot is up and running.'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |
+      #!/bin/bash
+      # THIS EGG IS LICENSED UNDER AGPLv3
+
+      set -euo pipefail
+      IFS=$'
+      \t'
+
+      # --- Non-interactive for apt ---
+      export DEBIAN_FRONTEND=noninteractive
+
+      # --- Define App Name ---
+      APPNAME="AthenaBot"
+
+      # --- Colors ---
+      RED=$(tput setaf 1)
+      GREEN=$(tput setaf 2)
+      YELLOW=$(tput setaf 3)
+      BLUE=$(tput setaf 4)
+      NC=$(tput sgr0)
+
+      # --- Line separator ---
+      LINE="${BLUE}-------------------------------------------------${NC}"
+
+      # --- Logging functions ---
+      log_info()    { echo "${BLUE}[INFO]${NC} $*"; }
+      log_warn()    { echo "${YELLOW}[WARN]${NC} $*"; }
+      log_error()   { echo "${RED}[ERROR]${NC} $*" >&2; }
+      log_success() { echo "${GREEN}[ OK ]${NC} $*"; }
+
+      # --- Helper for running commands safely ---
+      run_or_fail() {
+          local desc="$1"; shift
+          if "$@"; then
+              log_success "$desc"
+          else
+              log_error "$desc failed!"
+              exit 1
+          fi
+      }
+
+      # --- Print header ---
+      print_header() {
+          echo -e "$LINE"
+          echo -e "${YELLOW}${APPNAME} Installscript${NC}"
+          echo -e "${YELLOW}Egg by gOOvER (https://discord.goover.dev) | License: AGPLv3${NC}"
+          echo -e "$LINE"
+      }
+
+      print_header
+
+      # --- Ensure base folder ---
+      run_or_fail "Create /mnt/server" mkdir -p /mnt/server
+      cd /mnt/server || exit 1
+
+      # --- Install dependencies ---
+      echo -e "$LINE"
+      log_info "Installing dependencies..."
+      echo -e "$LINE"
+      run_or_fail "apt-get update" apt-get update -yqq
+      run_or_fail "Install required packages" apt-get install -yqq build-essential libtool python3 git tar
+      run_or_fail "Clean up apt cache" bash -c "apt-get clean && rm -rf /var/lib/apt/lists/*"
+
+      # --- Update npm ---
+      echo -e "$LINE"
+      log_info "Updating npm to latest..."
+      echo -e "$LINE"
+      run_or_fail "npm install -g npm@latest" npm install -g --force npm@latest
+      log_success "npm version: $(npm --version)"
+
+      # --- Backup MongoDB if exists ---
+      REINSTALL=false
+      if [ -d "/mnt/server/mongodb" ]; then
+          echo -e "$LINE"
+          log_info "Backing up existing MongoDB directory..."
+          echo -e "$LINE"
+          run_or_fail "Create MongoDB backup" tar --exclude='*.tar.gz' -czf /tmp/mongodb_backup.tar.gz mongodb/
+          log_info "MongoDB backup size: $(du -h /tmp/mongodb_backup.tar.gz | cut -f1)"
+          REINSTALL=true
+      fi
+
+      # --- Install Node.js packages ---
+      if [ -f package-lock.json ]; then
+          echo -e "$LINE"
+          log_info "Installing Node.js dependencies (npm ci)..."
+          echo -e "$LINE"
+          run_or_fail "npm ci" npm ci --only=production
+      elif [ -f package.json ]; then
+          echo -e "$LINE"
+          log_info "Installing Node.js dependencies (npm install)..."
+          echo -e "$LINE"
+          run_or_fail "npm install" npm install --production
+      else
+          log_warn "No package.json found, skipping Node.js dependencies"
+      fi
+
+      # --- Restore or fresh install ---
+      if [ "$REINSTALL" == "true" ]; then
+          echo -e "$LINE"
+          log_info "Restoring MongoDB backup..."
+          echo -e "$LINE"
+          run_or_fail "Extract backup" tar xf /tmp/mongodb_backup.tar.gz -C /mnt/server
+          rm -f /tmp/mongodb_backup.tar.gz
+      else
+          echo -e "$LINE"
+          log_info "Fresh install: creating MongoDB directory"
+          echo -e "$LINE"
+          mkdir -p /mnt/server/mongodb
+      fi
+
+      echo -e "$LINE"
+      log_success "Installation of ${APPNAME} completed!"
+      echo -e "$LINE"
+      exit 0
+    container: 'ghcr.io/goover/installers:nodejs'
+    entrypoint: bash
+variables:
+  -
+    sort: 1
+    name: 'JS file'
+    description: 'The file that starts the app'
+    env_variable: JS_FILE
+    default_value: index.js
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
+  -
+    sort: 2
+    name: 'MongoDB URL'
+    description: ''
+    env_variable: MONGO_URL
+    default_value: 'mongodb://127.0.0.1:27017/botdb'
+    user_viewable: true
+    user_editable: false
+    rules:
+      - required
+      - string
