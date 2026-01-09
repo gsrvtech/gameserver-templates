@@ -3,7 +3,7 @@
 ## Author & Contributors
 | Name        | Github Profile  | Buy me a Coffee |
 | ------------- |-------------|-------------|
-|   gOOvER   | https://github.com/gOOvER | [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B351D0Q) |
+|   gOOvER   | https://github.com/gOOvER | [![Donate](https://donate.goover.dev) |
 
 ## Game Description
 
@@ -65,3 +65,4 @@ For issues or questions:
 
 - Support: https://discord.goover.dev
 - Donations: https://donate.goover.dev
+
