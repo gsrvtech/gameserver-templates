@@ -2,9 +2,9 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
         "version": "PLCN_v3",
-        "update_url": null
+        "update_url": "https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/starrupture/egg-pelican-star-rupture.json"
     },
-    "exported_at": "2026-01-09T13:31:35+00:00",
+    "exported_at": "2026-01-09T16:53:53+00:00",
     "name": "StarRupture",
     "author": "eggs@goover.dev",
     "uuid": "3914c487-f23d-4a6f-918a-c17fcd4e5c75",
@@ -21,7 +21,7 @@
     },
     "file_denylist": [],
     "startup_commands": {
-        "Default": "proton run ./StarRupture/Binaries/Win64/StarRuptureServerEOS-Win64-Shipping.exe -port={{SERVER_PORT}} -multihome=0.0.0.0 -log & SR_PID=$! ; tail -c0 -F ./StarRupture/Saved/Logs/StarRupture.log --pid=$SR_PID"
+        "Default": "proton run ./StarRupture/Binaries/Win64/StarRuptureServerEOS-Win64-Shipping.exe -port={{SERVER_PORT}} -log & SR_PID=$! ; tail -c0 -F ./StarRupture/Saved/Logs/StarRupture.log --pid=$SR_PID"
     },
     "config": {
         "files": "{\n  \"DSSettings.txt\": {\n    \"parser\": \"json\",\n    \"find\": {\n      \"SessionName\": \"{{server.environment.SESSION_NAME}}\",\n      \"SaveGameInterval\": \"{{server.environment.SAVE_INTERVAL}}\",\n      \"StartNewGame\": \"{{server.environment.START_NEW}}\",\n      \"LoadSavedGame\": \"{{server.environment.LOAD_SAVE}}\",\n      \"SaveGameName\": \"{{server.environment.SAVEGAME_NAME}}\"\n    }\n  }\n}",
@@ -59,6 +59,8 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": [
+                "required",
+                "string",
                 "in:true,false"
             ]
         },
@@ -110,6 +112,8 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": [
+                "required",
+                "string",
                 "in:true,false"
             ]
         },

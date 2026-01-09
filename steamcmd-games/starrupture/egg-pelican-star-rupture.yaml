@@ -1,8 +1,8 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: null
-exported_at: '2026-01-09T13:31:47+00:00'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/starrupture/egg-pelican-star-rupture.json'
+exported_at: '2026-01-09T16:54:03+00:00'
 name: StarRupture
 author: eggs@goover.dev
 uuid: 3914c487-f23d-4a6f-918a-c17fcd4e5c75
@@ -19,7 +19,7 @@ docker_images:
   'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
 file_denylist: {  }
 startup_commands:
-  Default: 'proton run ./StarRupture/Binaries/Win64/StarRuptureServerEOS-Win64-Shipping.exe -port={{SERVER_PORT}} -multihome=0.0.0.0 -log & SR_PID=$! ; tail -c0 -F ./StarRupture/Saved/Logs/StarRupture.log --pid=$SR_PID'
+  Default: 'proton run ./StarRupture/Binaries/Win64/StarRuptureServerEOS-Win64-Shipping.exe -port={{SERVER_PORT}} -log & SR_PID=$! ; tail -c0 -F ./StarRupture/Saved/Logs/StarRupture.log --pid=$SR_PID'
 config:
   files:
     DSSettings.txt:
@@ -1137,6 +1137,8 @@ variables:
     user_viewable: true
     user_editable: true
     rules:
+      - required
+      - string
       - 'in:true,false'
   -
     sort: 2
@@ -1182,6 +1184,8 @@ variables:
     user_viewable: true
     user_editable: true
     rules:
+      - required
+      - string
       - 'in:true,false'
   -
     sort: 7

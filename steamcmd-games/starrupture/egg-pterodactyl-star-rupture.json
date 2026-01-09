@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-01-09T13:23:03+00:00",
+    "exported_at": "2026-01-09T16:53:53+00:00",
     "name": "StarRupture",
     "author": "eggs@goover.dev",
     "description": "StarRupture is a first-person open-world base building game with advanced combat and tons of exploration. Play alone or with up to 4 friends on this sublime and everchanging planet, extract and manage resources, create your complex industrial system, and fight off hordes of alien monsters.",
@@ -47,7 +47,7 @@
             "default_value": "true",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "in:true,false",
+            "rules": "required|string|in:true,false",
             "field_type": "text"
         },
         {
@@ -87,7 +87,7 @@
             "default_value": "false",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "in:true,false",
+            "rules": "required|string|in:true,false",
             "field_type": "text"
         },
         {
