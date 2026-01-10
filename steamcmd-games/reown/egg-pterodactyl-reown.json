@@ -1,0 +1,154 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-01-10T06:41:33+00:00",
+    "name": "Reown",
+    "author": "eggs@goover.de",
+    "description": "Renown is a game developed by RDBK Studios. It's creation derives from the inspiration of games such as Rust, Chivalry, Mordhau, and many other games in the survival PvP genre. Step into an intense medieval multiplayer survival experience set in a vast, ever-evolving world. Whether alone or rallying allies, gather resources, build powerful strongholds, and engage in brutal battles for dominance.",
+    "features": [
+        "steam_disk_feature"
+    ],
+    "docker_images": {
+        "ghcr.io\/goover\/steamcmd:debian": "ghcr.io\/goover\/steamcmd:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/Renown_Combat\/Binaries\/Linux\/Renown_CombatServer-Linux-Shipping Renown_Combat -PORT={{SERVER_PORT}} -QUERYPORT={{QUERY_PORT}} -BeaconPort={{BEACON_PORT}} -RCONPort={{RCON_PORT}} -multihome=0.0.0.0 -newconsole -log -ini:Engine:[EpicOnlineServices]:DedicatedServerClientId=xyza78917DzEE5Ey0isciVt66QDm5IzM -ini:Engine:[EpicOnlineServices]:DedicatedServerClientSecret=m\/mrnywFCdeA1mW3ZSvv3qcVlQlfwi1a+7Z63Q44E",
+    "config": {
+        "files": "{\n    \"\/Renown_Combat\/Saved\/Config\/LinuxServer\/Game.ini\": {\n        \"parser\": \"file\",\n        \"find\": {\n            \"EnableRCON=\": \"EnableRCON={{server.build.env.RCON}}\",\n            \"RCONPassword=\": \"RCONPassword={{server.build.env.RCON_PW}}\",\n            \"ServerName=\": \"ServerName={{server.build.env.SRV_NAME}}\",\n            \"ServerPassword=\": \"ServerPassword={{server.build.env.SRV_PW}}\",\n            \"MaxPlayers=\": \"MaxPlayers={{server.build.env.MAX_PLAYERS}}\",\n            \"AdminPassword=\": \"AdminPassword={{server.build.env.ADMIN_PW}}\"\n        }\n    }\n}",
+        "startup": "{\n    \"done\": \"Create Session Complete\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# ------------------------------------------------\r\n# Generic Installscript Template for Pelican Eggs (Linux)\r\n# License: AGPLv3\r\n# Author: gOOvER (https:\/\/discord.goover.dev)\r\n# Donate: https:\/\/donate.goover.dev\r\n# ------------------------------------------------\r\n\r\n# ----------------------------\r\n# Environment Setup\r\n# ----------------------------\r\nHOME=\/mnt\/server\r\nexport HOME\r\n\r\n# Ensure \/mnt is owned by root\r\nchown -R root:root \/mnt\r\n\r\nGAME_NAME=\"Reown\"   # <--- name of the game (internal placeholder)\r\nCONFIG_FILE_NAME=\"Game.ini\"      # <--- configurable config filename (internal)\r\nCONFIG_DIR=\"$HOME\/Renown_Combat\/Saved\/Config\/LinuxServer\" # <--- adjustable per game\r\nCONFIG_URL=\"https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/reown\/config\/$CONFIG_FILE_NAME\"                  # <--- adjustable per game\r\nSTEAMCMD_DIR=\"$HOME\/steamcmd\"              # <--- SteamCMD directory\r\n\r\nSTEAM_USER=\"${STEAM_USER:-anonymous}\"\r\nSTEAM_PASS=\"${STEAM_PASS:-}\"\r\nSTEAM_AUTH=\"${STEAM_AUTH:-}\"\r\nDEPOTDOWNLOADER=\"${DEPOTDOWNLOADER:-0}\"\r\n: \"${STEAM_APPID:?Environment variable STEAM_APPID must be set for $GAME_NAME}\"  # mandatory\r\n\r\n# ----------------------------\r\n# Locale Setup to suppress warnings\r\n# ----------------------------\r\nexport LANG=en_US.UTF-8\r\nexport LANGUAGE=en_US:en\r\nexport LC_ALL=en_US.UTF-8\r\n\r\n# ----------------------------\r\n# Logging Setup\r\n# ----------------------------\r\nSAFE_NAME=\"${GAME_NAME\/\/ \/_}_install.log\"\r\nINSTALL_LOG=\"$HOME\/$SAFE_NAME\"\r\n\r\n# Redirect all output to log while still mirroring to console\r\nif command -v tee >\/dev\/null 2>&1; then\r\n    exec 3>&1\r\n    exec > >(tee -a \"$INSTALL_LOG\" >&3) 2> >(tee -a \"$INSTALL_LOG\" >&2)\r\nelse\r\n    exec > \"$INSTALL_LOG\" 2>&1\r\nfi\r\n\r\n# ----------------------------\r\n# Colors\r\n# ----------------------------\r\nRED=$(tput setaf 1)\r\nGREEN=$(tput setaf 2)\r\nYELLOW=$(tput setaf 3)\r\nBLUE=$(tput setaf 4)\r\nCYAN=$(tput setaf 6)\r\nNC=$(tput sgr0)\r\n\r\nLINE=\"${BLUE}-------------------------------------------------${NC}\"\r\n\r\n# ----------------------------\r\n# Logging Functions\r\n# ----------------------------\r\nlog_info()    { echo \"${BLUE}[INFO]${NC} $*\"; }\r\nlog_warn()    { echo \"${YELLOW}[WARN]${NC} $*\"; }\r\nlog_error()   { echo \"${RED}[ERROR]${NC} $*\" >&2; }\r\nlog_success() { echo \"${GREEN}[ OK ]${NC} $*\"; }\r\n\r\n# ----------------------------\r\n# Safe command execution\r\n# ----------------------------\r\nrun_or_fail() {\r\n    local desc=\"$1\"; shift\r\n    if \"$@\"; then\r\n        log_success \"$desc\"\r\n    else\r\n        log_error \"$desc failed!\"\r\n        exit 1\r\n    fi\r\n}\r\n\r\n# ----------------------------\r\n# Start Script Output\r\n# ----------------------------\r\nclear\r\nlog_info \"$LINE\"\r\nlog_info \"${YELLOW}$GAME_NAME Installscript${NC}\"\r\nlog_info \"$LINE\"\r\n\r\nif [ \"$STEAM_USER\" = \"anonymous\" ]; then\r\n    log_warn \"Using anonymous Steam login for $GAME_NAME.\"\r\nelse\r\n    log_info \"Using Steam user: $STEAM_USER for $GAME_NAME.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Game Installation via DepotDownloader\r\n# ----------------------------\r\nif [ \"$DEPOTDOWNLOADER\" = \"1\" ]; then\r\n    log_info \"Installing $GAME_NAME via DepotDownloader (Linux)...\"\r\n    mkdir -p \"$HOME\/depotdownloader\"\r\n    cd \"$HOME\/depotdownloader\"\r\n\r\n    if [ ! -f DepotDownloader ]; then\r\n        log_info \"Fetching DepotDownloader Linux binary...\"\r\n        run_or_fail \"Download DepotDownloader\" curl -sSL -o DepotDownloader https:\/\/github.com\/SteamRE\/DepotDownloader\/releases\/latest\/download\/DepotDownloader-Linux-x64\r\n        run_or_fail \"Make DepotDownloader executable\" chmod +x DepotDownloader\r\n    fi\r\n\r\n    log_info \"Running DepotDownloader...\"\r\n    .\/DepotDownloader \\\r\n        -app $STEAM_APPID \\\r\n        -dir $HOME \\\r\n        $( [[ -n \"${STEAM_BETAID:-}\" ]] && printf %s \"-beta $STEAM_BETAID\" ) \\\r\n        $( [[ -n \"${STEAM_BETAPASS:-}\" ]] && printf %s \"-betapassword $STEAM_BETAPASS\" ) \\\r\n        ${INSTALL_FLAGS:-} \\\r\n        -username $STEAM_USER \\\r\n        -password $STEAM_PASS \\\r\n        ${STEAM_AUTH:+-remember-password $STEAM_AUTH} || \\\r\n        log_warn \"DepotDownloader returned non-zero exit code, but installation may still be OK.\"\r\n    log_success \"DepotDownloader installation finished.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Game Installation via SteamCMD\r\n# ----------------------------\r\nif [ \"$DEPOTDOWNLOADER\" != \"1\" ]; then\r\n    log_info \"Installing $GAME_NAME via SteamCMD...\"\r\n    mkdir -p \"$STEAMCMD_DIR\" \"$HOME\/steamapps\"\r\n\r\n    run_or_fail \"Download SteamCMD\" curl -sSL -o \/tmp\/steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\n    run_or_fail \"Extract SteamCMD\" tar -xzvf \/tmp\/steamcmd.tar.gz -C \"$STEAMCMD_DIR\"\r\n\r\n    cd \"$STEAMCMD_DIR\"\r\n\r\n    log_info \"Running SteamCMD...\"\r\n    .\/steamcmd.sh +force_install_dir $HOME \\\r\n        +login $STEAM_USER $STEAM_PASS $STEAM_AUTH \\\r\n        $( [[ \"${WINDOWS_INSTALL:-0}\" == \"1\" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) \\\r\n        $( [[ \"${STEAM_SDK:-0}\" == \"1\" ]] && printf %s '+app_update 1007' ) \\\r\n        +app_update $STEAM_APPID \\\r\n        $( [[ -n \"${STEAM_BETAID:-}\" ]] && printf %s \"-beta $STEAM_BETAID\" ) \\\r\n        $( [[ -n \"${STEAM_BETAPASS:-}\" ]] && printf %s \"-betapassword $STEAM_BETAPASS\" ) \\\r\n        ${INSTALL_FLAGS:-} validate +quit || \\\r\n        log_warn \"SteamCMD returned a non-zero exit code, but installation may still be OK.\"\r\n    log_success \"SteamCMD installation finished.\"\r\nfi\r\n\r\n# ----------------------------\r\n# Steam Libraries Setup\r\n# ----------------------------\r\nlog_info \"Setting up Steam libraries...\"\r\nmkdir -p \"$HOME\/.steam\/sdk32\" \"$HOME\/.steam\/sdk64\"\r\ncp -v \"$STEAMCMD_DIR\/linux32\/steamclient.so\" \"$HOME\/.steam\/sdk32\/steamclient.so\" || true\r\ncp -v \"$STEAMCMD_DIR\/linux64\/steamclient.so\" \"$HOME\/.steam\/sdk64\/steamclient.so\" || true\r\nlog_success \"Steam libraries setup complete.\"\r\n\r\n# ----------------------------\r\n# Game-specific Hooks\r\n# ----------------------------\r\nlog_info \"Executing $GAME_NAME game-specific hooks...\"\r\n# <--- add game-specific commands here\r\n\r\n# ----------------------------\r\n# Config Setup\r\n# ----------------------------\r\nif [ -f \"$CONFIG_DIR\/$CONFIG_FILE_NAME\" ]; then\r\n    log_success \"$GAME_NAME $CONFIG_FILE_NAME found.\"\r\nelse\r\n    log_warn \"$GAME_NAME $CONFIG_FILE_NAME not found. Fetching default...\"\r\n    mkdir -p \"$CONFIG_DIR\"\r\n    run_or_fail \"Download default $CONFIG_FILE_NAME\" curl -sSL -o \"$CONFIG_DIR\/$CONFIG_FILE_NAME\" https:\/\/raw.githubusercontent.com\/gsrvtech\/gameserver-templates\/refs\/heads\/main\/steamcmd-games\/reown\/config\/$CONFIG_FILE_NAME\r\nfi\r\n\r\n# ----------------------------\r\n# Done\r\n# ----------------------------\r\nlog_info \"$LINE\"\r\nlog_success \"$GAME_NAME installation completed successfully.\"\r\nlog_info \"$LINE\"\r\n",
+            "container": "ghcr.io\/goover\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "[SERVER] Admin Password",
+            "description": "",
+            "env_variable": "ADMIN_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM] Auto Update",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Beacon Port",
+            "description": "",
+            "env_variable": "BEACON_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Max Players",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "32",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Query Port",
+            "description": "",
+            "env_variable": "QUERY_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] RCON enabled",
+            "description": "",
+            "env_variable": "RCON",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] RCON Port",
+            "description": "",
+            "env_variable": "RCON_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|numeric",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] RCON password",
+            "description": "",
+            "env_variable": "RCON_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Server Name",
+            "description": "",
+            "env_variable": "SRV_NAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "[SERVER] Server Password",
+            "description": "",
+            "env_variable": "SRV_PW",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM]SteamAPPID",
+            "description": "",
+            "env_variable": "STEAM_APPID",
+            "default_value": " 1512690",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|in: 1512690",
+            "field_type": "text"
+        },
+        {
+            "name": "[STEAM]SteamSDK",
+            "description": "",
+            "env_variable": "STEAM_SDK",
+            "default_value": "1",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        }
+    ]
+}
