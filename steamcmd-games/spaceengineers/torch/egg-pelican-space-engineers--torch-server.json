@@ -1,14 +1,15 @@
 {
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL",
     "meta": {
-        "version": "PLCN_v2",
+        "version": "PLCN_v3",
         "update_url": null
     },
-    "exported_at": "2025-09-28T10:41:07+00:00",
+    "exported_at": "2026-01-24T13:21:52+00:00",
     "name": "Space Engineers - Torch Server",
     "author": "info@goover.de",
     "uuid": "502e2018-30ab-4cd4-8f95-fcbe58935c28",
     "description": "Torch is the successor to SE Server Extender and gives server admins the tools they need to keep their Space Engineers servers running smoothly. It features a user interface with live management tools and a plugin system so you can run your server exactly how you'd like. Torch is still in early development so there may be bugs and incomplete features.\r\n\r\n!!!!! DO NOT CANCEL THE FIRST START, OR YOU NEED TO DELETE THE SERVER AND CREATE FROM SCRATCH !!!!",
+    "image": null,
     "tags": [
         "goover.dev"
     ],
@@ -19,7 +20,9 @@
         "ghcr.io/goover/wine:staging": "ghcr.io/goover/wine:staging"
     },
     "file_denylist": [],
-    "startup": "export WINEDLLOVERRIDES=\"mscoree=n,b;mshtml=n,b\"; wine /home/container/Torch.Server.exe -noupdate -nogui -console",
+    "startup_commands": {
+        "Default": "export WINEDLLOVERRIDES=\"mscoree=n,b;mshtml=n,b\"; wine /home/container/Torch.Server.exe -noupdate -nogui -console"
+    },
     "config": {
         "files": "{\n    \"Instance\\/SpaceEngineers-Dedicated.cfg\": {\n        \"parser\": \"xml\",\n        \"find\": {\n            \"MyConfigDedicated.SessionSettings.GameMode\": \"{{server.environment.SERVER_MODE}}\",\n            \"MyConfigDedicated.SessionSettings.MaxPlayers\": \"{{server.environment.MAX_PLAYERS}}\",\n            \"MyConfigDedicated.SessionSettings.AutoSaveInMinutes\": \"{{server.environment.SAVE_INTERVAL}}\",\n            \"MyConfigDedicated.SessionSettings.EnableSaving\": \"{{server.environment.SAVE_ENABLED}}\",\n            \"MyConfigDedicated.LoadWorld\": \"Z:\\\\home\\\\container\\\\Instance\\\\Saves\\\\{{server.environment.WORLD_NAME}}\",\n            \"MyConfigDedicated.ServerPort\": \"{{server.allocations.default.port}}\",\n            \"MyConfigDedicated.SteamPort\": \"{{server.environment.STEAM_PORT}}\",\n            \"MyConfigDedicated.ServerName\": \"{{server.environment.SERVER_NAME}}\",\n            \"MyConfigDedicated.WorldName\": \"{{server.environment.WORLD_NAME}}\",\n            \"MyConfigDedicated.ServerDescription\": \"{{server.environment.SERVER_DESC}}\",\n            \"MyConfigDedicated.RemoteApiEnabled\": \"{{server.environment.REMOTEAPI_ENABLE}}\",\n            \"MyConfigDedicated.RemoteApiPort\": \"{{server.environment.REMOTEAPI_PORT}}\"\n        }\n    },\n    \"config\\/Saves\\/World\\/Sandbox.sbc\": {\n        \"parser\": \"xml\",\n        \"find\": {\n            \"MyConfigDedicated.SessionSettings.GameMode\": \"{{server.environment.SERVER_MODE}}\",\n            \"MyConfigDedicated.SessionSettings.MaxPlayers\": \"{{server.environment.MAX_PLAYERS}}\",\n            \"MyConfigDedicated.SessionSettings.AutoSaveInMinutes\": \"{{server.environment.SAVE_INTERVAL}}\",\n            \"MyConfigDedicated.SessionSettings.EnableSaving\": \"{{server.environment.SAVE_ENABLED}}\"\n        }\n    }\n}",
         "startup": "{\n    \"done\": \"Game ready...\"\n}",
