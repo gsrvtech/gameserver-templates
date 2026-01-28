@@ -233,18 +233,32 @@ system_check() {
     echo ""
     echo "${BLUE}┌─ ${CYAN}${BOLD}Virtualization${NC}"
     local virt_status="Unknown"
+    local virt_detail=""
+    
     if command -v systemd-detect-virt &> /dev/null; then
         virt_status=$(systemd-detect-virt 2>/dev/null || echo "none")
         if [[ "$virt_status" == "none" ]]; then
-            echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Bare Metal (No Virtualization)${NC}"
+            echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Bare Metal${NC}"
             virt_status="Bare Metal"
         else
-            echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${YELLOW}${virt_status}${NC}"
+            # Capitalize first letter for better display
+            virt_detail="$virt_status"
+            case "$virt_status" in
+                kvm) virt_detail="KVM" ;;
+                qemu) virt_detail="QEMU" ;;
+                docker) virt_detail="Docker Container" ;;
+                lxc) virt_detail="LXC Container" ;;
+                vmware) virt_detail="VMware" ;;
+                microsoft) virt_detail="Hyper-V" ;;
+                xen) virt_detail="Xen" ;;
+            esac
+            echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}${virt_detail}${NC}"
         fi
     elif [[ -f /proc/cpuinfo ]]; then
         if grep -qE "^flags.*hypervisor" /proc/cpuinfo; then
-            echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Virtualized (hypervisor detected)${NC}"
-            virt_status="Virtualized (hypervisor flag present)"
+            virt_status="Virtualized"
+            virt_detail="Hypervisor detected"
+            echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Virtualized${NC} ${WHITE}(${virt_detail})${NC}"
         else
             echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Likely Bare Metal${NC}"
             virt_status="Likely Bare Metal"
@@ -521,7 +535,7 @@ download_with_retry() {
     
     # Validate URL format
     if [[ ! "$url" =~ ^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$ ]]; then
-        log_error "Invalid URL format: $url"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Invalid URL format: $url" >> "$INSTALL_LOG"
         return 1
     fi
     
@@ -529,11 +543,11 @@ download_with_retry() {
     local curl_supports_https=true
     if ! curl --version 2>/dev/null | grep -q "https"; then
         curl_supports_https=false
-        log_warn "HTTPS not supported by curl, will try HTTP fallback"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] HTTPS not supported by curl, will try HTTP fallback" >> "$INSTALL_LOG"
     fi
     
     for i in $(seq 1 "$retries"); do
-        log_info "Downloading $desc (attempt $i/$retries)..."
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Downloading $desc (attempt $i/$retries)..." >> "$INSTALL_LOG"
         
         # Determine which URLs to try based on HTTPS support
         local urls_to_try=()
@@ -544,7 +558,7 @@ download_with_retry() {
             else
                 # Only try HTTP if HTTPS is not supported
                 urls_to_try=("${url/https:/http:}")
-                log_warn "Using HTTP instead of HTTPS: ${url/https:/http:}"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Using HTTP instead of HTTPS: ${url/https:/http:}" >> "$INSTALL_LOG"
             fi
         else
             # URL is already HTTP
@@ -589,28 +603,28 @@ download_with_retry() {
                 
                 if [[ "$file_size" -gt 0 ]]; then
                     if [[ -n "$expected_size" ]] && [[ "$file_size" -lt "$expected_size" ]]; then
-                        log_warn "Downloaded file seems too small ($file_size bytes, expected at least $expected_size)"
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Downloaded file seems too small ($file_size bytes, expected at least $expected_size)" >> "$INSTALL_LOG"
                     fi
-                    log_success "Downloaded $desc successfully ($file_size bytes)"
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Downloaded $desc successfully ($file_size bytes)" >> "$INSTALL_LOG"
                     return 0
                 else
-                    log_error "Downloaded file is empty"
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Downloaded file is empty" >> "$INSTALL_LOG"
                     rm -f "$output"
                 fi
             fi
         else
             if [[ -n "$last_error" ]]; then
-                log_warn "Download failed: $last_error"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Download failed: $last_error" >> "$INSTALL_LOG"
             fi
         fi
         
         if [[ "$i" -lt "$retries" ]]; then
-            log_warn "Download attempt $i failed, retrying in 5 seconds..."
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Download attempt $i failed, retrying in 5 seconds..." >> "$INSTALL_LOG"
             sleep 5
         fi
     done
     
-    log_error "Failed to download $desc after $retries attempts"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to download $desc after $retries attempts" >> "$INSTALL_LOG"
     return 1
 }
 
@@ -638,13 +652,8 @@ run_or_fail() {
 cleanup() {
     local exit_code=$?
     
-    # Only log cleanup on errors
-    if [[ "$exit_code" -ne 0 ]]; then
-        log_info "Cleaning up temporary files..."
-    fi
-    
-    # Remove temporary files
-    rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log
+    # Remove temporary files silently
+    rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log 2>/dev/null || true
     
     # Clean up any leftover processes
     pkill -f "steamcmd" 2>/dev/null || true
@@ -652,11 +661,6 @@ cleanup() {
     
     # Clear sensitive variables
     unset STEAM_PASS STEAM_AUTH
-    
-    if [[ "$exit_code" -ne 0 ]]; then
-        log_error "Script exited with error code $exit_code"
-        log_info "Check the installation log at: $INSTALL_LOG"
-    fi
     
     exit "$exit_code"
 }
@@ -675,54 +679,107 @@ run_steam_command() {
     
     echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Executing: $desc" >> "$INSTALL_LOG"
     
+    local temp_output="/tmp/steam_output_$$.log"
     local exit_code=0
     
-    # Show progress output on screen while filtering sensitive data
-    # SteamCMD outputs download progress which we want to show
+    # Execute command and capture output to temporary file
     echo "${BLUE}│${NC}"
-    "${cmd_array[@]}" 2>&1 | while IFS= read -r line; do
-        # Log everything (filtered) to file
-        echo "$line" | grep -v -iE "password|auth|token|secret" >> "$INSTALL_LOG" 2>/dev/null || true
+    "${cmd_array[@]}" > "$temp_output" 2>&1
+    exit_code=$?
+    
+    # Process output from file
+    while IFS= read -r line; do
+        # Remove ANSI escape codes for cleaner logging
+        local clean_line
+        clean_line=$(echo "$line" | sed -r 's/\x1b\[[0-9;]*[mK]//g' | sed 's/(B\[m//g')
         
-        # Show progress lines on screen (update%, downloading, validating)
-        if [[ "$line" =~ (Update|Downloading|Validating|progress|[0-9]+%) ]] || \
-           [[ "$line" =~ ^\ *\[.*\] ]] || \
-           [[ "$line" =~ "Success" ]] || \
-           [[ "$line" =~ "Depot download" ]]; then
-            # Filter out sensitive information before display
-            local safe_line
-            safe_line=$(echo "$line" | grep -v -iE "password|auth|token|secret|login")
-            if [[ -n "$safe_line" ]]; then
-                printf "${BLUE}│${NC}  ${WHITE}%s${NC}\n" "$safe_line"
+        # Skip banner messages, license info, and other non-error messages
+        if [[ "$clean_line" =~ (Image by gOOvER|discord.goover.dev|LICENSED UNDER|Redirecting stderr) ]] || \
+           [[ "$clean_line" =~ ^[[:space:]]*$ ]]; then
+            continue
+        fi
+        
+        # Log relevant lines (filtered) to file
+        if ! echo "$clean_line" | grep -qiE "password|auth|token|secret"; then
+            # Only log errors, warnings, progress, and important messages
+            if [[ "$clean_line" =~ (ERROR|Failed|Warning|Success|Update|Downloading|Validating|progress) ]] || \
+               [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
+               [[ "$clean_line" =~ "Depot download" ]] || \
+               [[ "$clean_line" =~ "Connecting" ]] || \
+               [[ "$clean_line" =~ "Waiting" ]]; then
+                echo "$clean_line" >> "$INSTALL_LOG" 2>/dev/null || true
             fi
         fi
-    done
-    exit_code=${PIPESTATUS[0]}
+        
+        # Show progress lines on screen (update%, downloading, validating)
+        if [[ "$clean_line" =~ (Update|Downloading|Validating|progress|[0-9]+%) ]] || \
+           [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
+           [[ "$clean_line" =~ "Success" ]] || \
+           [[ "$clean_line" =~ "Depot download" ]]; then
+            # Filter out sensitive information before display
+            if ! echo "$clean_line" | grep -qiE "password|auth|token|secret|login"; then
+                printf "${BLUE}│${NC}  ${WHITE}%s${NC}\n" "$clean_line"
+            fi
+        fi
+    done < "$temp_output"
+    
+    # Clean up temporary file
+    rm -f "$temp_output"
     echo "${BLUE}│${NC}"
     
-    # Log results
+    # Check for specific error messages in log
+    local last_error=""
+    if [[ -f "$INSTALL_LOG" ]]; then
+        last_error=$(tail -n 20 "$INSTALL_LOG" | { grep -i "ERROR\|Failed" || true; } | tail -n 1)
+    fi
+    
+    # Log results and handle errors
     case "$exit_code" in
-        0) echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc completed successfully" >> "$INSTALL_LOG" ;;
+        0) 
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc completed successfully" >> "$INSTALL_LOG"
+            return 0
+            ;;
         2) 
             echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Steam login failed - check credentials" >> "$INSTALL_LOG"
             print_error "Steam login failed"
+            exit 1
             ;;
         5) 
             echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] App not found or access denied for AppID: $STEAM_APPID" >> "$INSTALL_LOG"
             print_error "App not found (AppID: $STEAM_APPID)"
+            exit 1
             ;;
         7) 
             echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Steam is updating, please try again later" >> "$INSTALL_LOG"
             print_error "Steam is updating"
+            exit 1
+            ;;
+        8)
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Installation failed for AppID: $STEAM_APPID" >> "$INSTALL_LOG"
+            print_error "Installation failed (AppID: $STEAM_APPID)"
+            
+            # Check for "Missing configuration" error
+            if echo "$last_error" | grep -qi "Missing configuration"; then
+                echo "${BLUE}│${NC}"
+                print_warn "Possible causes for 'Missing configuration' error:"
+                echo "${BLUE}│${NC}    ${YELLOW}1.${NC} App may require a beta branch (set STEAM_BETAID)"
+                echo "${BLUE}│${NC}    ${YELLOW}2.${NC} App may be Windows-only (set WINDOWS_INSTALL=1)"
+                echo "${BLUE}│${NC}    ${YELLOW}3.${NC} App may require additional install flags"
+                echo "${BLUE}│${NC}    ${YELLOW}4.${NC} App ID might be incorrect or not accessible"
+                echo "${BLUE}│${NC}    ${YELLOW}5.${NC} App may not have a dedicated server version"
+                echo "${BLUE}│${NC}"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Missing configuration error - check egg variables" >> "$INSTALL_LOG"
+            fi
+            exit 1
             ;;
         *) 
             if [[ "$exit_code" -ne 0 ]]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $desc exited with code $exit_code" >> "$INSTALL_LOG"
+                print_warn "$desc exited with code $exit_code"
+                exit 1
             fi
             ;;
     esac
-    
-    return "$exit_code"
 }
 
 # ----------------------------
@@ -760,7 +817,9 @@ validate_config_url
 print_step "Validating Steam credentials..."
 validate_steam_credentials
 print_step "Validating paths..."
-validate_path "$CONFIG_DIR" "CONFIG_DIR"
+if [[ "${CONFIG_INIT:-0}" -eq 1 ]]; then
+    validate_path "$CONFIG_DIR" "CONFIG_DIR"
+fi
 validate_path "$STEAMCMD_DIR" "STEAMCMD_DIR"
 print_ok "All checks passed"
 echo "${BLUE}└─${NC}"
@@ -857,18 +916,29 @@ fi
 if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
     echo ""
     echo "${BLUE}┌─ ${CYAN}${BOLD}Game Installation (SteamCMD)${NC}"
-    print_step "Installing $GAME_NAME..."
     mkdir -p "$STEAMCMD_DIR" "$HOME/steamapps"
 
-    run_or_fail "Download SteamCMD" \
-        download_with_retry \
+    print_step "Downloading SteamCMD..."
+    if download_with_retry \
         "http://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
         "/tmp/steamcmd.tar.gz" \
         3 \
-        "SteamCMD archive"
+        "SteamCMD archive"; then
+        print_ok "SteamCMD downloaded"
+    else
+        print_error "Failed to download SteamCMD"
+        exit 1
+    fi
     
-    run_or_fail "Extract SteamCMD" tar -xzf /tmp/steamcmd.tar.gz -C "$STEAMCMD_DIR"
+    print_step "Extracting SteamCMD..."
+    if tar -xzf /tmp/steamcmd.tar.gz -C "$STEAMCMD_DIR" >> "$INSTALL_LOG" 2>&1; then
+        print_ok "SteamCMD extracted"
+    else
+        print_error "Failed to extract SteamCMD"
+        exit 1
+    fi
 
+    print_step "Installing $GAME_NAME..."
     cd "$STEAMCMD_DIR"
 
     # Build SteamCMD command array
@@ -890,8 +960,10 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
         steam_cmd+=("+@sSteamCmdForcePlatformType" "windows")
     fi
     
-    steam_cmd+=("+app_update" "$STEAM_APPID" "+app_update" "1007")
+    # Build app_update command with all its parameters
+    steam_cmd+=("+app_update" "$STEAM_APPID")
     
+    # Beta parameters must come immediately after app_update, before validate
     if [[ -n "${STEAM_BETAID:-}" ]]; then
         steam_cmd+=("-beta" "$STEAM_BETAID")
     fi
@@ -900,13 +972,19 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
         steam_cmd+=("-betapassword" "$STEAM_BETAPASS")
     fi
     
-    # Add install flags if provided
+    # Add install flags if provided (before validate)
     if [[ -n "${INSTALL_FLAGS:-}" ]]; then
         read -ra flags <<< "$INSTALL_FLAGS"
         steam_cmd+=("${flags[@]}")
     fi
     
-    steam_cmd+=("validate" "+quit")
+    # validate must be part of the app_update command
+    steam_cmd+=("validate")
+    
+    # Install Steam Linux Runtime (SteamCMD bootstrapping)
+    steam_cmd+=("+app_update" "1007" "validate")
+    
+    steam_cmd+=("+quit")
 
     # Convert array to string for run_steam_command
     cmd_string=""

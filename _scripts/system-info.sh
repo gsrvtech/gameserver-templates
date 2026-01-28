@@ -45,61 +45,59 @@ check_and_offer_packages() {
     
     echo ""
     echo "${YELLOW}╔════════════════════════════════════════════════════════════════════════════════╗${NC}"
-    echo "${YELLOW}║  Optionale Pakete für erweiterte Informationen                                 ║${NC}"
+    echo "${YELLOW}║  Optional Packages for Extended Information                                   ║${NC}"
     echo "${YELLOW}╚════════════════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo "${CYAN}Folgende optionale Pakete sind nicht installiert:${NC}"
+    echo "${CYAN}The following optional packages are not installed:${NC}"
     for pkg in "${missing_packages[@]}"; do
         echo "  ${YELLOW}•${NC} $pkg"
     done
     echo ""
-    echo "${CYAN}Das Script kann auch ohne diese Pakete ausgeführt werden.${NC}"
-    echo "${CYAN}Mit diesen Paketen erhalten Sie jedoch detailli
-
-ertere Informationen.${NC}"
+    echo "${CYAN}The script can run without these packages.${NC}"
+    echo "${CYAN}However, these packages provide more detailed information.${NC}"
     echo ""
     
-    read -p "${BLUE}Möchten Sie die fehlenden Pakete jetzt installieren? (j/N): ${NC}" -n 1 -r
+    read -p "${BLUE}Would you like to install the missing packages now? (y/N): ${NC}" -n 1 -r
     echo ""
     
     if [[ $REPLY =~ ^[JjYy]$ ]]; then
         echo ""
-        echo "${CYAN}Installiere optionale Pakete...${NC}"
+        echo "${CYAN}Installing optional packages...${NC}"
         
         # Detect package manager and install
         if command -v apt-get >/dev/null 2>&1; then
-            echo "${BLUE}Verwende apt-get...${NC}"
+            echo "${BLUE}Using apt-get...${NC}"
             sudo apt-get update >/dev/null 2>&1 || true
             sudo apt-get install -y systemd lshw dmidecode 2>/dev/null || {
-                echo "${YELLOW}Einige Pakete konnten nicht installiert werden (möglicherweise bereits vorhanden)${NC}"
+                echo "${YELLOW}Some packages could not be installed (possibly already present)${NC}"
             }
         elif command -v apk >/dev/null 2>&1; then
-            echo "${BLUE}Verwende apk...${NC}"
+            echo "${BLUE}Using apk...${NC}"
             sudo apk add --no-cache systemd lshw dmidecode 2>/dev/null || {
-                echo "${YELLOW}Einige Pakete konnten nicht installiert werden${NC}"
+                echo "${YELLOW}Some packages could not be installed${NC}"
             }
         elif command -v yum >/dev/null 2>&1; then
-            echo "${BLUE}Verwende yum...${NC}"
+            echo "${BLUE}Using yum...${NC}"
             sudo yum install -y systemd lshw dmidecode 2>/dev/null || {
-                echo "${YELLOW}Einige Pakete konnten nicht installiert werden${NC}"
+                echo "${YELLOW}Some packages could not be installed${NC}"
             }
         elif command -v dnf >/dev/null 2>&1; then
-            echo "${BLUE}Verwende dnf...${NC}"
+            echo "${BLUE}Using dnf...${NC}"
             sudo dnf install -y systemd lshw dmidecode 2>/dev/null || {
-                echo "${YELLOW}Einige Pakete konnten nicht installiert werden${NC}"
+                echo "${YELLOW}Some packages could not be installed${NC}"
             }
         else
-            echo "${RED}Kein unterstützter Paketmanager gefunden.${NC}"
-            echo "${YELLOW}Bitte installieren Sie die Pakete manuell.${NC}"
+            echo "${RED}No supported package manager found.${NC}"
+            echo "${YELLOW}Please install the packages manually.${NC}"
         fi
         
         OPTIONAL_PACKAGES_INSTALLED=1
-        echo "${GREEN}Installation abgeschlossen.${NC}"
+        echo "${GREEN}Installation completed.${NC}"
         echo ""
         sleep 2
     else
         echo ""
-        echo "${CYAN}Fahre ohne Installation fort...${NC}"
+        echo "${CYAN}Continuing without installation...${NC}"
         echo ""
         sleep 1
     fi
@@ -110,12 +108,12 @@ upload_to_wastebin() {
     
     if ! command -v curl >/dev/null 2>&1; then
         echo ""
-        echo "${RED}Fehler: curl ist nicht installiert. Kann nicht zu Wastebin hochladen.${NC}"
+        echo "${RED}Error: curl is not installed. Cannot upload to Wastebin.${NC}"
         return 1
     fi
     
     echo ""
-    echo "${CYAN}Lade Report zu Wastebin hoch...${NC}"
+    echo "${CYAN}Uploading report to Wastebin...${NC}"
     
     # Create temporary file with plain content
     local temp_file="/tmp/wastebin-content-$$.txt"
@@ -133,13 +131,13 @@ upload_to_wastebin() {
     
     if [ $curl_exit -ne 0 ]; then
         echo ""
-        echo "${RED}Fehler beim Hochladen (curl exit code: $curl_exit)${NC}"
+        echo "${RED}Upload error (curl exit code: $curl_exit)${NC}"
         echo "${YELLOW}Response: $response${NC}"
         return 1
     fi
     
     # Debug: Show raw response
-    echo "${CYAN}Server-Antwort:${NC} $response"
+    echo "${CYAN}Server response:${NC} $response"
     echo ""
     
     # Try to extract path from response
@@ -155,14 +153,14 @@ upload_to_wastebin() {
         local paste_url="${WASTEBIN_URL}${paste_path}"
         echo ""
         echo "${GREEN}╔════════════════════════════════════════════════════════════════════════════════╗${NC}"
-        echo "${GREEN}║  Report erfolgreich hochgeladen!                                               ║${NC}"
+        echo "${GREEN}║  Report successfully uploaded!                                                 ║${NC}"
         echo "${GREEN}╚════════════════════════════════════════════════════════════════════════════════╝${NC}"
         echo ""
         echo "${CYAN}URL:${NC} ${YELLOW}${paste_url}${NC}"
         echo ""
         return 0
     else
-        echo "${RED}Fehler: Konnte URL nicht aus Antwort extrahieren${NC}"
+        echo "${RED}Error: Could not extract URL from response${NC}"
         return 1
     fi
 }
@@ -174,7 +172,7 @@ ask_for_upload() {
     fi
     
     echo ""
-    read -p "${BLUE}Möchten Sie den Report zu Wastebin (${WASTEBIN_URL}) hochladen? (j/N): ${NC}" -n 1 -r
+    read -p "${BLUE}Would you like to upload the report to Wastebin (${WASTEBIN_URL})? (y/N): ${NC}" -n 1 -r
     echo ""
     
     if [[ $REPLY =~ ^[JjYy]$ ]]; then
@@ -458,7 +456,7 @@ show_cpu_info() {
         fi
     elif [ -f /proc/stat ]; then
         # Fallback: Calculate CPU usage from /proc/stat
-        print_info "CPU Usage" "Berechnung über /proc/stat verfügbar"
+        print_info "CPU Usage" "Calculation via /proc/stat available"
     fi
 }
 
@@ -712,7 +710,7 @@ show_docker_info() {
         
         # Check if Docker daemon is running
         if ! docker ps >/dev/null 2>&1; then
-            print_warn "Docker Status" "Daemon nicht erreichbar (läuft Docker?)"
+            print_warn "Docker Status" "Daemon not reachable (is Docker running?)"
             return
         fi
         
@@ -769,15 +767,15 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  -u, --upload       Automatisch zu Wastebin hochladen"
-            echo "  --no-upload        Nicht zu Wastebin hochladen (automatischer Modus)"
-            echo "  -h, --help         Diese Hilfe anzeigen"
+            echo "  -u, --upload       Automatically upload to Wastebin"
+            echo "  --no-upload        Do not upload to Wastebin (automatic mode)"
+            echo "  -h, --help         Show this help"
             echo ""
             exit 0
             ;;
         *)
-            echo "Unbekannte Option: $1"
-            echo "Verwenden Sie --help für Hilfe"
+            echo "Unknown option: $1"
+            echo "Use --help for help"
             exit 1
             ;;
     esac
@@ -838,7 +836,7 @@ else
         if [ "$UPLOAD_TO_WASTEBIN" -eq 1 ]; then
             # Regenerate report without colors and upload
             echo ""
-            echo "${CYAN}Generiere Report für Upload...${NC}"
+            echo "${CYAN}Generating report for upload...${NC}"
             generate_report 2>&1 | sed -r "s/\x1B\[[0-9;]*[mK]//g" > "$OUTPUT_FILE"
             upload_to_wastebin "$(cat "$OUTPUT_FILE")"
             rm -f "$OUTPUT_FILE"
