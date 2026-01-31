@@ -17,12 +17,25 @@ export HOME
 # Ensure /mnt is owned by root
 chown -R root:root /mnt
 
+# ----------------------------
+# Game Specific Configuration
+# ----------------------------
 GAME_NAME="Risk of Rain2"   # <--- name of the game (internal placeholder)
+
+# ----------------------------
+# Configuration Initialization
+# ----------------------------
 CONFIG_INIT=0
 CONFIG_FILE_NAME="Game.ini"      # <--- configurable config filename (internal)
 CONFIG_DIR="$HOME/PATH_TO_INI" # <--- adjustable per game
 CONFIG_URL="https://URL_TO_RAW_FILE_ON_GITHUB/$CONFIG_FILE_NAME"                  # <--- adjustable per game
 STEAMCMD_DIR="$HOME/steamcmd"              # <--- SteamCMD directory
+
+# ----------------------------
+# Library Copy Configuration (optional)
+# ("/path/src.so|/path/dest.so" "/path/src2.so|/path/dest2.so")
+# ----------------------------
+LIB_COPY_ITEMS=() # <--- optional
 
 STEAM_USER="${STEAM_USER:-anonymous}"
 STEAM_PASS="${STEAM_PASS:-}"
@@ -647,6 +660,54 @@ run_or_fail() {
 }
 
 # ----------------------------
+# Library Copy Helper
+# ----------------------------
+copy_game_libs() {
+    local items=()
+    if [[ "$#" -gt 0 ]]; then
+        items=("$@");
+    else
+        items=("${LIB_COPY_ITEMS[@]}")
+    fi
+
+    if [[ "${#items[@]}" -eq 0 ]]; then
+        print_step "No library copy entries configured"
+        return 0
+    fi
+
+    local item src dest
+    for item in "${items[@]}"; do
+        IFS='|' read -r src dest <<< "$item"
+
+        if [[ -z "${src:-}" || -z "${dest:-}" ]]; then
+            print_warn "Invalid copy entry (expected 'src|dest'): $item"
+            continue
+        fi
+
+        if [[ ! -e "$src" ]]; then
+            print_warn "Source not found: $src"
+            continue
+        fi
+
+        mkdir -p "$(dirname "$dest")"
+
+        if [[ -d "$src" ]]; then
+            if cp -a "$src" "$dest" >/dev/null 2>&1; then
+                print_ok "Copied directory: $src -> $dest"
+            else
+                print_warn "Failed to copy directory: $src -> $dest"
+            fi
+        else
+            if cp -f "$src" "$dest" >/dev/null 2>&1; then
+                print_ok "Copied file: $src -> $dest"
+            else
+                print_warn "Failed to copy file: $src -> $dest"
+            fi
+        fi
+    done
+}
+
+# ----------------------------
 # Cleanup Function
 # ----------------------------
 cleanup() {
@@ -1031,6 +1092,7 @@ echo ""
 echo "${BLUE}┌─ ${CYAN}${BOLD}Game-specific Hooks${NC}"
 print_step "Executing custom commands..."
 # <--- add game-specific commands here
+copy_game_libs
 print_ok "Hooks completed"
 echo "${BLUE}└─${NC}"
 
