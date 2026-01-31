@@ -22,6 +22,9 @@ chown -R root:root /mnt
 # ----------------------------
 GAME_NAME="Risk of Rain2"   # <--- name of the game (internal placeholder)
 
+# Steam Client AppID for steam_appid.txt (optional, leave empty if not needed)
+SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
+
 # ----------------------------
 # Configuration Initialization
 # ----------------------------
@@ -36,6 +39,10 @@ STEAMCMD_DIR="$HOME/steamcmd"              # <--- SteamCMD directory
 # ("/path/src.so|/path/dest.so" "/path/src2.so|/path/dest2.so")
 # ----------------------------
 LIB_COPY_ITEMS=() # <--- optional
+
+# -----------------------------------------------------------------------------------
+# WARNING: Do not modify anything below this line unless you know what you are doing!
+# -----------------------------------------------------------------------------------
 
 STEAM_USER="${STEAM_USER:-anonymous}"
 STEAM_PASS="${STEAM_PASS:-}"
@@ -269,9 +276,40 @@ system_check() {
         fi
     elif [[ -f /proc/cpuinfo ]]; then
         if grep -qE "^flags.*hypervisor" /proc/cpuinfo; then
-            virt_status="Virtualized"
-            virt_detail="Hypervisor detected"
-            echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Virtualized${NC} ${WHITE}(${virt_detail})${NC}"
+            local dmi_vendor=""
+            local dmi_product=""
+            if [[ -r /sys/class/dmi/id/sys_vendor ]]; then
+                dmi_vendor=$(tr -d '\n' </sys/class/dmi/id/sys_vendor 2>/dev/null || true)
+            fi
+            if [[ -r /sys/class/dmi/id/product_name ]]; then
+                dmi_product=$(tr -d '\n' </sys/class/dmi/id/product_name 2>/dev/null || true)
+            fi
+
+            if [[ -e /dev/kvm ]] || grep -qi "kvm" /proc/cpuinfo; then
+                virt_status="KVM"
+                virt_detail="KVM"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}KVM${NC}"
+            elif echo "$dmi_vendor $dmi_product" | grep -qi "vmware"; then
+                virt_status="VMware"
+                virt_detail="VMware"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}VMware${NC}"
+            elif echo "$dmi_vendor $dmi_product" | grep -qi "microsoft"; then
+                virt_status="Hyper-V"
+                virt_detail="Hyper-V"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Hyper-V${NC}"
+            elif echo "$dmi_vendor $dmi_product" | grep -qi "xen"; then
+                virt_status="Xen"
+                virt_detail="Xen"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Xen${NC}"
+            elif echo "$dmi_vendor $dmi_product" | grep -qi "qemu"; then
+                virt_status="QEMU"
+                virt_detail="QEMU"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}QEMU${NC}"
+            else
+                virt_status="Virtualized"
+                virt_detail="Hypervisor detected"
+                echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Virtualized${NC} ${WHITE}(${virt_detail})${NC}"
+            fi
         else
             echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Likely Bare Metal${NC}"
             virt_status="Likely Bare Metal"
@@ -685,7 +723,7 @@ copy_game_libs() {
         fi
 
         if [[ ! -e "$src" ]]; then
-            print_warn "Source not found: $src"
+            print_error "Source not found: $src"
             continue
         fi
 
@@ -743,13 +781,12 @@ run_steam_command() {
     local temp_output="/tmp/steam_output_$$.log"
     local exit_code=0
     
-    # Execute command and capture output to temporary file
+    # Execute command and process output in real-time
     echo "${BLUE}│${NC}"
-    "${cmd_array[@]}" > "$temp_output" 2>&1
-    exit_code=$?
-    
-    # Process output from file
-    while IFS= read -r line; do
+    "${cmd_array[@]}" 2>&1 | while IFS= read -r line; do
+        # Save raw line to temp file
+        echo "$line" >> "$temp_output"
+        
         # Remove ANSI escape codes for cleaner logging
         local clean_line
         clean_line=$(echo "$line" | sed -r 's/\x1b\[[0-9;]*[mK]//g' | sed 's/(B\[m//g')
@@ -763,26 +800,32 @@ run_steam_command() {
         # Log relevant lines (filtered) to file
         if ! echo "$clean_line" | grep -qiE "password|auth|token|secret"; then
             # Only log errors, warnings, progress, and important messages
-            if [[ "$clean_line" =~ (ERROR|Failed|Warning|Success|Update|Downloading|Validating|progress) ]] || \
+            if [[ "$clean_line" =~ (ERROR|Failed|Warning|Success|Update|Downloading|Validating|progress|Installing|Loading) ]] || \
                [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
                [[ "$clean_line" =~ "Depot download" ]] || \
                [[ "$clean_line" =~ "Connecting" ]] || \
-               [[ "$clean_line" =~ "Waiting" ]]; then
+               [[ "$clean_line" =~ "Waiting" ]] || \
+               [[ "$clean_line" =~ "App" ]] || \
+               [[ "$clean_line" =~ "state" ]]; then
                 echo "$clean_line" >> "$INSTALL_LOG" 2>/dev/null || true
             fi
         fi
         
-        # Show progress lines on screen (update%, downloading, validating)
-        if [[ "$clean_line" =~ (Update|Downloading|Validating|progress|[0-9]+%) ]] || \
+        # Show progress lines on screen (update%, downloading, validating, installing)
+        if [[ "$clean_line" =~ (Update|Downloading|Validating|Installing|Loading|progress|state|[0-9]+%) ]] || \
            [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
            [[ "$clean_line" =~ "Success" ]] || \
-           [[ "$clean_line" =~ "Depot download" ]]; then
+           [[ "$clean_line" =~ "Depot download" ]] || \
+           [[ "$clean_line" =~ "App.*[0-9]+" ]]; then
             # Filter out sensitive information before display
             if ! echo "$clean_line" | grep -qiE "password|auth|token|secret|login"; then
                 printf "${BLUE}│${NC}  ${WHITE}%s${NC}\n" "$clean_line"
             fi
         fi
-    done < "$temp_output"
+    done
+    
+    # Capture exit code from the command, not the while loop
+    exit_code="${PIPESTATUS[0]}"
     
     # Clean up temporary file
     rm -f "$temp_output"
@@ -1093,6 +1136,13 @@ echo "${BLUE}┌─ ${CYAN}${BOLD}Game-specific Hooks${NC}"
 print_step "Executing custom commands..."
 # <--- add game-specific commands here
 copy_game_libs
+
+# Create steam_appid.txt if SteamAppId is set
+if [[ -n "${SteamAppId:-}" ]]; then
+    echo "$SteamAppId" > "$HOME/steam_appid.txt"
+    print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+fi
+
 print_ok "Hooks completed"
 echo "${BLUE}└─${NC}"
 
