@@ -709,10 +709,11 @@ copy_game_libs() {
     fi
 
     if [[ "${#items[@]}" -eq 0 ]]; then
-        print_step "No library copy entries configured"
         return 0
     fi
 
+    print_step "Copying libraries..."
+    
     local item src dest
     for item in "${items[@]}"; do
         IFS='|' read -r src dest <<< "$item"
