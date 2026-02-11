@@ -1,0 +1,15 @@
+{
+  "address": "0.0.0.0",
+  "backupFreqMins": 30,
+  "backupsEnabled": "true",
+  "enableProfiling": "true",
+  "gameDataDir": "./GameData/",
+  "logsDir": "./logs/",
+  "masterPort": 27018,
+  "maxBackups": 5,
+  "name": "goover.dev - Pelican Egg",
+  "password": "",
+  "port": 27017,
+  "saveFreqMins": 5,
+  "worldDataDir": "./world/"
+}
