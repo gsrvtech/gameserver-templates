@@ -2,7 +2,7 @@ _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
   update_url: null
-exported_at: '2026-02-11T17:09:50+00:00'
+exported_at: '2026-02-14T19:59:21+00:00'
 name: 'Echoes of Elysium'
 author: iamtempusthales@gmail.com
 uuid: 97c22ea9-68cd-48d3-82c6-2bbb5fda0c79
@@ -83,7 +83,7 @@ scripts:
       # Library Copy Configuration (optional)
       # ("/path/src.so|/path/dest.so" "/path/src2.so|/path/dest2.so")
       # ----------------------------
-      LIB_COPY_ITEMS=() # <--- optional
+      LIB_COPY_ITEMS=("$HOME/libsteam_api.so|$HOME/linux64/libsteam_api.so")
 
       # -----------------------------------------------------------------------------------
       # WARNING: Do not modify anything below this line unless you know what you are doing!
