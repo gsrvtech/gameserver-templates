@@ -2,7 +2,7 @@ _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
   update_url: null
-exported_at: '2026-02-14T19:59:21+00:00'
+exported_at: '2026-02-15T09:34:34+00:00'
 name: 'Echoes of Elysium'
 author: iamtempusthales@gmail.com
 uuid: 97c22ea9-68cd-48d3-82c6-2bbb5fda0c79
@@ -68,7 +68,7 @@ scripts:
       GAME_NAME="Echos of Elysium"   # <--- name of the game (internal placeholder)
 
       # Steam Client AppID for steam_appid.txt (optional, leave empty if not needed)
-      SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
+      SteamAppId="2644050"  # <--- optional client AppID
 
       # ----------------------------
       # Configuration Initialization
@@ -1110,6 +1110,9 @@ scripts:
               steam_cmd+=("+@sSteamCmdForcePlatformType" "windows")
           fi
           
+          # Install Steam Linux Runtime (SteamCMD bootstrapping)
+          steam_cmd+=("+app_update" "1007" "validate")
+          
           # Build app_update command with all its parameters
           steam_cmd+=("+app_update" "$STEAM_APPID")
           
@@ -1130,9 +1133,6 @@ scripts:
           
           # validate must be part of the app_update command
           steam_cmd+=("validate")
-          
-          # Install Steam Linux Runtime (SteamCMD bootstrapping)
-          steam_cmd+=("+app_update" "1007" "validate")
           
           steam_cmd+=("+quit")
 
@@ -1185,8 +1185,34 @@ scripts:
 
       # Create steam_appid.txt if SteamAppId is set
       if [[ -n "${SteamAppId:-}" ]]; then
-          echo "$SteamAppId" > "$HOME/steam_appid.txt"
-          print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+          # Validate that SteamAppId is numeric
+          if [[ "$SteamAppId" =~ ^[0-9]+$ ]]; then
+              # Ensure HOME directory is writable
+              if [[ -w "$HOME" ]]; then
+                  # Write steam_appid.txt with proper error handling
+                  if echo "$SteamAppId" > "$HOME/steam_appid.txt" 2>/dev/null; then
+                      # Verify file was created successfully
+                      if [[ -f "$HOME/steam_appid.txt" ]] && [[ -s "$HOME/steam_appid.txt" ]]; then
+                          print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] steam_appid.txt created: $SteamAppId" >> "$INSTALL_LOG"
+                      else
+                          print_warn "steam_appid.txt verification failed"
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] steam_appid.txt not readable after creation" >> "$INSTALL_LOG"
+                      fi
+                  else
+                      print_warn "Failed to create steam_appid.txt in $HOME"
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Failed to write steam_appid.txt: Permission denied or write error" >> "$INSTALL_LOG"
+                  fi
+              else
+                  print_warn "HOME directory ($HOME) is not writable - skipping steam_appid.txt"
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] HOME directory not writable for steam_appid.txt" >> "$INSTALL_LOG"
+              fi
+          else
+              print_warn "SteamAppId is not numeric: $SteamAppId"
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Invalid SteamAppId (not numeric): $SteamAppId" >> "$INSTALL_LOG"
+          fi
+      else
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] SteamAppId not set, skipping steam_appid.txt creation" >> "$INSTALL_LOG"
       fi
 
       print_ok "Hooks completed"

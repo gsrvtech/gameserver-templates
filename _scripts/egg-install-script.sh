@@ -1065,6 +1065,9 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
         steam_cmd+=("+@sSteamCmdForcePlatformType" "windows")
     fi
     
+    # Install Steam Linux Runtime (SteamCMD bootstrapping)
+    steam_cmd+=("+app_update" "1007" "validate")
+    
     # Build app_update command with all its parameters
     steam_cmd+=("+app_update" "$STEAM_APPID")
     
@@ -1085,9 +1088,6 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
     
     # validate must be part of the app_update command
     steam_cmd+=("validate")
-    
-    # Install Steam Linux Runtime (SteamCMD bootstrapping)
-    steam_cmd+=("+app_update" "1007" "validate")
     
     steam_cmd+=("+quit")
 
@@ -1140,8 +1140,34 @@ copy_game_libs
 
 # Create steam_appid.txt if SteamAppId is set
 if [[ -n "${SteamAppId:-}" ]]; then
-    echo "$SteamAppId" > "$HOME/steam_appid.txt"
-    print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+    # Validate that SteamAppId is numeric
+    if [[ "$SteamAppId" =~ ^[0-9]+$ ]]; then
+        # Ensure HOME directory is writable
+        if [[ -w "$HOME" ]]; then
+            # Write steam_appid.txt with proper error handling
+            if echo "$SteamAppId" > "$HOME/steam_appid.txt" 2>/dev/null; then
+                # Verify file was created successfully
+                if [[ -f "$HOME/steam_appid.txt" ]] && [[ -s "$HOME/steam_appid.txt" ]]; then
+                    print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] steam_appid.txt created: $SteamAppId" >> "$INSTALL_LOG"
+                else
+                    print_warn "steam_appid.txt verification failed"
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] steam_appid.txt not readable after creation" >> "$INSTALL_LOG"
+                fi
+            else
+                print_warn "Failed to create steam_appid.txt in $HOME"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Failed to write steam_appid.txt: Permission denied or write error" >> "$INSTALL_LOG"
+            fi
+        else
+            print_warn "HOME directory ($HOME) is not writable - skipping steam_appid.txt"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] HOME directory not writable for steam_appid.txt" >> "$INSTALL_LOG"
+        fi
+    else
+        print_warn "SteamAppId is not numeric: $SteamAppId"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Invalid SteamAppId (not numeric): $SteamAppId" >> "$INSTALL_LOG"
+    fi
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] SteamAppId not set, skipping steam_appid.txt creation" >> "$INSTALL_LOG"
 fi
 
 print_ok "Hooks completed"
