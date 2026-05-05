@@ -29,15 +29,28 @@ SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
 # Configuration Initialization
 # ----------------------------
 CONFIG_INIT=0
-CONFIG_FILE_NAME="Game.ini"      # <--- configurable config filename (internal)
-CONFIG_DIR="$HOME/PATH_TO_INI" # <--- adjustable per game
-CONFIG_URL="https://URL_TO_RAW_FILE_ON_GITHUB/$CONFIG_FILE_NAME"                  # <--- adjustable per game
-STEAMCMD_DIR="$HOME/steamcmd"              # <--- SteamCMD directory
+# CONFIG_SOURCE: how to provide the default config if missing.
+#   "url"    - download from CONFIG_URL (e.g. raw GitHub link)
+#   "sample" - copy a bundled sample file from CONFIG_SAMPLE_FILE
+#   ""       - no automatic provisioning
+CONFIG_SOURCE="url"              # <--- "url" | "sample" | ""
+CONFIG_FILE_NAME="Game.ini"      # <--- target config filename
+CONFIG_DIR="$HOME/PATH_TO_INI"   # <--- target config directory
+CONFIG_URL="https://URL_TO_RAW_FILE_ON_GITHUB/$CONFIG_FILE_NAME"  # <--- used when CONFIG_SOURCE="url"
+CONFIG_SAMPLE_FILE="$HOME/Game_Sample.ini"  # <--- used when CONFIG_SOURCE="sample"
+STEAMCMD_DIR="$HOME/steamcmd"    # <--- SteamCMD directory
 
 # ----------------------------
 # Library Copy Configuration (optional)
-# ("/path/src.so|/path/dest.so" "/path/src2.so|/path/dest2.so")
 # ----------------------------
+# STEAM_LIBS_DEST: if set, automatically copies the standard Steam DLLs
+#   (steamclient.dll, steamclient64.dll, tier0_s.dll, tier0_s64.dll,
+#    vstdlib_s.dll, vstdlib_s64.dll) from $HOME into the given directory.
+# Example: STEAM_LIBS_DEST="$HOME/game/Binaries/Win64"
+STEAM_LIBS_DEST="" # <--- optional: destination dir for standard Steam DLLs
+
+# LIB_COPY_ITEMS: additional files/dirs to copy, format "src|dest" per entry.
+# Example: LIB_COPY_ITEMS=("$HOME/extra.so|$HOME/Game/lib/extra.so")
 LIB_COPY_ITEMS=() # <--- optional
 
 # -----------------------------------------------------------------------------------
@@ -116,20 +129,6 @@ print_warn()    {
 print_error()   { 
     echo "${BLUE}│${NC}  ${RED}✗${NC} $*" >&2
     echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
-}
-
-# Centered text in box (width=64 total, 62 between borders)
-print_centered() {
-    local text="$1"
-    local color="$2"
-    local box_width=62
-    # Remove ANSI codes for length calculation
-    local clean_text=$(printf "%s" "$text" | sed 's/\x1b\[[0-9;]*m//g')
-    local text_len=${#clean_text}
-    local total_padding=$((box_width - text_len))
-    local left_pad=$((total_padding / 2))
-    local right_pad=$((total_padding - left_pad))
-    printf "${BLUE}║${NC}%*s%s%s%s%*s${BLUE}║${NC}\n" "$left_pad" "" "$color" "$text" "${NC}" "$right_pad" ""
 }
 
 # Progress indication removed - causes issues with output redirection
@@ -467,7 +466,7 @@ validate_path() {
     local name="$2"
     
     # Check for path traversal attempts
-    if [[ "$path" =~ \.\./\.\. ]] || [[ "$path" =~ ^/etc ]] || [[ "$path" =~ ^/root ]]; then
+    if [[ "$path" =~ \.\. ]] || [[ "$path" =~ ^/etc ]] || [[ "$path" =~ ^/root ]]; then
         log_error "Invalid or dangerous path for $name: $path"
         exit 1
     fi
@@ -700,20 +699,78 @@ run_or_fail() {
 # ----------------------------
 # Library Copy Helper
 # ----------------------------
+
+# Standard Steam DLLs copied when STEAM_LIBS_DEST is set.
+STEAM_STANDARD_LIBS=(
+    "steamclient.dll"
+    "steamclient64.dll"
+    "tier0_s.dll"
+    "tier0_s64.dll"
+    "vstdlib_s.dll"
+    "vstdlib_s64.dll"
+)
+
+_copy_single_lib() {
+    local src="$1"
+    local dest="$2"
+
+    if [[ ! -e "$src" ]]; then
+        print_error "Source not found: $src"
+        return
+    fi
+
+    mkdir -p "$(dirname "$dest")"
+
+    if [[ -d "$src" ]]; then
+        if cp -a "$src" "$dest" >/dev/null 2>&1; then
+            print_ok "Copied directory: $src -> $dest"
+        else
+            print_warn "Failed to copy directory: $src -> $dest"
+        fi
+    else
+        if cp -f "$src" "$dest" >/dev/null 2>&1; then
+            print_ok "Copied file: $src -> $dest"
+        else
+            print_warn "Failed to copy file: $src -> $dest"
+        fi
+    fi
+}
+
 copy_game_libs() {
+    local has_work=false
+
+    # Check if there is anything to do at all
+    if [[ -n "${STEAM_LIBS_DEST:-}" ]] || [[ "${#LIB_COPY_ITEMS[@]}" -gt 0 ]] || [[ "$#" -gt 0 ]]; then
+        has_work=true
+    fi
+
+    [[ "$has_work" == "false" ]] && return 0
+
+    print_step "Copying libraries..."
+
+    # --- Standard Steam DLLs ---
+    if [[ -n "${STEAM_LIBS_DEST:-}" ]]; then
+        mkdir -p "$STEAM_LIBS_DEST"
+        local lib
+        for lib in "${STEAM_STANDARD_LIBS[@]}"; do
+            local src="$HOME/$lib"
+            local dest="$STEAM_LIBS_DEST/$lib"
+            if [[ -f "$src" ]]; then
+                _copy_single_lib "$src" "$dest"
+            else
+                print_warn "Standard Steam lib not found (skipping): $src"
+            fi
+        done
+    fi
+
+    # --- Custom LIB_COPY_ITEMS or caller-supplied items ---
     local items=()
     if [[ "$#" -gt 0 ]]; then
-        items=("$@");
+        items=("$@")
     else
         items=("${LIB_COPY_ITEMS[@]}")
     fi
 
-    if [[ "${#items[@]}" -eq 0 ]]; then
-        return 0
-    fi
-
-    print_step "Copying libraries..."
-    
     local item src dest
     for item in "${items[@]}"; do
         IFS='|' read -r src dest <<< "$item"
@@ -723,26 +780,7 @@ copy_game_libs() {
             continue
         fi
 
-        if [[ ! -e "$src" ]]; then
-            print_error "Source not found: $src"
-            continue
-        fi
-
-        mkdir -p "$(dirname "$dest")"
-
-        if [[ -d "$src" ]]; then
-            if cp -a "$src" "$dest" >/dev/null 2>&1; then
-                print_ok "Copied directory: $src -> $dest"
-            else
-                print_warn "Failed to copy directory: $src -> $dest"
-            fi
-        else
-            if cp -f "$src" "$dest" >/dev/null 2>&1; then
-                print_ok "Copied file: $src -> $dest"
-            else
-                print_warn "Failed to copy file: $src -> $dest"
-            fi
-        fi
+        _copy_single_lib "$src" "$dest"
     done
 }
 
@@ -769,13 +807,12 @@ trap cleanup EXIT
 
 # ----------------------------
 # Secure Steam Command Execution
+# _STEAM_CMD must be set by the caller before invoking this function.
 # ----------------------------
 run_steam_command() {
-    local -a cmd_array=()
-    local desc="$2"
-    
-    # Parse command array from first argument
-    eval "cmd_array=($1)"
+    local desc="$1"
+    local -a cmd_array=("${_STEAM_CMD[@]}")
+    unset _STEAM_CMD
     
     echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Executing: $desc" >> "$INSTALL_LOG"
     
@@ -784,7 +821,15 @@ run_steam_command() {
     
     # Execute command and process output in real-time
     echo "${BLUE}│${NC}"
-    "${cmd_array[@]}" 2>&1 | while IFS= read -r line; do
+    
+    # Create a temporary file to capture the exit code
+    local exit_code_file="/tmp/steam_exit_$$.code"
+    
+    # Execute command with proper exit code handling
+    {
+        "${cmd_array[@]}" 2>&1
+        echo $? > "$exit_code_file"
+    } | while IFS= read -r line; do
         # Save raw line to temp file
         echo "$line" >> "$temp_output"
         
@@ -825,8 +870,14 @@ run_steam_command() {
         fi
     done
     
-    # Capture exit code from the command, not the while loop
-    exit_code="${PIPESTATUS[0]}"
+    # Read the exit code from the file
+    if [[ -f "$exit_code_file" ]]; then
+        exit_code=$(cat "$exit_code_file")
+        rm -f "$exit_code_file"
+    else
+        # If file doesn't exist, assume failure
+        exit_code=1
+    fi
     
     # Clean up temporary file
     rm -f "$temp_output"
@@ -1006,11 +1057,8 @@ if [[ "$DEPOTDOWNLOADER" == "1" ]]; then
         dd_cmd+=("-remember-password" "$STEAM_AUTH")
     fi
 
-    # Convert array to string for run_steam_command
-    cmd_string=""
-    printf -v cmd_string '%q ' "${dd_cmd[@]}"
-    
-    run_steam_command "$cmd_string" "DepotDownloader installation"
+    _STEAM_CMD=("${dd_cmd[@]}")
+    run_steam_command "DepotDownloader installation"
     print_ok "Installation finished"
     echo "${BLUE}└─${NC}"
 fi
@@ -1025,7 +1073,7 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
 
     print_step "Downloading SteamCMD..."
     if download_with_retry \
-        "http://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+        "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
         "/tmp/steamcmd.tar.gz" \
         3 \
         "SteamCMD archive"; then
@@ -1091,11 +1139,8 @@ if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
     
     steam_cmd+=("+quit")
 
-    # Convert array to string for run_steam_command
-    cmd_string=""
-    printf -v cmd_string '%q ' "${steam_cmd[@]}"
-    
-    run_steam_command "$cmd_string" "SteamCMD installation"
+    _STEAM_CMD=("${steam_cmd[@]}")
+    run_steam_command "SteamCMD installation"
     print_ok "Installation finished"
     echo "${BLUE}└─${NC}"
 fi
@@ -1182,16 +1227,42 @@ if [[ "${CONFIG_INIT:-0}" -eq 1 ]]; then
     if [[ -f "$CONFIG_DIR/$CONFIG_FILE_NAME" ]]; then
         print_ok "$CONFIG_FILE_NAME found"
     else
-        print_warn "$CONFIG_FILE_NAME not found, fetching default..."
+        print_warn "$CONFIG_FILE_NAME not found, provisioning default..."
         mkdir -p "$CONFIG_DIR"
-        
-        run_or_fail "Download default $CONFIG_FILE_NAME" \
-            download_with_retry \
-            "$CONFIG_URL" \
-            "$CONFIG_DIR/$CONFIG_FILE_NAME" \
-            3 \
-            "config file"
-        print_ok "Configuration downloaded"
+
+        case "${CONFIG_SOURCE:-url}" in
+            url)
+                run_or_fail "Download default $CONFIG_FILE_NAME" \
+                    download_with_retry \
+                    "$CONFIG_URL" \
+                    "$CONFIG_DIR/$CONFIG_FILE_NAME" \
+                    3 \
+                    "config file"
+                print_ok "Configuration downloaded from URL"
+                ;;
+            sample)
+                if [[ -f "${CONFIG_SAMPLE_FILE:-}" ]]; then
+                    if cp -f "$CONFIG_SAMPLE_FILE" "$CONFIG_DIR/$CONFIG_FILE_NAME" 2>/dev/null; then
+                        print_ok "Configuration copied from sample: $CONFIG_SAMPLE_FILE"
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Config copied from sample: $CONFIG_SAMPLE_FILE" >> "$INSTALL_LOG"
+                    else
+                        print_error "Failed to copy sample config: $CONFIG_SAMPLE_FILE"
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to copy sample config" >> "$INSTALL_LOG"
+                        exit 1
+                    fi
+                else
+                    print_error "Sample file not found: ${CONFIG_SAMPLE_FILE:-<not set>}"
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] CONFIG_SAMPLE_FILE not found: ${CONFIG_SAMPLE_FILE:-}" >> "$INSTALL_LOG"
+                    exit 1
+                fi
+                ;;
+            "")
+                print_warn "CONFIG_SOURCE is empty, skipping auto-provisioning"
+                ;;
+            *)
+                print_warn "Unknown CONFIG_SOURCE value: ${CONFIG_SOURCE} (expected: url | sample)"
+                ;;
+        esac
     fi
 else
     print_step "Skipping (CONFIG_INIT != 1)"
