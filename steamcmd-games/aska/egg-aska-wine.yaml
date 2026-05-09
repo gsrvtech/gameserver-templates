@@ -1,16 +1,17 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/sonsoftheforrest/pelican-egg-sons-of-the-forest.json'
-exported_at: '2026-05-09T16:01:45+00:00'
-name: 'Sons Of The Forest'
-author: eggs@goover.dev
-uuid: 7ee5f7cd-89f5-4115-8685-5029bd97801f
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/aska/egg-pelican-aska-wine.json'
+exported_at: '2026-05-09T13:59:12+00:00'
+name: 'Aska Wine'
+author: info@goover.de
+uuid: 59c07510-19dd-48e4-86e8-e79ca483ae0c
 description: |-
-  Sons of the Forest is a horror survival game and sequel to The Forest by Endnight Games, Ltd.. Sent
-  to find a missing billionaire on a remote island, you find yourself in a cannibal-infested
-  hellscape. Craft, build, and struggle to survive, alone or with friends.
-icon: 'data:image/webp;base64,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'
+  Lay claim to unspoiled lands and pave the way for a fierce Viking tribe. Craft the ultimate
+  settlement solo or together with up to x3 friends. Trust in the Gods and the power of the Eye of
+  Odin and summon intelligent NPC villagers to provide camaraderie and relief from the toils of
+  survival.
+icon: null
 tags: {  }
 features:
   - steam_disk_space
@@ -18,17 +19,24 @@ docker_images:
   'ghcr.io/goover/wine:staging': 'ghcr.io/goover/wine:staging'
 file_denylist: {  }
 startup_commands:
-  Default: 'wine ./SonsOfTheForestDS.exe -nographics -batchmode -userdatapath "/home/container/serverconfig" -dedicatedserver.IpAddress "0.0.0.0" -dedicatedserver.GamePort "{{SERVER_PORT}}" -dedicatedserver.QueryPort "{{QUERY_PORT}}" -dedicatedserver.BlobSyncPort "{{BLOBSYNC_PORT}}" -dedicatedserver.ServerName "{{SRV_NAME}}" -dedicatedserver.MaxPlayers "{{MAX_PLAYERS}}" -dedicatedserver.Password "{{SRV_PW}}" -dedicatedserver.GameMode "{{GAME_MODE}}" -dedicatedserver.SkipNetworkAccessibilityTest "{{SKIP_TESTS}}" -dedicatedserver.LogFilesEnabled "true" -dedicatedserver.TimestampLogFilenames "true"'
+  Default: 'xvfb-run wine ./AskaServer.exe -propertiesPath "server properties.txt"'
 config:
   files:
-    serverconfig/dedicatedserver.cfg:
-      parser: json
+    'server properties.txt':
+      parser: file
       find:
-        Port: '{{server.allocations.default.port}}'
-        SlotCount: '{{server.environment.MAX_PLAYERS}}'
-        Password: '{{server.environment.SRV_PW}}'
+        'steam game port =': 'steam game port = {{server.allocations.default.port}}'
+        'save id': 'save id = {{env.SAVE_ID}}'
+        'steam query port =': 'steam query port = {{env.QUERY_PORT}}'
+        'display name =': 'display name = {{env.DISPLAY_NAME}}'
+        'server name =': 'server name = {{env.SRV_NAME}}'
+        'password =': 'password = {{env.SRV_PW}}'
+        'region =': 'region = {{env.SRV_REGION}}'
+        'keep server world alive =': 'keep server world alive = {{env.KEEP_ALIVE}}'
+        'autosave style =': 'autosave style = {{env.AUTO_SAVE}}'
+        'authentication token =': 'authentication token = {{env.STEAM_GSLT_TOKEN}}'
   startup:
-    done: '#DSL Dedicated server loaded.'
+    done: 'Activating game state: GameState_Boot'
   logs: {  }
   stop: ^C
 scripts:
@@ -56,7 +64,7 @@ scripts:
       # ----------------------------
       # Game Specific Configuration
       # ----------------------------
-      GAME_NAME="Sons of the Forest"   # <--- name of the game (internal placeholder)
+      GAME_NAME="ASKA"   # <--- name of the game (internal placeholder)
 
       # Steam Client AppID for steam_appid.txt (optional, leave empty if not needed)
       SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
@@ -64,15 +72,15 @@ scripts:
       # ----------------------------
       # Configuration Initialization
       # ----------------------------
-      CONFIG_INIT=1
+      CONFIG_INIT=0
       # CONFIG_SOURCE: how to provide the default config if missing.
       #   "url"    - download from CONFIG_URL (e.g. raw GitHub link)
       #   "sample" - copy a bundled sample file from CONFIG_SAMPLE_FILE
       #   ""       - no automatic provisioning
       CONFIG_SOURCE="url"              # <--- "url" | "sample" | ""
-      CONFIG_FILE_NAME="dedicatedserver.cfg"      # <--- target config filename
-      CONFIG_DIR="$HOME/serverconfig"   # <--- target config directory
-      CONFIG_URL="https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/sonsoftheforest/config/dedicatedserver.cfg"  # <--- used when CONFIG_SOURCE="url"
+      CONFIG_FILE_NAME="Game.ini"      # <--- target config filename
+      CONFIG_DIR="$HOME/PATH_TO_INI"   # <--- target config directory
+      CONFIG_URL="https://URL_TO_RAW_FILE_ON_GITHUB/$CONFIG_FILE_NAME"  # <--- used when CONFIG_SOURCE="url"
       CONFIG_SAMPLE_FILE="$HOME/Game_Sample.ini"  # <--- used when CONFIG_SOURCE="sample"
       STEAMCMD_DIR="$HOME/steamcmd"    # <--- SteamCMD directory
 
@@ -1394,59 +1402,61 @@ scripts:
     entrypoint: bash
 variables:
   -
-    sort: 8
-    name: '[SERVER] Auto Update'
-    description: ''
-    env_variable: AUTO_UPDATE
-    default_value: 1
+    sort: 9
+    name: '[SERVER] Autosave Style'
+    description: |-
+      the style in which the server should save, possible options: every morning, disabled, every 5
+      minutes, every 10 minutes, every 15 minutes, every 20 minutes
+    env_variable: AUTO_SAVE
+    default_value: disabled
     user_viewable: true
     user_editable: true
     rules:
       - required
-      - boolean
+      - string
+      - 'in:disabled,every morning,every 5 minutes,every 10 minutes,every 15 minutes,every 20 minutes'
   -
-    sort: 2
-    name: '[SERVER] BlobSyncPort'
-    description: 'BlobSyncPort UDP port used by the BlobSync system to initialize game systems and exchange data.'
-    env_variable: BLOBSYNC_PORT
+    sort: 10
+    name: '[STEAM] Auto Update'
+    description: 'autoupdate the server on startup'
+    env_variable: AUTO_UPDATE
     default_value: ''
     user_viewable: true
-    user_editable: false
+    user_editable: true
     rules:
-      - required
-      - integer
-      - 'between:1024,65536'
+      - boolean
   -
-    sort: 6
-    name: '[SERVER] Gamemode'
+    sort: 8
+    name: '[SERVER] Display Name'
     description: |-
-      Sets the difficulty game mode when creating a new save. This parameter is ignored if loading a save
-      (save mode set to “continue” with a save that exists on the slot). If the game mode is set to
-      “custom”, then the custom game mode settings will be read from CustomGameModeSettings option,
-      described later.
-    env_variable: GAME_MODE
-    default_value: normal
-    user_viewable: true
-    user_editable: true
-    rules:
-      - string
-      - 'in:normal,hard,hardsurvival,peaceful,custom'
-  -
-    sort: 4
-    name: '[SERVER] Max Players'
-    description: 'The maximum number of players allowed simultaneously on the server.'
-    env_variable: MAX_PLAYERS
-    default_value: 4
+      display name is the name the session displays in the session list for new saves, for old saves it
+      will take the name from the save itself
+    env_variable: DISPLAY_NAME
+    default_value: 'egg by discord.goover.dev'
     user_viewable: true
     user_editable: true
     rules:
       - required
-      - integer
-      - 'min:1'
+      - string
+      - 'max:40'
+  -
+    sort: 7
+    name: '[SERVER] Keep Server alive?'
+    description: |-
+      if set to true when the session is open, the world is also updating, even without players, if set to
+      false, the world loads when the first player joins and the world unloads when the last player leaves
+    env_variable: KEEP_ALIVE
+    default_value: false
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'in:true,false'
   -
     sort: 1
-    name: '[SERVER] QueryPort'
-    description: 'UDP port used by Steam to list the server and enable the discovery services.'
+    name: '[SERVER] SteamQueryPort'
+    description: 'the port that will manage server browser related duties and info pings from clients.'
     env_variable: QUERY_PORT
     default_value: ''
     user_viewable: true
@@ -1456,21 +1466,23 @@ variables:
       - integer
       - 'between:1024,65536'
   -
-    sort: 7
-    name: '[SERVER] Skip network Test'
-    description: 'if you have problems to connect to the server, set this to true'
-    env_variable: SKIP_TESTS
-    default_value: true
+    sort: 2
+    name: '[SERVER] Save ID'
+    description: 'start the server one time; stop it; navigate to configfile; copy saveID and paste it here'
+    env_variable: SAVE_ID
+    default_value: ''
     user_viewable: true
     user_editable: true
     rules:
-      - boolean
+      - nullable|string
   -
     sort: 3
     name: '[SERVER] Server Name'
-    description: 'Name of the server visible in the server list, and in the Steam contacts.'
+    description: |-
+      override for the host name that is displayed in the session list. if left blank it will use what
+      would normally be used when hosting from this machine
     env_variable: SRV_NAME
-    default_value: 'Pterodactyl hosted Server'
+    default_value: 'egg by goover.dev'
     user_viewable: true
     user_editable: true
     rules:
@@ -1478,30 +1490,66 @@ variables:
       - string
       - 'max:60'
   -
-    sort: 5
-    name: '[SERVER] Password'
-    description: ''
+    sort: 4
+    name: '[SERVER] Server Password'
+    description: 'the password this session will have'
     env_variable: SRV_PW
-    default_value: changeme
+    default_value: ''
     user_viewable: true
     user_editable: true
     rules:
       - nullable
       - string
   -
-    sort: 13
+    sort: 6
+    name: '[SERVER] Server Region'
+    description: ''
+    env_variable: SRV_REGION
+    default_value: default
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'in:default,asia,japan,europe,south america,south korea,usa east,usa west,australia,canada east,hong kong,india,turkey,united arab emirates,usa south central'
+  -
+    sort: 11
     name: '[STEAM] STEAM_APPID'
     description: ''
     env_variable: STEAM_APPID
-    default_value: 2465200
+    default_value: 3246670
     user_viewable: false
     user_editable: false
     rules:
       - required
+      - numeric
+      - 'in:3246670'
+  -
+    sort: 5
+    name: '[STEAM] Steam GSLT'
+    description: "the token needed for an authentication without a Steam client\r\nshould come from https://steamcommunity.com/dev/managegameservers\r\nfor the Aska game app (id: 1898300)"
+    env_variable: STEAM_GSLT_TOKEN
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
       - string
-      - 'max:20'
+      - 'max:60'
   -
     sort: 12
+    name: '[STEAM] SteamAppid'
+    description: ''
+    env_variable: SteamAppId
+    default_value: 1898300
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - numeric
+      - 'in:1898300'
+  -
+    sort: 13
     name: '[STEAM] WINDOWS_INSTALL'
     description: ''
     env_variable: WINDOWS_INSTALL
@@ -1513,7 +1561,7 @@ variables:
       - string
       - 'max:20'
   -
-    sort: 10
+    sort: 16
     name: '[WINE] WINEARCH'
     description: ''
     env_variable: WINEARCH
@@ -1525,7 +1573,7 @@ variables:
       - string
       - 'max:20'
   -
-    sort: 9
+    sort: 15
     name: '[WINE] WINEDEBUG'
     description: ''
     env_variable: WINEDEBUG
@@ -1537,13 +1585,36 @@ variables:
       - string
       - 'max:20'
   -
-    sort: 11
+    sort: 14
+    name: '[WINE] WINEPATH'
+    description: ''
+    env_variable: WINEPATH
+    default_value: /home/container
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
+      - 'max:20'
+  -
+    sort: 17
     name: '[WINE] WINETRICKS_RUN'
     description: ''
     env_variable: WINETRICKS_RUN
-    default_value: mono
+    default_value: 'vcrun2022 mono'
     user_viewable: false
     user_editable: false
     rules:
       - nullable
       - string
+  -
+    sort: 18
+    name: '[WINE] XVFB'
+    description: ''
+    env_variable: XVFB
+    default_value: 1
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - boolean
