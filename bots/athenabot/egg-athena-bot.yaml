@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/bots/athenabot/egg-pelican-athena-bot.json'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/bots/athenabot/egg-athena-bot.yaml'
 exported_at: '2025-12-29T14:15:17+00:00'
 name: 'Athena Bot'
 author: eggs@goover.dev
@@ -14,9 +14,10 @@ tags:
   - nodejs
 features: {  }
 docker_images:
-  'ghcr.io/goover/bots:nodemongo7': 'ghcr.io/goover/bots:nodemongo7'
-  'ghcr.io/goover/bots:nodemongo8': 'ghcr.io/goover/bots:nodemongo8'
+  'ghcr.io/goover/bots:nodemongo83': 'ghcr.io/goover/bots:nodemongo83'
   'ghcr.io/goover/bots:nodemongo': 'ghcr.io/goover/bots:nodemongo'
+  'ghcr.io/goover/bots:nodemongo8': 'ghcr.io/goover/bots:nodemongo8'
+  'ghcr.io/goover/bots:nodemongo7': 'ghcr.io/goover/bots:nodemongo7'
 file_denylist: {  }
 startup_commands:
   Default: 'if [ -f /home/container/package.json ]; then npm install; fi; node /home/container/{{JS_FILE}}'
@@ -159,12 +160,25 @@ variables:
       - string
   -
     sort: 2
-    name: 'MongoDB URL'
-    description: ''
-    env_variable: MONGO_URL
-    default_value: 'mongodb://127.0.0.1:27017/botdb'
+    name: 'MongoDB Port'
+    description: 'Port on which MongoDB listens. Change per server instance to run multiple bots on the same node.'
+    env_variable: MONGO_PORT
+    default_value: '27017'
     user_viewable: true
-    user_editable: false
+    user_editable: true
+    rules:
+      - required
+      - numeric
+      - min:1024
+      - max:65535
+  -
+    sort: 3
+    name: 'MongoDB Database'
+    description: 'MongoDB database name used by the bot.'
+    env_variable: MONGO_DB
+    default_value: botdb
+    user_viewable: true
+    user_editable: true
     rules:
       - required
       - string
