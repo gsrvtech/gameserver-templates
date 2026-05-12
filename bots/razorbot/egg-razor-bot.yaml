@@ -25,7 +25,7 @@ startup_commands:
 config:
   files: {  }
   startup:
-    done: 'AthenaBot is up and running.'
+    done: 'RazorBot is up and running.'
   logs: {  }
   stop: ^C
 scripts:
@@ -42,7 +42,7 @@ scripts:
       export DEBIAN_FRONTEND=noninteractive
 
       # --- Define App Name ---
-      APPNAME="AthenaBot"
+      APPNAME="RazorBot"
 
       # --- Colors ---
       RED=$(tput setaf 1)
