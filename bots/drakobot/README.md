@@ -1,11 +1,11 @@
-# RazorBot
+# DrakoBot
 
 ## Author & Contributors
 | Name | GitHub Profile | Buy me a Coffee |
-|------|----------------|-----------------|
+|------|----------------|-----------------| 
 | gOOvER | https://github.com/gOOvER | [![donate](https://donate.goover.dev)](https://donate.goover.dev) |
 
-## RazorBot
+## DrakoBot
 
 ## MongoDB
 
@@ -21,7 +21,7 @@ The resulting URL `mongodb://127.0.0.1:<MONGO_PORT>/<MONGO_DB>` is written to `/
 ## Pterodactyl Egg
 
 > **Note:** Pterodactyl (`.json`) eggs are no longer maintained in this repository.  
-> Use the Pelican YAML egg (`egg-razor-bot.yaml`) and convert it with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)** to get a Pterodactyl-compatible JSON egg.
+> Use the Pelican YAML egg (`egg-drako-bot.yaml`) and convert it with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)** to get a Pterodactyl-compatible JSON egg.
 
 ## Server Ports
 
