@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: null
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/apps/bin/egg-bin.yaml'
 exported_at: '2026-05-18T13:21:36+00:00'
 name: BIN
 author: eggs@goover.dev

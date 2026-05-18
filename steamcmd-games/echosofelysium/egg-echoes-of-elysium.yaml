@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: null
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/echosofelysium/egg-echoes-of-elysium.yaml'
 exported_at: '2026-02-15T09:34:34+00:00'
 name: 'Echoes of Elysium'
 author: iamtempusthales@gmail.com

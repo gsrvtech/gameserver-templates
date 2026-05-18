@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: null
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/7d2d/egg-7-days-to-die.yaml'
 exported_at: '2026-05-18T13:20:06+00:00'
 name: '7 Days To Die'
 author: eggs@goover.dev

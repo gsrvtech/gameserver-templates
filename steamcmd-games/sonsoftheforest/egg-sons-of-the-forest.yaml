@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/sonsoftheforrest/pelican-egg-sons-of-the-forest.json'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/sonsoftheforest/egg-sons-of-the-forest.yaml'
 exported_at: '2026-05-09T16:01:45+00:00'
 name: 'Sons Of The Forest'
 author: eggs@goover.dev

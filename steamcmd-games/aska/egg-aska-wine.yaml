@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/aska/egg-pelican-aska-wine.json'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/aska/egg-aska-wine.yaml'
 exported_at: '2026-05-09T13:59:12+00:00'
 name: 'Aska Wine'
 author: info@goover.de

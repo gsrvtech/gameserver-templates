@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/bots/razorbot/egg-razor-bot.yaml'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/bots/razorbot/egg-razor-bot.yaml'
 exported_at: '2025-12-29T14:15:17+00:00'
 name: 'Razor Bot'
 author: eggs@goover.dev

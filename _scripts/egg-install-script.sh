@@ -28,11 +28,11 @@ SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
 # ----------------------------
 # Configuration Initialization
 # ----------------------------
-CONFIG_INIT=0
 # CONFIG_SOURCE: how to provide the default config if missing.
 #   "url"    - download from CONFIG_URL (e.g. raw GitHub link)
 #   "sample" - copy a bundled sample file from CONFIG_SAMPLE_FILE
 #   ""       - no automatic provisioning
+CONFIG_INIT=0
 CONFIG_SOURCE="url"              # <--- "url" | "sample" | ""
 CONFIG_FILE_NAME="Game.ini"      # <--- target config filename
 CONFIG_DIR="$HOME/PATH_TO_INI"   # <--- target config directory
@@ -740,7 +740,7 @@ copy_game_libs() {
     local has_work=false
 
     # Check if there is anything to do at all
-    if [[ -n "${STEAM_LIBS_DEST:-}" ]] || [[ "${#LIB_COPY_ITEMS[@]}" -gt 0 ]] || [[ "$#" -gt 0 ]]; then
+    if [[ -n "${STEAM_LIBS_DEST:-}" ]] || [[ "${#LIB_COPY_ITEMS[@]}" -gt 0 ]]; then
         has_work=true
     fi
 
@@ -763,13 +763,8 @@ copy_game_libs() {
         done
     fi
 
-    # --- Custom LIB_COPY_ITEMS or caller-supplied items ---
-    local items=()
-    if [[ "$#" -gt 0 ]]; then
-        items=("$@")
-    else
-        items=("${LIB_COPY_ITEMS[@]}")
-    fi
+    # --- Custom LIB_COPY_ITEMS ---
+    local items=("${LIB_COPY_ITEMS[@]}")
 
     local item src dest
     for item in "${items[@]}"; do
@@ -787,6 +782,7 @@ copy_game_libs() {
 # ----------------------------
 # Cleanup Function
 # ----------------------------
+# shellcheck disable=SC2329  # Invoked indirectly via: trap cleanup EXIT
 cleanup() {
     local exit_code=$?
     

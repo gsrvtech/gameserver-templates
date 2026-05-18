@@ -1,0 +1,204 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/nightingale/egg-pelican-nightingale.yaml'
+exported_at: '2025-07-19T07:08:19+00:00'
+name: Nightingale
+author: 'eggs@goover.dev'
+uuid: 978cd97a-524b-4240-b925-b321cd4af644
+description: Nightingale is a shared world survival-crafting game set in a rich gaslamp Victorian fantasy setting. Players venture through portals where adventure and mystery awaits across a myriad of beautiful and increasingly-dangerous worlds.
+icon: null
+tags: {  }
+features: []
+docker_images:
+  SteamCMD: 'ghcr.io/goover/steamcmd:debian'
+file_denylist: {  }
+startup_commands:
+  Default: './NWX/Binaries/Linux/NWXServer-Linux-Shipping  -port={{SERVER_PORT}} -multihome=0.0.0.0  -ini:Game:[/Script/Engine.GameSession]:MaxPlayers={{MAX_PLAYERS}} '
+config:
+  files:
+    NWX/Config/ServerSettings.ini:
+      parser: file
+      find:
+        StartingDifficulty=: 'StartingDifficulty={{env.STARTING_DIFFICULTY}}'
+        Password=: 'Password={{env.SRV_PW}}'
+        AdminPassword=: 'AdminPassword={{env.ADMIN_PW}}'
+  startup:
+    done: GameModeAwaiter became ready.
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # THIS EGG IS LICENSED UNDER AGPLv3
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      CYAN='\033[1;36m'
+      NC='\033[0m'
+      export HOME=/mnt/server
+
+      echo -e "${CYAN}=============================================================${NC}"
+      echo -e "${YELLOW}        Nightingale Server Installation Script${NC}"
+      echo -e "${CYAN}=============================================================${NC}"
+      echo -e "${GREEN}Egg by gOOvER (https://discord.goover.dev)${NC}"
+      echo -e "${GREEN}License: AGPLv3 | Donations: https://donate.goover.dev${NC}"
+      echo -e "${CYAN}=============================================================${NC}"
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 1: Checking Steam user...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      if [[ -z "${STEAM_USER}" ]] || [[ -z "${STEAM_PASS}" ]]; then
+          echo -e "${RED}Steam user is not set.${NC}"
+          echo -e "${YELLOW}Using anonymous user.${NC}"
+          STEAM_USER="anonymous"
+          STEAM_PASS=""
+          STEAM_AUTH=""
+      else
+          echo -e "${GREEN}User set to ${STEAM_USER}${NC}"
+      fi
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 2: Checking Steam AppID...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+
+      # Check if STEAM_APPID or SRCDS_APPID is set, and set STEAM_APPID accordingly
+      if [[ -z "${STEAM_APPID}" && -n "${SRCDS_APPID}" ]]; then
+          STEAM_APPID="${SRCDS_APPID}"
+          echo -e "${YELLOW}STEAM_APPID not set, using SRCDS_APPID (${SRCDS_APPID}) instead.${NC}"
+      fi
+
+      if [[ -z "${STEAM_APPID}" ]]; then
+          echo -e "${RED}STEAM_APPID is not set! Please provide a valid Steam App ID.${NC}"
+          exit 1
+      fi
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 3: Downloading and installing SteamCMD...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      cd /tmp
+      mkdir -p "$HOME/steamcmd"
+      curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+      tar -xzvf steamcmd.tar.gz -C "$HOME/steamcmd"
+      mkdir -p "$HOME/steamapps" # Fixes SteamCMD disk write error
+      cd "$HOME/steamcmd"
+      echo -e "${GREEN}SteamCMD downloaded and extracted.${NC}"
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 4: Setting permissions...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      chown -R root:root /mnt
+      echo -e "${GREEN}Permissions set.${NC}"
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 5: Installing game using SteamCMD...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      ./steamcmd.sh +force_install_dir "$HOME" \
+          +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" \
+          $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) \
+          $( [[ "${STEAM_SDK}" == "1" ]] && printf %s '+app_update 1007' ) \
+          +app_update "${STEAM_APPID}" \
+          $( [[ -n "${STEAM_BETAID}" ]] && printf %s "-beta ${STEAM_BETAID}" ) \
+          $( [[ -n "${STEAM_BETAPASS}" ]] && printf %s "-betapassword ${STEAM_BETAPASS}" ) \
+          ${INSTALL_FLAGS} validate +quit
+
+      echo -e "${GREEN}Game installation finished.${NC}"
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 6: Setting up Steam libraries...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      mkdir -p "$HOME/.steam/sdk32"
+      cp -v linux32/steamclient.so ../.steam/sdk32/steamclient.so
+      mkdir -p "$HOME/.steam/sdk64"
+      cp -v linux64/steamclient.so ../.steam/sdk64/steamclient.so
+      echo -e "${GREEN}Steam libraries set up.${NC}"
+
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      echo -e "${YELLOW}Step 7: Checking server configuration...${NC}"
+      echo -e "${BLUE}──────────────────────────────────────────────────────────────${NC}"
+      CONFIG_DIR="$HOME/NWX/Config"
+      FILE="$CONFIG_DIR/ServerSettings.ini"
+      EXAMPLE="$CONFIG_DIR/ExampleServerSettings.ini"
+      if [ -f "$FILE" ]; then
+          echo -e "${GREEN}$FILE found.${NC}"
+      else
+          echo -e "${RED}$FILE not found. Creating default...${NC}"
+          if [ -f "$EXAMPLE" ]; then
+              cp "$EXAMPLE" "$FILE"
+              echo -e "${GREEN}Default configuration created.${NC}"
+          else
+              echo -e "${RED}Example configuration missing!${NC}"
+          fi
+      fi
+
+      echo -e "${CYAN}=============================================================${NC}"
+      echo -e "${GREEN}Installation completed successfully!${NC}"
+      echo -e "${GREEN}Want to buy me a coffee? https://donate.goover.dev${NC}"
+      echo -e "${CYAN}=============================================================${NC}"
+      exit 0
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[SERVER] Admin Password'
+  description: ''
+  env_variable: ADMIN_PW
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 3
+- name: '[SERVER] Max Players'
+  description: ''
+  env_variable: MAX_PLAYERS
+  default_value: '10'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  sort: 4
+- name: '[SERVER] Password'
+  description: ''
+  env_variable: SRV_PW
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  sort: 2
+- name: '[SERVER] Starting Difficulty'
+  description: ''
+  env_variable: STARTING_DIFFICULTY
+  default_value: easy
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - 'in:easy,medium,hard,extreme'
+  - string
+  sort: 1
+- name: '[STEAM] AutoUdate'
+  description: ''
+  env_variable: AUTO_UPDATE
+  default_value: '1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - boolean
+  sort: 5
+- name: '[STEAM] Steam AppID'
+  description: ''
+  env_variable: STEAM_APPID
+  default_value: '3796810'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - 'in:3796810'
+  sort: 6

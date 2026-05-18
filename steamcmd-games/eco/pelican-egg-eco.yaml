@@ -1,0 +1,337 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/eco/pelican-egg-eco.yaml'
+exported_at: '2024-11-24T11:21:06+00:00'
+name: Eco
+author: 'eggs@goover.dev'
+uuid: 61490e11-18a7-4ab9-94db-af44efd634a3
+description: 'Eco is an online world from Strange Loop Games where players must build civilization using resources from an ecosystem that can be damaged and destroyed. The world of Eco is an incredibly reactive one, and whatever any player does in the world affects the underlying ecosystem.'
+icon: null
+tags: {  }
+features:
+- steam_disk_space
+docker_images:
+  'ghcr.io/goover/steamcmd:debian': 'ghcr.io/goover/steamcmd:debian'
+file_denylist: {  }
+startup_commands:
+  Default: './EcoServer --username="{{SLG_USER}}" --password="{{SLG_PW}}"'
+config:
+  files:
+    Configs/Network.eco:
+      parser: json
+      find:
+        GameServerPort: '{{server.allocations.default.port}}'
+        WebServerPort: '{{server.environment.WEB_PORT}}'
+        PublicServer: '{{server.environment.PUB_SRV}}'
+        Password: '{{server.environment.SRV_PW}}'
+        UPnPEnabled: '{{server.environment.UPNP}}'
+        Description: '{{server.environment.SRV_NAME}}'
+        DetailedDescription: '{{server.environment.DEDES}}'
+        Playtime: '{{server.environment.PLAYTIME}}'
+        MaxConnections: '{{server.environment.MAX_CON}}'
+        DiscordAddress: '{{server.environment.DISCORD_SRV}}'
+        RconServerPort: '{{server.environment.RCON_PORT}}'
+        RconPassword: '{{server.environment.RCON_PW}}'
+        ServerCategory: '{{server.environment.SRV_CAT}}'
+    Configs/Localization.eco:
+      parser: json
+      find:
+        Language: '{{server.environment.LANGUAGE}}'
+  startup:
+    done: 'Web Server now listening on:'
+  logs: {  }
+  stop: exit
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # steamcmd Base Installation Script
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}ECO  Installscript${NC}"
+      echo -e "${YELLOW}Egg by gOOvER | https://discord.goover.dev${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      #apt -y update
+      #apt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates jq dos2unix
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}download and install steamcmd. please wait...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      ## just in case someone removed the defaults.
+      if [[ "${STEAM_USER}" == "" ]] || [[ "${STEAM_PASS}" == "" ]]; then
+          echo -e "steam user is not set.\n"
+          echo -e "Using anonymous user.\n"
+          STEAM_USER=anonymous
+          STEAM_PASS=""
+          STEAM_AUTH=""
+      else
+          echo -e "user set to ${STEAM_USER}"
+      fi
+
+      ## download and install steamcmd
+      cd /tmp
+      mkdir -p /mnt/server/steamcmd
+      curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+      tar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd
+      mkdir -p /mnt/server/steamapps # Fix steamcmd disk write error when this folder is missing
+      cd /mnt/server/steamcmd
+
+      # SteamCMD fails otherwise for some reason, even running as root.
+      # This is changed at the end of the install process anyways.
+      chown -R root:root /mnt
+      export HOME=/mnt/server
+      echo -e "${GREEN}..done..${NC}"
+
+      ## install game using steamcmd
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}install game using steamcmd. please wait...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      ./steamcmd.sh +force_install_dir /mnt/server +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s "-beta ${STEAM_BETAID}" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s "-betapassword ${STEAM_BETAPASS}" ) ${INSTALL_FLAGS} validate +quit
+      echo -e "${GREEN}..done..${NC}"
+
+      ## set up 32 bit libraries
+      mkdir -p /mnt/server/.steam/sdk32
+      cp -v linux32/steamclient.so ../.steam/sdk32/steamclient.so
+
+      ## set up 64 bit libraries
+      mkdir -p /mnt/server/.steam/sdk64
+      cp -v linux64/steamclient.so ../.steam/sdk64/steamclient.so
+
+      # add below your custom commands if needed
+
+      FILE=$HOME/Configs/Network.eco
+      if [ -f "$FILE" ]; then
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        echo -e "${GREEN}Network.eco found.${NC}"
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+      else
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        echo -e "${RED}No Network.eco found. Moving default...${NC}"
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        cp -f $HOME/Configs/Network.eco.template $HOME/Configs/Network.eco
+        echo -e "${GREEN}..done..${NC}"
+      fi
+
+      FILE=$HOME/Configs/Localization.eco
+      if [ -f "$FILE" ]; then
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        echo -e "${GREEN}Localization.eco found.${NC}"
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+      else
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        echo -e "${RED}No Localization.eco found. Moving default...${NC}"
+        echo -e "${BLUE}-------------------------------------------------${NC}"
+        cp -f $HOME/Configs/Localization.eco.template $HOME/Configs/Localization.eco
+        echo -e "${GREEN}..done..${NC}"
+      fi
+
+      ## install end
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${GREEN}Installation completed...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[STEAM] AppID'
+  description: ID
+  env_variable: STEAM_APPID
+  default_value: '739590'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - string
+  - 'in:739590'
+  sort: 18
+- name: '[SERVER] Webserver Port'
+  description: Port for the Webserver
+  env_variable: WEB_PORT
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'between:1024,65536'
+  sort: 13
+- name: '[SERVER] Public Server'
+  description: Set to True to have the server listed in the Eco client
+  env_variable: PUB_SRV
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 6
+- name: '[SERVER] Server Password'
+  description: 'Set a password for the server, or leave this blank to not require a password. Players on the whitelist will not have to enter a password.'
+  env_variable: SRV_PW
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:20'
+  sort: 4
+- name: '[SERVER] Server Name'
+  description: 'Sets the name of your server in the client server browser. Chat_Commands#Text_markup can be used to add color or modify the appearance of the text.'
+  env_variable: SRV_NAME
+  default_value: Egg by gameserver.tech
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:50'
+  sort: 3
+- name: UPNP
+  description: UPNP OFF
+  env_variable: UPNP
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 17
+- name: '[SERVER] Auto Update'
+  description: ''
+  env_variable: AUTO_UPDATE
+  default_value: '1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - boolean
+  sort: 12
+- name: '[SERVER] Webserver URL'
+  description: your webserver url.
+  env_variable: WEBSRVURL
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - url
+  sort: 14
+- name: '[SERVER] Max Connections'
+  description: Maximum number of concurrent players (-1 no limits).
+  env_variable: MAX_CON
+  default_value: '-1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:20'
+  sort: 7
+- name: '[SERVER] Playtime'
+  description: 'This is automatically filled in if you created the server in the Eco client and made a Timetable (schedule of preferred playtimes). If this is blank, the best way to fill it in is to “Set Playtime” through the Game Menu (Esc), and copy and paste the data from playtime.eco.'
+  env_variable: PLAYTIME
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 11
+- name: '[SERVER] Detailed Description'
+  description: Sets the long-form description of your server when people click on it in the server browser. Adding this description helps the server show up more prominently in the browser.
+  env_variable: DEDES
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:50'
+  sort: 5
+- name: '[SERVER] RCON Port'
+  description: ''
+  env_variable: RCON_PORT
+  default_value: ''
+  user_viewable: true
+  user_editable: false
+  rules:
+  - required
+  - integer
+  - 'between:1024,65536'
+  sort: 15
+- name: '[SERVER] RCON Password'
+  description: ''
+  env_variable: RCON_PW
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 16
+- name: '[SERVER] Discord Server'
+  description: Invite link ID for a Discord server (the ID after the “discord.gg/”).
+  env_variable: DISCORD_SRV
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 8
+- name: '[SERVER] Server Category'
+  description: 'Choose from 1 of 4 categories that will show up when players first click on “New Game” in the Eco client. Selecting a category makes it much more likely new players will join your server. Strings available for this option are: None; Beginner; Established; BeginnerHard; Strange'
+  env_variable: SRV_CAT
+  default_value: None
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:None,Beginner,Established,BeginnerHard,Strange'
+  sort: 9
+- name: '[SERVER] Language'
+  description: Defines the language.
+  env_variable: LANGUAGE
+  default_value: English
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:English,French,German'
+  sort: 10
+- name: '[ACCOUNT] SLG Username'
+  description: ''
+  env_variable: SLG_USER
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:20'
+  sort: 1
+- name: '[ACCOUNT] SLG Pasword'
+  description: ''
+  env_variable: SLG_PW
+  default_value: ''
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - string
+  - 'max:20'
+  sort: 2

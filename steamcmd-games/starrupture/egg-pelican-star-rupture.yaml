@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/refs/heads/main/steamcmd-games/starrupture/egg-pelican-star-rupture.json'
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/starrupture/egg-pelican-star-rupture.yaml'
 exported_at: '2026-01-09T16:54:03+00:00'
 name: StarRupture
 author: eggs@goover.dev

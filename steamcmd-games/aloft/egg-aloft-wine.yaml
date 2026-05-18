@@ -1,7 +1,7 @@
 _comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
 meta:
   version: PLCN_v3
-  update_url: null
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/aloft/egg-aloft-wine.yaml'
 exported_at: '2026-05-18T13:27:08+00:00'
 name: 'Aloft Wine'
 author: eggs@goover.dev
