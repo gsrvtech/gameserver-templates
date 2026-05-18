@@ -1,0 +1,1490 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: null
+exported_at: '2026-05-18T13:25:12+00:00'
+name: 'Abiotic Factor'
+author: eggs@goover.dev
+uuid: 86aa18b2-65df-4a42-a572-980e6913de4b
+description: |-
+  Abiotic Factor is a survival crafting experience for 1-6 players set in the depths of an underground
+  research facility. Caught between paranormal containment failure, a military crusade, and chaos from
+  a dozen realms, the world’s greatest minds must survive against the universe’s biggest threats.
+icon: null
+tags: {  }
+features:
+  - steam_disk_space
+docker_images:
+  'ghcr.io/goover/wine:staging': 'ghcr.io/goover/wine:staging'
+file_denylist: {  }
+startup_commands:
+  Default: 'wine ./AbioticFactor/Binaries/Win64/AbioticFactorServer-Win64-Shipping.exe -log -useperfthreads -NoAsyncLoadingThread -MaxServerPlayers={{NUM_PLAYERS}} -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}} -ServerPassword="{{SERVER_PASSWORD}}" -SteamServerName="{{SERVER_NAME}}" & AF_PID=$!; tail -c0 -F /home/container/AbioticFactor/Saved/Logs/AbioticFactor.log --pid=$AF_PID'
+config:
+  files: {  }
+  startup:
+    done: 'LogInit: Display: Engine is initialized.'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # ------------------------------------------------
+      # Generic Installscript Template for Pelican Eggs (Linux)
+      # License: AGPLv3
+      # Author: gOOvER (https://discord.goover.dev)
+      # Donate: https://donate.goover.dev
+      # ------------------------------------------------
+
+      set -euo pipefail  # Strict error handling
+
+      # ----------------------------
+      # Environment Setup
+      # ----------------------------
+      HOME=/mnt/server
+      export HOME
+
+      # Ensure /mnt is owned by root
+      chown -R root:root /mnt
+
+      # ----------------------------
+      # Game Specific Configuration
+      # ----------------------------
+      GAME_NAME="Abiotic Factor"   # <--- name of the game (internal placeholder)
+
+      # Steam Client AppID for steam_appid.txt (optional, leave empty if not needed)
+      SteamAppId="${SteamAppId:-}"  # <--- optional client AppID
+
+      # ----------------------------
+      # Configuration Initialization
+      # ----------------------------
+      CONFIG_INIT=0
+      # CONFIG_SOURCE: how to provide the default config if missing.
+      #   "url"    - download from CONFIG_URL (e.g. raw GitHub link)
+      #   "sample" - copy a bundled sample file from CONFIG_SAMPLE_FILE
+      #   ""       - no automatic provisioning
+      CONFIG_SOURCE="url"              # <--- "url" | "sample" | ""
+      CONFIG_FILE_NAME="Game.ini"      # <--- target config filename
+      CONFIG_DIR="$HOME/PATH_TO_INI"   # <--- target config directory
+      CONFIG_URL="https://URL_TO_RAW_FILE_ON_GITHUB/$CONFIG_FILE_NAME"  # <--- used when CONFIG_SOURCE="url"
+      CONFIG_SAMPLE_FILE="$HOME/Game_Sample.ini"  # <--- used when CONFIG_SOURCE="sample"
+      STEAMCMD_DIR="$HOME/steamcmd"    # <--- SteamCMD directory
+
+      # ----------------------------
+      # Library Copy Configuration (optional)
+      # ----------------------------
+      # STEAM_LIBS_DEST: if set, automatically copies the standard Steam DLLs
+      #   (steamclient.dll, steamclient64.dll, tier0_s.dll, tier0_s64.dll,
+      #    vstdlib_s.dll, vstdlib_s64.dll) from $HOME into the given directory.
+      # Example: STEAM_LIBS_DEST="$HOME/game/Binaries/Win64"
+      STEAM_LIBS_DEST="" # <--- optional: destination dir for standard Steam DLLs
+
+      # LIB_COPY_ITEMS: additional files/dirs to copy, format "src|dest" per entry.
+      # Example: LIB_COPY_ITEMS=("$HOME/extra.so|$HOME/Game/lib/extra.so")
+      LIB_COPY_ITEMS=() # <--- optional
+
+      # -----------------------------------------------------------------------------------
+      # WARNING: Do not modify anything below this line unless you know what you are doing!
+      # -----------------------------------------------------------------------------------
+
+      STEAM_USER="${STEAM_USER:-anonymous}"
+      STEAM_PASS="${STEAM_PASS:-}"
+      STEAM_AUTH="${STEAM_AUTH:-}"
+      DEPOTDOWNLOADER="${DEPOTDOWNLOADER:-0}"
+      : "${STEAM_APPID:?Environment variable STEAM_APPID must be set for $GAME_NAME}"  # mandatory
+
+      # ----------------------------
+      # Locale Setup to suppress warnings
+      # ----------------------------
+      export LANG=en_US.UTF-8
+      export LANGUAGE=en_US:en
+      export LC_ALL=en_US.UTF-8
+
+      # ----------------------------
+      # Logging Setup
+      # ----------------------------
+      SAFE_NAME="${GAME_NAME// /_}_install.log"
+      INSTALL_LOG="$HOME/$SAFE_NAME"
+
+      # Initialize log file
+      : > "$INSTALL_LOG"
+
+      # ----------------------------
+      # Colors
+      # ----------------------------
+      RED=$(tput setaf 1 2>/dev/null || echo "")
+      GREEN=$(tput setaf 2 2>/dev/null || echo "")
+      YELLOW=$(tput setaf 3 2>/dev/null || echo "")
+      BLUE=$(tput setaf 4 2>/dev/null || echo "")
+      CYAN=$(tput setaf 6 2>/dev/null || echo "")
+      WHITE=$(tput setaf 7 2>/dev/null || echo "")
+      BOLD=$(tput bold 2>/dev/null || echo "")
+      NC=$(tput sgr0 2>/dev/null || echo "")
+
+      LINE="${BLUE}════════════════════════════════════════════════════════════════${NC}"
+
+      # ----------------------------
+      # Logging Functions
+      # ----------------------------
+      log_info()    { 
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${BLUE}[INFO]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] $*" >> "$INSTALL_LOG"
+      }
+      log_warn()    { 
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+      }
+      log_error()   { 
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${NC} $*" >&2
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+      }
+      log_success() { 
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${GREEN}[ OK ]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ OK ] $*" >> "$INSTALL_LOG"
+      }
+
+      # Visual output functions (no timestamps for clean display)
+      print_step()    { 
+          echo "${BLUE}│${NC}  ${CYAN}→${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [STEP] $*" >> "$INSTALL_LOG"
+      }
+      print_ok()      { 
+          echo "${BLUE}│${NC}  ${GREEN}✓${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $*" >> "$INSTALL_LOG"
+      }
+      print_warn()    { 
+          echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+      }
+      print_error()   { 
+          echo "${BLUE}│${NC}  ${RED}✗${NC} $*" >&2
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+      }
+
+      # Progress indication removed - causes issues with output redirection
+
+      # ----------------------------
+      # System Check Function
+      # ----------------------------
+      system_check() {
+          local sys_info_file="$HOME/system_info.txt"
+          
+          echo ""
+          echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+          # "SYSTEM INFORMATION CHECK" = 24 chars, (64-24)/2 = 20 left, 20 right
+          printf "${BLUE}║${NC}%20s${CYAN}${BOLD}%s${NC}%20s${BLUE}║${NC}\n" "" "SYSTEM INFORMATION CHECK" ""
+          echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+          echo ""
+          
+          # Initialize system info file
+          {
+              echo "=================================================================="
+              echo "                   SYSTEM INFORMATION CHECK"
+              echo "=================================================================="
+              echo "Date: $(date '+%Y-%m-%d %H:%M:%S')"
+              echo "=================================================================="
+              echo ""
+          } > "$sys_info_file"
+          
+          # Kernel Information
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Kernel Information${NC}"
+          if command -v uname &> /dev/null; then
+              local kernel_name
+              local kernel_version
+              local distro_name="Unknown"
+              local distro_version=""
+              
+              kernel_name=$(uname -s)
+              kernel_version=$(uname -r)
+              
+              # Detect Linux distribution (pure bash, no external tools)
+              if [[ -f /etc/os-release ]]; then
+                  # Modern standard (systemd-based distros, Alpine, etc.)
+                  while IFS='=' read -r key value; do
+                      value="${value%\"}"
+                      value="${value#\"}"
+                      case "$key" in
+                          PRETTY_NAME) distro_name="$value" ;;
+                          VERSION_ID) distro_version="$value" ;;
+                      esac
+                  done < /etc/os-release
+              elif [[ -f /etc/lsb-release ]]; then
+                  # LSB-compliant distros
+                  while IFS='=' read -r key value; do
+                      value="${value%\"}"
+                      value="${value#\"}"
+                      case "$key" in
+                          DISTRIB_DESCRIPTION) distro_name="$value" ;;
+                          DISTRIB_RELEASE) distro_version="$value" ;;
+                      esac
+                  done < /etc/lsb-release
+              elif [[ -f /etc/alpine-release ]]; then
+                  distro_name="Alpine Linux"
+                  distro_version=$(cat /etc/alpine-release 2>/dev/null)
+              elif [[ -f /etc/debian_version ]]; then
+                  distro_name="Debian"
+                  distro_version=$(cat /etc/debian_version 2>/dev/null)
+              elif [[ -f /etc/redhat-release ]]; then
+                  distro_name=$(cat /etc/redhat-release 2>/dev/null)
+              elif [[ -f /etc/arch-release ]]; then
+                  distro_name="Arch Linux"
+              elif [[ -f /etc/gentoo-release ]]; then
+                  distro_name=$(cat /etc/gentoo-release 2>/dev/null)
+              elif [[ -f /etc/SuSE-release ]]; then
+                  distro_name=$(head -n1 /etc/SuSE-release 2>/dev/null)
+              elif [[ -f /etc/issue ]]; then
+                  # Fallback to /etc/issue (strip escape sequences)
+                  distro_name=$(head -n1 /etc/issue 2>/dev/null | sed 's/\\[a-z]//g' | xargs)
+              fi
+              
+              # Fallback if still unknown
+              [[ "$distro_name" == "Unknown" || -z "$distro_name" ]] && distro_name="$kernel_name"
+              
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Distro:  ${WHITE}${distro_name}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Kernel:  ${WHITE}${kernel_version}${NC}"
+              {
+                  echo "KERNEL INFORMATION:"
+                  echo "  Distro:  ${distro_name}"
+                  echo "  Kernel:  ${kernel_version}"
+                  echo ""
+              } >> "$sys_info_file"
+          else
+              echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Kernel information not available"
+              echo "Kernel Information: Not available" >> "$sys_info_file"
+              echo "" >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+          
+          # CPU Information
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}CPU Information${NC}"
+          if [[ -f /proc/cpuinfo ]]; then
+              local cpu_model
+              local cpu_cores
+              cpu_model=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
+              cpu_cores=$(grep -c "^processor" /proc/cpuinfo)
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Model:   ${WHITE}${cpu_model}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Cores:   ${WHITE}${cpu_cores}${NC}"
+              {
+                  echo "CPU INFORMATION:"
+                  echo "  Model: ${cpu_model}"
+                  echo "  Cores: ${cpu_cores}"
+                  echo ""
+              } >> "$sys_info_file"
+          else
+              echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} CPU information not available"
+              echo "CPU Information: Not available" >> "$sys_info_file"
+              echo "" >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+          
+          # Virtualization Detection
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Virtualization${NC}"
+          local virt_status="Unknown"
+          local virt_detail=""
+          
+          if command -v systemd-detect-virt &> /dev/null; then
+              virt_status=$(systemd-detect-virt 2>/dev/null || echo "none")
+              if [[ "$virt_status" == "none" ]]; then
+                  echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Bare Metal${NC}"
+                  virt_status="Bare Metal"
+              else
+                  # Capitalize first letter for better display
+                  virt_detail="$virt_status"
+                  case "$virt_status" in
+                      kvm) virt_detail="KVM" ;;
+                      qemu) virt_detail="QEMU" ;;
+                      docker) virt_detail="Docker Container" ;;
+                      lxc) virt_detail="LXC Container" ;;
+                      vmware) virt_detail="VMware" ;;
+                      microsoft) virt_detail="Hyper-V" ;;
+                      xen) virt_detail="Xen" ;;
+                  esac
+                  echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}${virt_detail}${NC}"
+              fi
+          elif [[ -f /proc/cpuinfo ]]; then
+              if grep -qE "^flags.*hypervisor" /proc/cpuinfo; then
+                  local dmi_vendor=""
+                  local dmi_product=""
+                  if [[ -r /sys/class/dmi/id/sys_vendor ]]; then
+                      dmi_vendor=$(tr -d '\n' </sys/class/dmi/id/sys_vendor 2>/dev/null || true)
+                  fi
+                  if [[ -r /sys/class/dmi/id/product_name ]]; then
+                      dmi_product=$(tr -d '\n' </sys/class/dmi/id/product_name 2>/dev/null || true)
+                  fi
+
+                  if [[ -e /dev/kvm ]] || grep -qi "kvm" /proc/cpuinfo; then
+                      virt_status="KVM"
+                      virt_detail="KVM"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}KVM${NC}"
+                  elif echo "$dmi_vendor $dmi_product" | grep -qi "vmware"; then
+                      virt_status="VMware"
+                      virt_detail="VMware"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}VMware${NC}"
+                  elif echo "$dmi_vendor $dmi_product" | grep -qi "microsoft"; then
+                      virt_status="Hyper-V"
+                      virt_detail="Hyper-V"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Hyper-V${NC}"
+                  elif echo "$dmi_vendor $dmi_product" | grep -qi "xen"; then
+                      virt_status="Xen"
+                      virt_detail="Xen"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Xen${NC}"
+                  elif echo "$dmi_vendor $dmi_product" | grep -qi "qemu"; then
+                      virt_status="QEMU"
+                      virt_detail="QEMU"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}QEMU${NC}"
+                  else
+                      virt_status="Virtualized"
+                      virt_detail="Hypervisor detected"
+                      echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Virtualized${NC} ${WHITE}(${virt_detail})${NC}"
+                  fi
+              else
+                  echo "${BLUE}│${NC}  ${GREEN}✓${NC} Type:    ${GREEN}Likely Bare Metal${NC}"
+                  virt_status="Likely Bare Metal"
+              fi
+          else
+              echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Type:    ${YELLOW}Cannot determine${NC}"
+          fi
+          {
+              echo "VIRTUALIZATION:"
+              echo "  Type: ${virt_status}"
+              echo ""
+          } >> "$sys_info_file"
+          echo "${BLUE}└─${NC}"
+          
+          # Memory (RAM) Information
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Memory (RAM)${NC}"
+          if [[ -f /proc/meminfo ]]; then
+              local total_ram_kb
+              local total_ram_mb
+              local total_ram_gb
+              local available_ram_kb
+              local available_ram_mb
+              local available_ram_gb
+              local used_ram_mb
+              local ram_percent
+              
+              total_ram_kb=$(grep "MemTotal" /proc/meminfo | awk '{print $2}')
+              total_ram_mb=$((total_ram_kb / 1024))
+              # Pure bash decimal calculation (integer.decimal)
+              total_ram_gb="$((total_ram_mb / 1024)).$((total_ram_mb * 100 / 1024 % 100))"
+              
+              available_ram_kb=$(grep "MemAvailable" /proc/meminfo | awk '{print $2}')
+              available_ram_mb=$((available_ram_kb / 1024))
+              available_ram_gb="$((available_ram_mb / 1024)).$((available_ram_mb * 100 / 1024 % 100))"
+              
+              used_ram_mb=$((total_ram_mb - available_ram_mb))
+              # Calculate percentage with one decimal place using pure bash
+              ram_percent="$((used_ram_mb * 100 / total_ram_mb)).$((used_ram_mb * 1000 / total_ram_mb % 10))"
+              
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Total:     ${WHITE}${total_ram_mb} MB${NC} ${BLUE}(${WHITE}${total_ram_gb} GB${BLUE})${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Available: ${WHITE}${available_ram_mb} MB${NC} ${BLUE}(${WHITE}${available_ram_gb} GB${BLUE})${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Used:      ${WHITE}${used_ram_mb} MB${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Usage:     ${YELLOW}${ram_percent}%${NC}"
+              
+              {
+                  echo "MEMORY (RAM):"
+                  echo "  Total:     ${total_ram_mb} MB (${total_ram_gb} GB)"
+                  echo "  Available: ${available_ram_mb} MB (${available_ram_gb} GB)"
+                  echo "  Used:      ${used_ram_mb} MB"
+                  echo "  Usage:     ${ram_percent}%"
+                  echo ""
+              } >> "$sys_info_file"
+          else
+              echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Memory information not available"
+              echo "Memory (RAM): Not available" >> "$sys_info_file"
+              echo "" >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+          
+          # Disk Space Information
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Disk Space (Home Directory)${NC}"
+          if command -v df &> /dev/null; then
+              local disk_info
+              local disk_total
+              local disk_used
+              local disk_available
+              local disk_percent
+              
+              disk_info=$(df -h "$HOME" 2>/dev/null | tail -n1)
+              disk_total=$(echo "$disk_info" | awk '{print $2}')
+              disk_used=$(echo "$disk_info" | awk '{print $3}')
+              disk_available=$(echo "$disk_info" | awk '{print $4}')
+              disk_percent=$(echo "$disk_info" | awk '{print $5}')
+              
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Total:     ${WHITE}${disk_total}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Used:      ${WHITE}${disk_used}${NC} ${YELLOW}(${disk_percent})${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Available: ${WHITE}${disk_available}${NC}"
+              
+              {
+                  echo "DISK SPACE (Home Directory):"
+                  echo "  Total:     ${disk_total}"
+                  echo "  Used:      ${disk_used} (${disk_percent})"
+                  echo "  Available: ${disk_available}"
+                  echo ""
+              } >> "$sys_info_file"
+          else
+              echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} Disk information not available"
+              echo "Disk Space: Not available" >> "$sys_info_file"
+              echo "" >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+          
+          echo ""
+          {
+              echo "=================================================================="
+              echo "                  END OF SYSTEM INFORMATION"
+              echo "=================================================================="
+          } >> "$sys_info_file"
+          
+          # Only log to file, no screen output
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] System information saved to: ${sys_info_file}" >> "$INSTALL_LOG"
+          echo ""
+      }
+
+      # ----------------------------
+      # Validation Functions
+      # ----------------------------
+      validate_steam_appid() {
+          if [[ ! "$STEAM_APPID" =~ ^[0-9]+$ ]]; then
+              log_error "STEAM_APPID must be numeric: $STEAM_APPID"
+              exit 1
+          fi
+      }
+
+      validate_config_url() {
+          # Only validate if CONFIG_INIT is enabled
+          if [[ "${CONFIG_INIT:-0}" -eq 1 ]] && [[ -n "$CONFIG_URL" ]]; then
+              if [[ ! "$CONFIG_URL" =~ ^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$ ]]; then
+                  log_error "CONFIG_URL must be a valid HTTP/HTTPS URL: $CONFIG_URL"
+                  exit 1
+              fi
+              
+              # Check for suspicious URLs
+              if [[ "$CONFIG_URL" =~ (localhost|127\.0\.0\.1|0\.0\.0\.0|::1) ]]; then
+                  log_warn "CONFIG_URL points to localhost - this may be intentional but could be suspicious"
+              fi
+          fi
+      }
+
+      # New function for additional security checks
+      validate_steam_credentials() {
+          # Check for suspicious characters in Steam credentials
+          local suspicious_chars='[;&|`$()]'
+          
+          if [[ "$STEAM_USER" =~ $suspicious_chars ]]; then
+              log_error "STEAM_USER contains suspicious characters"
+              exit 1
+          fi
+          
+          if [[ -n "$STEAM_PASS" ]] && [[ "$STEAM_PASS" =~ $suspicious_chars ]]; then
+              log_error "STEAM_PASS contains suspicious characters"
+              exit 1
+          fi
+          
+          if [[ -n "$STEAM_AUTH" ]] && [[ "$STEAM_AUTH" =~ $suspicious_chars ]]; then
+              log_error "STEAM_AUTH contains suspicious characters"
+              exit 1
+          fi
+      }
+
+      validate_path() {
+          local path="$1"
+          local name="$2"
+          
+          # Check for path traversal attempts
+          if [[ "$path" =~ \.\. ]] || [[ "$path" =~ ^/etc ]] || [[ "$path" =~ ^/root ]]; then
+              log_error "Invalid or dangerous path for $name: $path"
+              exit 1
+          fi
+          
+          # Ensure path starts with $HOME
+          if [[ ! "$path" =~ ^"$HOME" ]]; then
+              log_error "Path $name must start with HOME directory: $path"
+              exit 1
+          fi
+      }
+
+      check_dependencies() {
+          local deps=("curl" "tar")
+          local missing=()
+          local optional_deps=("wget" "unzip")
+          
+          # Check if curl supports HTTPS
+          local curl_https_support=false
+          if command -v curl >/dev/null 2>&1; then
+              if curl --version 2>/dev/null | grep -q "https"; then
+                  curl_https_support=true
+              else
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] curl found but HTTPS support is missing" >> "$INSTALL_LOG"
+              fi
+          else
+              missing+=("curl")
+          fi
+          
+          for dep in "${deps[@]}"; do
+              if ! command -v "$dep" >/dev/null 2>&1; then
+                  missing+=("$dep")
+              fi
+          done
+          
+          # Try to install missing dependencies automatically
+          if [[ "${#missing[@]}" -gt 0 ]] || [[ "$curl_https_support" == "false" ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Attempting to install missing dependencies..." >> "$INSTALL_LOG"
+              
+              # Alpine Linux
+              if command -v apk >/dev/null 2>&1; then
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Detected Alpine Linux, installing packages..." >> "$INSTALL_LOG"
+                  apk add --no-cache curl ca-certificates openssl tar wget 2>/dev/null || {
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to install packages via apk" >> "$INSTALL_LOG"
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Missing required dependencies: ${missing[*]}" >> "$INSTALL_LOG"
+                      print_error "Failed to install packages via apk"
+                      exit 1
+                  }
+              # Debian/Ubuntu
+              elif command -v apt-get >/dev/null 2>&1; then
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Detected Debian/Ubuntu, installing packages..." >> "$INSTALL_LOG"
+                  export DEBIAN_FRONTEND=noninteractive
+                  apt-get update >/dev/null 2>&1 || true
+                  apt-get install -y curl ca-certificates openssl tar wget gnupg2 2>/dev/null || {
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to install packages via apt-get" >> "$INSTALL_LOG"
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Missing required dependencies: ${missing[*]}" >> "$INSTALL_LOG"
+                      print_error "Failed to install packages via apt-get"
+                      exit 1
+                  }
+                  # Update CA certificates to ensure HTTPS works properly
+                  update-ca-certificates >/dev/null 2>&1 || true
+              else
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Unsupported Linux distribution" >> "$INSTALL_LOG"
+                  print_error "Unsupported Linux distribution"
+                  exit 1
+              fi
+              
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Dependencies installed successfully" >> "$INSTALL_LOG"
+          fi
+          
+          # Re-check dependencies after installation
+          missing=()
+          for dep in "${deps[@]}"; do
+              if ! command -v "$dep" >/dev/null 2>&1; then
+                  missing+=("$dep")
+              fi
+          done
+          
+          if [[ "${#missing[@]}" -gt 0 ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Still missing dependencies after installation: ${missing[*]}" >> "$INSTALL_LOG"
+              print_error "Still missing dependencies after installation: ${missing[*]}"
+              exit 1
+          fi
+          
+          # Check optional dependencies
+          for dep in "${optional_deps[@]}"; do
+              if ! command -v "$dep" >/dev/null 2>&1; then
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Optional dependency missing: $dep" >> "$INSTALL_LOG"
+              fi
+          done
+          
+          # Check system requirements
+          if [[ "$(nproc 2>/dev/null || echo 1)" -lt 2 ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] System has less than 2 CPU cores" >> "$INSTALL_LOG"
+          fi
+          
+          local available_memory
+          available_memory="$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 0)"
+          if [[ "$available_memory" -lt 1024 ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Less than 1GB available memory" >> "$INSTALL_LOG"
+          fi
+          
+          # Only log to file, no screen output
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] All required dependencies found" >> "$INSTALL_LOG"
+      }
+
+      # ----------------------------
+      # Download with Retry Function
+      # ----------------------------
+      # shellcheck disable=SC2317  # Function is called later in script
+      download_with_retry() {
+          local url="$1" 
+          local output="$2" 
+          local retries="${3:-3}"
+          local desc="${4:-file}"
+          local expected_size="${5:-}"
+          
+          # Validate URL format
+          if [[ ! "$url" =~ ^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$ ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Invalid URL format: $url" >> "$INSTALL_LOG"
+              return 1
+          fi
+          
+          # Check if HTTPS is supported by curl
+          local curl_supports_https=true
+          if ! curl --version 2>/dev/null | grep -q "https"; then
+              curl_supports_https=false
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] HTTPS not supported by curl, will try HTTP fallback" >> "$INSTALL_LOG"
+          fi
+          
+          for i in $(seq 1 "$retries"); do
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Downloading $desc (attempt $i/$retries)..." >> "$INSTALL_LOG"
+              
+              # Determine which URLs to try based on HTTPS support
+              local urls_to_try=()
+              if [[ "$url" =~ ^https:// ]]; then
+                  if [[ "$curl_supports_https" == "true" ]]; then
+                      # Try HTTPS first, then HTTP as fallback
+                      urls_to_try=("$url" "${url/https:/http:}")
+                  else
+                      # Only try HTTP if HTTPS is not supported
+                      urls_to_try=("${url/https:/http:}")
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Using HTTP instead of HTTPS: ${url/https:/http:}" >> "$INSTALL_LOG"
+                  fi
+              else
+                  # URL is already HTTP
+                  urls_to_try=("$url")
+              fi
+              
+              local success=false
+              local last_error=""
+              
+              for try_url in "${urls_to_try[@]}"; do
+                  # Use appropriate curl options based on protocol
+                  local curl_opts=(
+                      -fsSL
+                      --connect-timeout 30
+                      --max-time 300
+                      --retry 1
+                      --retry-delay 1
+                      --location
+                      -H "User-Agent: GameServer-Installer/1.0"
+                      -o "$output"
+                  )
+                  
+                  # Add protocol restrictions based on URL and support
+                  if [[ "$try_url" =~ ^https:// ]]; then
+                      curl_opts+=(--proto '=https' --tlsv1.2)
+                  else
+                      curl_opts+=(--proto '=http')
+                  fi
+                  
+                  last_error=$(curl "${curl_opts[@]}" "$try_url" 2>&1)
+                  if [[ "$?" -eq 0 ]]; then
+                      success=true
+                      break
+                  fi
+              done
+              
+              if [[ "$success" == "true" ]]; then
+                  # Verify download
+                  if [[ -f "$output" ]]; then
+                      local file_size
+                      file_size="$(stat -f%z "$output" 2>/dev/null || stat -c%s "$output" 2>/dev/null || echo 0)"
+                      
+                      if [[ "$file_size" -gt 0 ]]; then
+                          if [[ -n "$expected_size" ]] && [[ "$file_size" -lt "$expected_size" ]]; then
+                              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Downloaded file seems too small ($file_size bytes, expected at least $expected_size)" >> "$INSTALL_LOG"
+                          fi
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Downloaded $desc successfully ($file_size bytes)" >> "$INSTALL_LOG"
+                          return 0
+                      else
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Downloaded file is empty" >> "$INSTALL_LOG"
+                          rm -f "$output"
+                      fi
+                  fi
+              else
+                  if [[ -n "$last_error" ]]; then
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Download failed: $last_error" >> "$INSTALL_LOG"
+                  fi
+              fi
+              
+              if [[ "$i" -lt "$retries" ]]; then
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Download attempt $i failed, retrying in 5 seconds..." >> "$INSTALL_LOG"
+                  sleep 5
+              fi
+          done
+          
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to download $desc after $retries attempts" >> "$INSTALL_LOG"
+          return 1
+      }
+
+      # ----------------------------
+      # Safe command execution
+      # ----------------------------
+      run_or_fail() {
+          local desc="$1"; shift
+          # Only log to file, no screen output
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Starting: $desc" >> "$INSTALL_LOG"
+          
+          if "$@" >> "$INSTALL_LOG" 2>&1; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc" >> "$INSTALL_LOG"
+          else
+              local exit_code=$?
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $desc failed with exit code $exit_code" >> "$INSTALL_LOG"
+              print_error "$desc failed (exit code $exit_code)"
+              exit 1
+          fi
+      }
+
+      # ----------------------------
+      # Library Copy Helper
+      # ----------------------------
+
+      # Standard Steam DLLs copied when STEAM_LIBS_DEST is set.
+      STEAM_STANDARD_LIBS=(
+          "steamclient.dll"
+          "steamclient64.dll"
+          "tier0_s.dll"
+          "tier0_s64.dll"
+          "vstdlib_s.dll"
+          "vstdlib_s64.dll"
+      )
+
+      _copy_single_lib() {
+          local src="$1"
+          local dest="$2"
+
+          if [[ ! -e "$src" ]]; then
+              print_error "Source not found: $src"
+              return
+          fi
+
+          mkdir -p "$(dirname "$dest")"
+
+          if [[ -d "$src" ]]; then
+              if cp -a "$src" "$dest" >/dev/null 2>&1; then
+                  print_ok "Copied directory: $src -> $dest"
+              else
+                  print_warn "Failed to copy directory: $src -> $dest"
+              fi
+          else
+              if cp -f "$src" "$dest" >/dev/null 2>&1; then
+                  print_ok "Copied file: $src -> $dest"
+              else
+                  print_warn "Failed to copy file: $src -> $dest"
+              fi
+          fi
+      }
+
+      copy_game_libs() {
+          local has_work=false
+
+          # Check if there is anything to do at all
+          if [[ -n "${STEAM_LIBS_DEST:-}" ]] || [[ "${#LIB_COPY_ITEMS[@]}" -gt 0 ]] || [[ "$#" -gt 0 ]]; then
+              has_work=true
+          fi
+
+          [[ "$has_work" == "false" ]] && return 0
+
+          print_step "Copying libraries..."
+
+          # --- Standard Steam DLLs ---
+          if [[ -n "${STEAM_LIBS_DEST:-}" ]]; then
+              mkdir -p "$STEAM_LIBS_DEST"
+              local lib
+              for lib in "${STEAM_STANDARD_LIBS[@]}"; do
+                  local src="$HOME/$lib"
+                  local dest="$STEAM_LIBS_DEST/$lib"
+                  if [[ -f "$src" ]]; then
+                      _copy_single_lib "$src" "$dest"
+                  else
+                      print_warn "Standard Steam lib not found (skipping): $src"
+                  fi
+              done
+          fi
+
+          # --- Custom LIB_COPY_ITEMS or caller-supplied items ---
+          local items=()
+          if [[ "$#" -gt 0 ]]; then
+              items=("$@")
+          else
+              items=("${LIB_COPY_ITEMS[@]}")
+          fi
+
+          local item src dest
+          for item in "${items[@]}"; do
+              IFS='|' read -r src dest <<< "$item"
+
+              if [[ -z "${src:-}" || -z "${dest:-}" ]]; then
+                  print_warn "Invalid copy entry (expected 'src|dest'): $item"
+                  continue
+              fi
+
+              _copy_single_lib "$src" "$dest"
+          done
+      }
+
+      # ----------------------------
+      # Cleanup Function
+      # ----------------------------
+      cleanup() {
+          local exit_code=$?
+          
+          # Remove temporary files silently
+          rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log 2>/dev/null || true
+          
+          # Clean up any leftover processes
+          pkill -f "steamcmd" 2>/dev/null || true
+          pkill -f "DepotDownloader" 2>/dev/null || true
+          
+          # Clear sensitive variables
+          unset STEAM_PASS STEAM_AUTH
+          
+          exit "$exit_code"
+      }
+
+      trap cleanup EXIT
+
+      # ----------------------------
+      # Secure Steam Command Execution
+      # _STEAM_CMD must be set by the caller before invoking this function.
+      # ----------------------------
+      run_steam_command() {
+          local desc="$1"
+          local -a cmd_array=("${_STEAM_CMD[@]}")
+          unset _STEAM_CMD
+          
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Executing: $desc" >> "$INSTALL_LOG"
+          
+          local temp_output="/tmp/steam_output_$$.log"
+          local exit_code=0
+          
+          # Execute command and process output in real-time
+          echo "${BLUE}│${NC}"
+          
+          # Create a temporary file to capture the exit code
+          local exit_code_file="/tmp/steam_exit_$$.code"
+          
+          # Execute command with proper exit code handling
+          {
+              "${cmd_array[@]}" 2>&1
+              echo $? > "$exit_code_file"
+          } | while IFS= read -r line; do
+              # Save raw line to temp file
+              echo "$line" >> "$temp_output"
+              
+              # Remove ANSI escape codes for cleaner logging
+              local clean_line
+              clean_line=$(echo "$line" | sed -r 's/\x1b\[[0-9;]*[mK]//g' | sed 's/(B\[m//g')
+              
+              # Skip banner messages, license info, and other non-error messages
+              if [[ "$clean_line" =~ (Image by gOOvER|discord.goover.dev|LICENSED UNDER|Redirecting stderr) ]] || \
+                 [[ "$clean_line" =~ ^[[:space:]]*$ ]]; then
+                  continue
+              fi
+              
+              # Log relevant lines (filtered) to file
+              if ! echo "$clean_line" | grep -qiE "password|auth|token|secret"; then
+                  # Only log errors, warnings, progress, and important messages
+                  if [[ "$clean_line" =~ (ERROR|Failed|Warning|Success|Update|Downloading|Validating|progress|Installing|Loading) ]] || \
+                     [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
+                     [[ "$clean_line" =~ "Depot download" ]] || \
+                     [[ "$clean_line" =~ "Connecting" ]] || \
+                     [[ "$clean_line" =~ "Waiting" ]] || \
+                     [[ "$clean_line" =~ "App" ]] || \
+                     [[ "$clean_line" =~ "state" ]]; then
+                      echo "$clean_line" >> "$INSTALL_LOG" 2>/dev/null || true
+                  fi
+              fi
+              
+              # Show progress lines on screen (update%, downloading, validating, installing)
+              if [[ "$clean_line" =~ (Update|Downloading|Validating|Installing|Loading|progress|state|[0-9]+%) ]] || \
+                 [[ "$clean_line" =~ ^\ *\[.*\] ]] || \
+                 [[ "$clean_line" =~ "Success" ]] || \
+                 [[ "$clean_line" =~ "Depot download" ]] || \
+                 [[ "$clean_line" =~ "App.*[0-9]+" ]]; then
+                  # Filter out sensitive information before display
+                  if ! echo "$clean_line" | grep -qiE "password|auth|token|secret|login"; then
+                      printf "${BLUE}│${NC}  ${WHITE}%s${NC}\n" "$clean_line"
+                  fi
+              fi
+          done
+          
+          # Read the exit code from the file
+          if [[ -f "$exit_code_file" ]]; then
+              exit_code=$(cat "$exit_code_file")
+              rm -f "$exit_code_file"
+          else
+              # If file doesn't exist, assume failure
+              exit_code=1
+          fi
+          
+          # Clean up temporary file
+          rm -f "$temp_output"
+          echo "${BLUE}│${NC}"
+          
+          # Check for specific error messages in log
+          local last_error=""
+          if [[ -f "$INSTALL_LOG" ]]; then
+              last_error=$(tail -n 20 "$INSTALL_LOG" | { grep -i "ERROR\|Failed" || true; } | tail -n 1)
+          fi
+          
+          # Log results and handle errors
+          case "$exit_code" in
+              0) 
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc completed successfully" >> "$INSTALL_LOG"
+                  return 0
+                  ;;
+              2) 
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Steam login failed - check credentials" >> "$INSTALL_LOG"
+                  print_error "Steam login failed"
+                  exit 1
+                  ;;
+              5) 
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] App not found or access denied for AppID: $STEAM_APPID" >> "$INSTALL_LOG"
+                  print_error "App not found (AppID: $STEAM_APPID)"
+                  exit 1
+                  ;;
+              7) 
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Steam is updating, please try again later" >> "$INSTALL_LOG"
+                  print_error "Steam is updating"
+                  exit 1
+                  ;;
+              8)
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Installation failed for AppID: $STEAM_APPID" >> "$INSTALL_LOG"
+                  print_error "Installation failed (AppID: $STEAM_APPID)"
+                  
+                  # Check for "Missing configuration" error
+                  if echo "$last_error" | grep -qi "Missing configuration"; then
+                      echo "${BLUE}│${NC}"
+                      print_warn "Possible causes for 'Missing configuration' error:"
+                      echo "${BLUE}│${NC}    ${YELLOW}1.${NC} App may require a beta branch (set STEAM_BETAID)"
+                      echo "${BLUE}│${NC}    ${YELLOW}2.${NC} App may be Windows-only (set WINDOWS_INSTALL=1)"
+                      echo "${BLUE}│${NC}    ${YELLOW}3.${NC} App may require additional install flags"
+                      echo "${BLUE}│${NC}    ${YELLOW}4.${NC} App ID might be incorrect or not accessible"
+                      echo "${BLUE}│${NC}    ${YELLOW}5.${NC} App may not have a dedicated server version"
+                      echo "${BLUE}│${NC}"
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Missing configuration error - check egg variables" >> "$INSTALL_LOG"
+                  fi
+                  exit 1
+                  ;;
+              *) 
+                  if [[ "$exit_code" -ne 0 ]]; then
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $desc exited with code $exit_code" >> "$INSTALL_LOG"
+                      print_warn "$desc exited with code $exit_code"
+                      exit 1
+                  fi
+                  ;;
+          esac
+      }
+
+      # ----------------------------
+      # Start Script Output
+      # ----------------------------
+      clear
+      echo ""
+      echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+      # "GAME INSTALLATION" = 17 chars, (64-17)/2 = 23 left, 24 right
+      printf "${BLUE}║${NC}%23s${YELLOW}${BOLD}%s${NC}%24s${BLUE}║${NC}\n" "" "GAME INSTALLATION" ""
+      # "${GAME_NAME}" - dynamisch berechnet
+      game_name_len=${#GAME_NAME}
+      game_left=$(( (64 - game_name_len) / 2 ))
+      game_right=$(( 64 - game_name_len - game_left ))
+      printf "${BLUE}║${NC}%*s${WHITE}%s${NC}%*s${BLUE}║${NC}\n" "$game_left" "" "${GAME_NAME}" "$game_right" ""
+      echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+      echo ""
+
+      # ----------------------------
+      # System Check
+      # ----------------------------
+      system_check
+
+      # ----------------------------
+      # Pre-flight Checks
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Pre-flight Checks${NC}"
+      print_step "Validating environment..."
+      check_dependencies
+      print_step "Validating Steam App ID..."
+      validate_steam_appid
+      print_step "Validating configuration..."
+      validate_config_url
+      print_step "Validating Steam credentials..."
+      validate_steam_credentials
+      print_step "Validating paths..."
+      if [[ "${CONFIG_INIT:-0}" -eq 1 ]]; then
+          validate_path "$CONFIG_DIR" "CONFIG_DIR"
+      fi
+      validate_path "$STEAMCMD_DIR" "STEAMCMD_DIR"
+      print_ok "All checks passed"
+      echo "${BLUE}└─${NC}"
+
+      # Check network connectivity
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Network Connectivity${NC}"
+      if ! curl -s --connect-timeout 10 --max-time 15 "https://steamcdn-a.akamaihd.net" >/dev/null 2>&1; then
+          print_warn "HTTPS failed, trying HTTP..."
+          if ! curl -s --connect-timeout 10 --max-time 15 "http://steamcdn-a.akamaihd.net" >/dev/null 2>&1; then
+              print_error "Cannot reach Steam servers"
+              echo "${BLUE}└─${NC}"
+              exit 1
+          else
+              print_ok "HTTP connection verified"
+          fi
+      else
+          print_ok "HTTPS connection verified"
+      fi
+      echo "${BLUE}└─${NC}"
+
+      echo ""
+      if [[ "$STEAM_USER" == "anonymous" ]]; then
+          echo "${BLUE}•${NC} ${YELLOW}Using anonymous Steam login${NC}"
+      else
+          echo "${BLUE}•${NC} ${CYAN}Steam user:${NC} ${WHITE}$STEAM_USER${NC}"
+      fi
+
+      # ----------------------------
+      # Game Installation via DepotDownloader
+      # ----------------------------
+      if [[ "$DEPOTDOWNLOADER" == "1" ]]; then
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Game Installation (DepotDownloader)${NC}"
+          print_step "Installing $GAME_NAME..."
+          mkdir -p "$HOME/depotdownloader"
+          cd "$HOME/depotdownloader"
+
+          if [[ ! -f DepotDownloader ]]; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Fetching DepotDownloader Linux binary..." >> "$INSTALL_LOG"
+              run_or_fail "Download DepotDownloader" \
+                  download_with_retry \
+                  "https://github.com/SteamRE/DepotDownloader/releases/latest/download/DepotDownloader-Linux-x64" \
+                  "DepotDownloader" \
+                  3 \
+                  "DepotDownloader binary"
+              
+              run_or_fail "Make DepotDownloader executable" chmod +x DepotDownloader
+          fi
+
+          # Build DepotDownloader command array
+          declare -a dd_cmd=(
+              "./DepotDownloader"
+              "-app" "$STEAM_APPID"
+              "-dir" "$HOME"
+          )
+          
+          if [[ -n "${STEAM_BETAID:-}" ]]; then
+              dd_cmd+=("-beta" "$STEAM_BETAID")
+          fi
+          
+          if [[ -n "${STEAM_BETAPASS:-}" ]]; then
+              dd_cmd+=("-betapassword" "$STEAM_BETAPASS")
+          fi
+          
+          # Add install flags if provided
+          if [[ -n "${INSTALL_FLAGS:-}" ]]; then
+              read -ra flags <<< "$INSTALL_FLAGS"
+              dd_cmd+=("${flags[@]}")
+          fi
+          
+          dd_cmd+=("-username" "$STEAM_USER")
+          
+          if [[ -n "$STEAM_PASS" ]]; then
+              dd_cmd+=("-password" "$STEAM_PASS")
+          fi
+          
+          if [[ -n "$STEAM_AUTH" ]]; then
+              dd_cmd+=("-remember-password" "$STEAM_AUTH")
+          fi
+
+          _STEAM_CMD=("${dd_cmd[@]}")
+          run_steam_command "DepotDownloader installation"
+          print_ok "Installation finished"
+          echo "${BLUE}└─${NC}"
+      fi
+
+      # ----------------------------
+      # Game Installation via SteamCMD
+      # ----------------------------
+      if [[ "$DEPOTDOWNLOADER" != "1" ]]; then
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Game Installation (SteamCMD)${NC}"
+          mkdir -p "$STEAMCMD_DIR" "$HOME/steamapps"
+
+          print_step "Downloading SteamCMD..."
+          if download_with_retry \
+              "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+              "/tmp/steamcmd.tar.gz" \
+              3 \
+              "SteamCMD archive"; then
+              print_ok "SteamCMD downloaded"
+          else
+              print_error "Failed to download SteamCMD"
+              exit 1
+          fi
+          
+          print_step "Extracting SteamCMD..."
+          if tar -xzf /tmp/steamcmd.tar.gz -C "$STEAMCMD_DIR" >> "$INSTALL_LOG" 2>&1; then
+              print_ok "SteamCMD extracted"
+          else
+              print_error "Failed to extract SteamCMD"
+              exit 1
+          fi
+
+          print_step "Installing $GAME_NAME..."
+          cd "$STEAMCMD_DIR"
+
+          # Build SteamCMD command array
+          declare -a steam_cmd=(
+              "./steamcmd.sh"
+              "+force_install_dir" "$HOME"
+              "+login" "$STEAM_USER"
+          )
+          
+          if [[ -n "$STEAM_PASS" ]]; then
+              steam_cmd+=("$STEAM_PASS")
+          fi
+          
+          if [[ -n "$STEAM_AUTH" ]]; then
+              steam_cmd+=("$STEAM_AUTH")
+          fi
+          
+          if [[ "${WINDOWS_INSTALL:-0}" == "1" ]]; then
+              steam_cmd+=("+@sSteamCmdForcePlatformType" "windows")
+          fi
+          
+          # Install Steam Linux Runtime (SteamCMD bootstrapping)
+          steam_cmd+=("+app_update" "1007" "validate")
+          
+          # Build app_update command with all its parameters
+          steam_cmd+=("+app_update" "$STEAM_APPID")
+          
+          # Beta parameters must come immediately after app_update, before validate
+          if [[ -n "${STEAM_BETAID:-}" ]]; then
+              steam_cmd+=("-beta" "$STEAM_BETAID")
+          fi
+          
+          if [[ -n "${STEAM_BETAPASS:-}" ]]; then
+              steam_cmd+=("-betapassword" "$STEAM_BETAPASS")
+          fi
+          
+          # Add install flags if provided (before validate)
+          if [[ -n "${INSTALL_FLAGS:-}" ]]; then
+              read -ra flags <<< "$INSTALL_FLAGS"
+              steam_cmd+=("${flags[@]}")
+          fi
+          
+          # validate must be part of the app_update command
+          steam_cmd+=("validate")
+          
+          steam_cmd+=("+quit")
+
+          _STEAM_CMD=("${steam_cmd[@]}")
+          run_steam_command "SteamCMD installation"
+          print_ok "Installation finished"
+          echo "${BLUE}└─${NC}"
+      fi
+
+      # ----------------------------
+      # Steam Libraries Setup
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Steam Libraries Setup${NC}"
+      mkdir -p "$HOME/.steam/sdk32" "$HOME/.steam/sdk64"
+
+      if [[ -f "$STEAMCMD_DIR/linux32/steamclient.so" ]]; then
+          if cp -v "$STEAMCMD_DIR/linux32/steamclient.so" "$HOME/.steam/sdk32/steamclient.so" >/dev/null 2>&1; then
+              print_ok "32-bit Steam library copied"
+          else
+              print_warn "Failed to copy 32-bit library"
+          fi
+      else
+          print_warn "32-bit Steam library not found"
+      fi
+
+      if [[ -f "$STEAMCMD_DIR/linux64/steamclient.so" ]]; then
+          if cp -v "$STEAMCMD_DIR/linux64/steamclient.so" "$HOME/.steam/sdk64/steamclient.so" >/dev/null 2>&1; then
+              print_ok "64-bit Steam library copied"
+          else
+              print_warn "Failed to copy 64-bit library"
+          fi
+      else
+          print_warn "64-bit library not found"
+      fi
+      print_ok "Setup complete"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Game-specific Hooks
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Game-specific Hooks${NC}"
+      print_step "Executing custom commands..."
+      # <--- add game-specific commands here
+      copy_game_libs
+
+      # Create steam_appid.txt if SteamAppId is set
+      if [[ -n "${SteamAppId:-}" ]]; then
+          # Validate that SteamAppId is numeric
+          if [[ "$SteamAppId" =~ ^[0-9]+$ ]]; then
+              # Ensure HOME directory is writable
+              if [[ -w "$HOME" ]]; then
+                  # Write steam_appid.txt with proper error handling
+                  if echo "$SteamAppId" > "$HOME/steam_appid.txt" 2>/dev/null; then
+                      # Verify file was created successfully
+                      if [[ -f "$HOME/steam_appid.txt" ]] && [[ -s "$HOME/steam_appid.txt" ]]; then
+                          print_ok "Created steam_appid.txt with Client AppID: $SteamAppId"
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] steam_appid.txt created: $SteamAppId" >> "$INSTALL_LOG"
+                      else
+                          print_warn "steam_appid.txt verification failed"
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] steam_appid.txt not readable after creation" >> "$INSTALL_LOG"
+                      fi
+                  else
+                      print_warn "Failed to create steam_appid.txt in $HOME"
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Failed to write steam_appid.txt: Permission denied or write error" >> "$INSTALL_LOG"
+                  fi
+              else
+                  print_warn "HOME directory ($HOME) is not writable - skipping steam_appid.txt"
+                  echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] HOME directory not writable for steam_appid.txt" >> "$INSTALL_LOG"
+              fi
+          else
+              print_warn "SteamAppId is not numeric: $SteamAppId"
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] Invalid SteamAppId (not numeric): $SteamAppId" >> "$INSTALL_LOG"
+          fi
+      else
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] SteamAppId not set, skipping steam_appid.txt creation" >> "$INSTALL_LOG"
+      fi
+
+      print_ok "Hooks completed"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Config Setup
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Configuration Setup${NC}"
+      if [[ "${CONFIG_INIT:-0}" -eq 1 ]]; then
+          if [[ -f "$CONFIG_DIR/$CONFIG_FILE_NAME" ]]; then
+              print_ok "$CONFIG_FILE_NAME found"
+          else
+              print_warn "$CONFIG_FILE_NAME not found, provisioning default..."
+              mkdir -p "$CONFIG_DIR"
+
+              case "${CONFIG_SOURCE:-url}" in
+                  url)
+                      run_or_fail "Download default $CONFIG_FILE_NAME" \
+                          download_with_retry \
+                          "$CONFIG_URL" \
+                          "$CONFIG_DIR/$CONFIG_FILE_NAME" \
+                          3 \
+                          "config file"
+                      print_ok "Configuration downloaded from URL"
+                      ;;
+                  sample)
+                      if [[ -f "${CONFIG_SAMPLE_FILE:-}" ]]; then
+                          if cp -f "$CONFIG_SAMPLE_FILE" "$CONFIG_DIR/$CONFIG_FILE_NAME" 2>/dev/null; then
+                              print_ok "Configuration copied from sample: $CONFIG_SAMPLE_FILE"
+                              echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Config copied from sample: $CONFIG_SAMPLE_FILE" >> "$INSTALL_LOG"
+                          else
+                              print_error "Failed to copy sample config: $CONFIG_SAMPLE_FILE"
+                              echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to copy sample config" >> "$INSTALL_LOG"
+                              exit 1
+                          fi
+                      else
+                          print_error "Sample file not found: ${CONFIG_SAMPLE_FILE:-<not set>}"
+                          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] CONFIG_SAMPLE_FILE not found: ${CONFIG_SAMPLE_FILE:-}" >> "$INSTALL_LOG"
+                          exit 1
+                      fi
+                      ;;
+                  "")
+                      print_warn "CONFIG_SOURCE is empty, skipping auto-provisioning"
+                      ;;
+                  *)
+                      print_warn "Unknown CONFIG_SOURCE value: ${CONFIG_SOURCE} (expected: url | sample)"
+                      ;;
+              esac
+          fi
+      else
+          print_step "Skipping (CONFIG_INIT != 1)"
+      fi
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Final Verification
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Post-Installation Verification${NC}"
+
+      # Check if Steam libraries were installed correctly
+      if [[ ! -d "$HOME/.steam" ]]; then
+          print_warn "Steam directory not found"
+      fi
+
+      # Check if basic Steam files exist
+      steam_files_found=0
+      if [[ -f "$HOME/.steam/sdk32/steamclient.so" ]]; then
+          steam_files_found=$((steam_files_found + 1))
+      fi
+      if [[ -f "$HOME/.steam/sdk64/steamclient.so" ]]; then
+          steam_files_found=$((steam_files_found + 1))
+      fi
+
+      if [[ "$steam_files_found" -eq 0 ]]; then
+          print_warn "No Steam libraries found"
+      elif [[ "$steam_files_found" -eq 1 ]]; then
+          print_warn "Only one Steam library found"
+      else
+          print_ok "Steam libraries installed"
+      fi
+
+      # Check if game files were downloaded (safe version)
+      game_files=0
+      if command -v find >/dev/null 2>&1; then
+          game_files="$(find "$HOME" -maxdepth 3 -type f \( -name "*.exe" -o -name "*.so" -o -name "*.bin" \) 2>/dev/null | wc -l || echo 0)"
+      fi
+
+      if [[ "$game_files" -gt 0 ]]; then
+          print_ok "Found $game_files game files"
+      else
+          print_warn "No executable files found"
+      fi
+
+      # Check permissions (non-fatal)
+      if [[ ! -w "$HOME" ]]; then
+          print_warn "HOME directory not writable"
+      else
+          print_ok "Permissions correct"
+      fi
+
+      # Check if SteamCMD was extracted successfully
+      if [[ -f "$STEAMCMD_DIR/steamcmd.sh" ]]; then
+          print_ok "SteamCMD extracted successfully"
+      else
+          print_warn "SteamCMD not found"
+      fi
+      print_ok "Verification completed"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Cleanup
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Cleanup${NC}"
+      print_step "Removing temporary files..."
+      rm -f /tmp/steamcmd.tar.gz /tmp/depotdownloader.zip /tmp/steam_output.log
+      print_ok "Cleanup complete"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Done
+      # ----------------------------
+      echo ""
+      echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+      # "INSTALLATION COMPLETED" = 22 chars, (64-22)/2 = 21 left, 21 right
+      printf "${BLUE}║${NC}%21s${GREEN}${BOLD}%s${NC}%21s${BLUE}║${NC}\n" "" "INSTALLATION COMPLETED" ""
+      echo "${BLUE}╠════════════════════════════════════════════════════════════════╣${NC}"
+      # Ohne Emojis - nur ASCII für zuverlässige Ausrichtung
+      # Zeile 1: "  [OK] " = 7 Zeichen, Rest = 57
+      printf "${BLUE}║${NC}  ${GREEN}[OK]${NC} %-57s${BLUE}║${NC}\n" "${GAME_NAME} successfully installed"
+      # Zeile 2: "  Log: " = 7 Zeichen, Rest = 57
+      printf "${BLUE}║${NC}  Log: %-57s${BLUE}║${NC}\n" "$INSTALL_LOG"
+      # Zeile 3: "  Support: " = 11 Zeichen, Rest = 53
+      printf "${BLUE}║${NC}  Support: %-53s${BLUE}║${NC}\n" "https://donate.goover.dev"
+      echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+      echo ""
+
+      exit 0
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+  -
+    sort: 4
+    name: '[STEAM] Auto Update'
+    description: 'Should Auto Update'
+    env_variable: AUTO_UPDATE
+    default_value: 1
+    user_viewable: true
+    user_editable: true
+    rules:
+      - boolean
+  -
+    sort: 5
+    name: '[SERVER] Number of Players'
+    description: 'Number of allowed player connections'
+    env_variable: NUM_PLAYERS
+    default_value: 6
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - numeric
+      - 'between:1,32'
+  -
+    sort: 1
+    name: '[SERVER] Query Port'
+    description: 'Steam query port'
+    env_variable: QUERY_PORT
+    default_value: 27015
+    user_viewable: true
+    user_editable: false
+    rules:
+      - required
+      - numeric
+  -
+    sort: 2
+    name: '[SERVER] Server Name'
+    description: 'Name of the server'
+    env_variable: SERVER_NAME
+    default_value: 'A Pelican Hosted Server'
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'max:64'
+  -
+    sort: 3
+    name: '[SERVER] Server Password'
+    description: 'Server access password'
+    env_variable: SERVER_PASSWORD
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'max:30'
+  -
+    sort: 9
+    name: '[STEAM] STEAM_APPID'
+    description: 'Steam App ID'
+    env_variable: STEAM_APPID
+    default_value: 2857200
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - numeric
+      - 'in:2857200'
+  -
+    sort: 6
+    name: '[STEAM] WINDOWS_INSTALL'
+    description: ''
+    env_variable: WINDOWS_INSTALL
+    default_value: 1
+    user_viewable: false
+    user_editable: false
+    rules:
+      - boolean
+  -
+    sort: 7
+    name: '[WINE] WINEDEBUG'
+    description: ''
+    env_variable: WINEDEBUG
+    default_value: '-all'
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string
+  -
+    sort: 8
+    name: '[WINE] WINETRICKS_RUN'
+    description: ''
+    env_variable: WINETRICKS_RUN
+    default_value: 'vcrun2022 mono'
+    user_viewable: false
+    user_editable: false
+    rules:
+      - required
+      - string

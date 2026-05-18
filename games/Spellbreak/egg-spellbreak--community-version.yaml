@@ -1,0 +1,102 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: null
+exported_at: '2026-05-18T13:22:47+00:00'
+name: 'Spellbreak- Community Version'
+author: eggs@goover.de
+uuid: 847ccd5d-bc8d-4f2f-ae11-396a509d672b
+description: 'Spellbreak- Community Version'
+icon: null
+tags: {  }
+features: {  }
+docker_images:
+  'Wine Staging': 'ghcr.io/goover/wine:staging'
+file_denylist: {  }
+startup_commands:
+  Default: 'wine ./g3/Binaries/Win64/g3Server-Win64-Test.exe Alpha_Resculpt?game={{GAME}} -PORT={{SERVER_PORT}}'
+config:
+  files: {  }
+  startup:
+    done: ' Game Engine Initialized.'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # THIS EGG IS LICENCED UNDER AGPLv3
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+      chown -R root:root /mnt
+      export HOME=/mnt/server
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Spellbreak Installscript${NC}"
+      echo -e "${YELLOW}Egg by gOOvER (https://dicord.goover.dev) | Licence: AGPLv3${NC}"
+      echo -e "${RED}Donations: (https://donate.goover.dev)${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      cd $HOME
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}download Spellbreak. please wait...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      itch-dl https://sbcommunity.itch.io/spellbreak-community-version --filter-files-regex "^spellbreak.*server.*windows\.zip$" --api-key ${API_KEY}
+      mv $HOME/sbcommunity/spellbreak-community-version/files/spellbreak-community-version-server-windows.zip $HOME
+      unzip -o spellbreak-community-version-server-windows.zip
+      rm -fr $HOME/sbcommunity
+      rm -fr $HOME/spellbreak-community-version-server-windows.zip
+
+      ## install end
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${GREEN}Installation completed...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      exit 1
+    container: 'ghcr.io/goover/installers:python'
+    entrypoint: bash
+variables:
+  -
+    sort: 1
+    name: 'API Key'
+    description: ''
+    env_variable: API_KEY
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+  -
+    sort: 2
+    name: GAMEMODE
+    description: ''
+    env_variable: GAME
+    default_value: Duo
+    user_viewable: true
+    user_editable: true
+    rules:
+      - 'in:Duo,Solo,Squad,Capture'
+  -
+    sort: 3
+    name: WINEDEBUG
+    description: ''
+    env_variable: WINEDEBUG
+    default_value: '-all'
+    user_viewable: false
+    user_editable: false
+    rules: {  }
+  -
+    sort: 4
+    name: WINETRICKS_RUN
+    description: ''
+    env_variable: WINETRICKS_RUN
+    default_value: vcrun2022
+    user_viewable: false
+    user_editable: false
+    rules: {  }

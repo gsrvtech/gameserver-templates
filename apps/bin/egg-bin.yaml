@@ -1,0 +1,54 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: null
+exported_at: '2026-05-18T13:21:36+00:00'
+name: BIN
+author: eggs@goover.dev
+uuid: 0d1186ff-d3e6-47f4-892d-82c6fab1e6d1
+description: 'A minimal pastebin which also accepts binary files like Images, PDFs and ships multiple clients.'
+icon: null
+tags: {  }
+features: {  }
+docker_images:
+  'ghcr.io/goover/debian:13-trixie': 'ghcr.io/goover/debian:13-trixie'
+file_denylist: {  }
+startup_commands:
+  Default: 'export BIN_PORT={{SERVER_PORT}}; export BIN_ADDRESS=0.0.0.0; ./bin'
+config:
+  files: {  }
+  startup:
+    done: ' ./bin --address'
+  logs: {  }
+  stop: ^^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # Installation Script
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}BIN Installscript${NC}"
+      echo -e "${YELLOW}Egg by gOOvER | https://discord.goover.dev${NC}"
+      echo -e "${YELLOW}Egg is licensed under AGPLv3${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      nala update
+      nala install -y curl jq
+
+      cd /mnt/server
+      rm -f bin
+      VERSION=$(curl -I https://github.com/wantguns/bin/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
+      curl -sSL -o bin https://github.com/wantguns/bin/releases/download/${VERSION}/bin-${VERSION}-x86_64-unknown-linux-gnu
+
+      chmod +x bin
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables: {  }
