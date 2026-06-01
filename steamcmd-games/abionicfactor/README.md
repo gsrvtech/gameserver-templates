@@ -50,6 +50,12 @@ I cannot and will not provide support for servers hosted at home. 99 % of such i
 
 ---
 
+## Tags
+
+`survival`, `crafting`, `steam`, `multiplayer`, `co-op`, `open-world`, `sci-fi`
+
+---
+
 ## License
 
 This Egg is licensed under the [AGPLv3](LICENCE.md) licence.

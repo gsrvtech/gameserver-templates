@@ -67,6 +67,12 @@ I cannot and will not provide support for servers hosted at home. 99 % of such i
 
 ---
 
+## Tags
+
+`driving`, `open-world`, `steam`, `multiplayer`, `simulation`, `proton`, `wine`
+
+---
+
 ## License
 
 This Egg is licensed under the [AGPLv3](LICENCE.md) licence.

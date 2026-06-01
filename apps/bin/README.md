@@ -46,6 +46,12 @@ I cannot and will not provide support for servers hosted at home. 99 % of such i
 
 ---
 
+## Tags
+
+`pastebin`, `self-hosted`, `web`, `tool`, `file-sharing`
+
+---
+
 ## License
 
 This Egg is licensed under the [AGPLv3](LICENCE.md) licence.

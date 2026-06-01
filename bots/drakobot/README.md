@@ -57,6 +57,12 @@ I cannot and will not provide support for servers hosted at home. 99 % of such i
 
 ---
 
+## Tags
+
+`discord-bot`, `nodejs`, `javascript`, `mongodb`, `discord.js`
+
+---
+
 ## License
 
 This Egg is licensed under the [AGPLv3](LICENCE.md) licence.

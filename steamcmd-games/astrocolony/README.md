@@ -49,6 +49,12 @@ I cannot and will not provide support for servers hosted at home. 99 % of such i
 
 ---
 
+## Tags
+
+`colony-sim`, `survival`, `crafting`, `steam`, `multiplayer`, `sci-fi`, `space`, `base-building`
+
+---
+
 ## License
 
 This Egg is licensed under the [AGPLv3](LICENCE.md) licence.
