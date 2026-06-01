@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Palworld (Wine + UE4SS)
 
 ## Author & Contributors
 
@@ -8,18 +8,24 @@
 
 ---
 
-## About 7 Days to Die
+## About Palworld
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Palworld** is a multiplayer open-world survival crafting game where you live and work alongside mysterious creatures called "Pals". Catch, breed, and put your Pals to work — farming, building, mining, and fighting. Battle powerful bosses, explore dungeons, and build an industrial empire in this unique creature-collector meets factory-builder meets survival game. Play solo or online with up to 32 players.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/1623730](https://store.steampowered.com/app/1623730/Palworld/)
+- **SteamDB**: [steamdb.info/app/1623730](https://steamdb.info/app/1623730/)
+
+---
+
+## About this Egg
+
+This egg runs the **Windows-native Palworld dedicated server** via **Wine** and includes **UE4SS** mod loader support — allowing mods that require UE4SS to be used server-side.
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`pelican-egg-palworld-wine-ue4ss.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +35,10 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
+| RCON Port   | free to set  | Remote console (RCON)     |
 
 ---
 

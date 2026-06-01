@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Reign of Kings
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Reign of Kings
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Reign of Kings** is a brutal medieval survival game where you must fight to survive in a harsh, player-driven world. Hunt wildlife, mine resources, build fortifications, and craft weapons and armour to protect yourself. Form guilds, wage war against rivals, and claw your way to the top — seize the throne and become king, if you dare.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/344760](https://store.steampowered.com/app/344760/Reign_of_Kings/)
+- **SteamDB**: [steamdb.info/app/344760](https://steamdb.info/app/344760/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-pelican-reign-of-kings.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,10 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port            | Default      | Description               |
+|-----------------|--------------|---------------------------|
+| Game Port       | free to set  | Main game connection port |
+| Steam Auth Port | free to set  | Steam authentication port |
 
 ---
 

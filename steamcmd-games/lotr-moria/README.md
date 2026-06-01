@@ -1,4 +1,4 @@
-# 7 Days to Die
+# The Lord of the Rings: Return to Moria
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About The Lord of the Rings: Return to Moria
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**The Lord of the Rings: Return to Moria™** is the only survival crafting game set in the Fourth Age of Middle-earth™. Summoned by Gimli Lord of the Glittering Caves, a company of Dwarves must reclaim the lost Dwarven homeland of Khazad-dûm — deep in the Misty Mountains. Explore, craft, and build your way through the procedurally generated mines of Moria. Play solo or with up to 8 players in online co-op.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/2161700](https://store.steampowered.com/app/2161700/The_Lord_of_the_Rings_Return_to_Moria/)
+- **SteamDB**: [steamdb.info/app/2161700](https://steamdb.info/app/2161700/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-pelican-lotr-return-to-moria-wine.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,9 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
 
 ---
 

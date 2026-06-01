@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Echoes of Elysium
 
 ## Author & Contributors
 
@@ -8,18 +8,15 @@
 
 ---
 
-## About 7 Days to Die
+## About Echoes of Elysium
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
-
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+**Echoes of Elysium** is a co-op airship survival RPG set in a vast procedurally generated clockwork world. Build and customise your floating fortress, gather resources, and explore ever-changing skies with up to 6 friends. Battle land and sky-borne threats, upgrade your crew, and uncover the mysteries of a paradise on the brink of collapse — all while keeping your airship in the air.
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-echoes-of-elysium.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +26,9 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port       | Default      | Description               |
+|------------|--------------|---------------------------|
+| Game Port  | free to set  | Main game connection port |
 
 ---
 

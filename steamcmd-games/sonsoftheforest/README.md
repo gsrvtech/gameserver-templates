@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Sons of the Forest
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Sons of the Forest
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Sons of the Forest** is the sequel to the cult-classic horror survival game *The Forest* by Endnight Games. Sent to find a missing billionaire on a remote island, you are dropped into a cannibal-infested hellscape. Craft weapons, build shelters, and struggle to survive in a dense, dynamic forest environment — either alone or with friends in online co-op. With advanced AI companions and an immersive narrative, Sons of the Forest raises the bar for survival horror.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/1326470](https://store.steampowered.com/app/1326470/Sons_of_the_Forest/)
+- **SteamDB**: [steamdb.info/app/1326470](https://steamdb.info/app/1326470/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-sons-of-the-forest.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,11 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port            | Default      | Description                     |
+|-----------------|--------------|----------------------------------|
+| Game Port       | free to set  | Main game connection port        |
+| Query Port      | free to set  | Steam query port                 |
+| BlobSync Port   | free to set  | Used for data synchronisation    |
 
 ---
 

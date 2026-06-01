@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Beasts of Bermuda
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Beasts of Bermuda
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Beasts of Bermuda** is an online multiplayer survival game where you grow up as a dinosaur or other prehistoric creature within a living, player-created ecosystem. Choose your species, join a herd, hunt for food, and fight to survive on the islands of Bermuda. The ultimate goal is to outlast both the environment and other players in this large-scale creature survival experience.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/719890](https://store.steampowered.com/app/719890/Beasts_of_Bermuda/)
+- **SteamDB**: [steamdb.info/app/719890](https://steamdb.info/app/719890/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-pelican-beasts-of-bermuda.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,10 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
+| Query Port  | free to set  | Steam query port          |
 
 ---
 

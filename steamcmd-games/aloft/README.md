@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Aloft
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Aloft
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Aloft** is a co-op sandbox survival game set in a world of floating islands. Build and sail your own skyship, explore uncharted island chains, fight off the spreading fungal corruption, and survive the hurricane to restore the ecosystem. Whether you venture alone or with friends, the open skies are yours to conquer.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/2051980](https://store.steampowered.com/app/2051980/Aloft/)
+- **SteamDB**: [steamdb.info/app/2051980](https://steamdb.info/app/2051980/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-aloft-wine.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,9 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port       | Default      | Description              |
+|------------|--------------|--------------------------|
+| Game Port  | free to set  | Main game connection port |
 
 ---
 

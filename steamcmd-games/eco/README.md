@@ -1,4 +1,4 @@
-# 7 Days to Die
+# ECO
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About ECO
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**ECO** is an online survival and civilisation-building game by Strange Loop Games. Players must construct a civilisation using resources from a living ecosystem that can be damaged and destroyed. The twist: a meteor is heading towards the planet, and the players must develop technology fast enough to stop it — without causing ecological collapse in the process. Every action affects the ecosystem, and every player shapes the outcome.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/382310](https://store.steampowered.com/app/382310/Eco/)
+- **SteamDB**: [steamdb.info/app/382310](https://steamdb.info/app/382310/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`pelican-egg-eco.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,10 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port            | Default      | Description              |
+|-----------------|--------------|--------------------------|
+| Game Port       | free to set  | Main game connection port |
+| Web Server Port | free to set  | In-game web interface     |
 
 ---
 

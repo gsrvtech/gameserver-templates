@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Spellbreak — Community Version
 
 ## Author & Contributors
 
@@ -8,18 +8,17 @@
 
 ---
 
-## About 7 Days to Die
+## About Spellbreak
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Spellbreak** was a free-to-play fantasy battle royale in which players wielded powerful elemental magic to fight for survival in the Hollow Lands. After the official servers shut down, the passionate community rescued the game and continues to maintain and develop it as an open-source project. This egg runs the **community-maintained dedicated server**.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+> ⚠️ **An itch.io API key is required.** The game files are downloaded from [sbcommunity.itch.io/spellbreak-community-version](https://sbcommunity.itch.io/spellbreak-community-version). You must provide a valid itch.io API key with access to the download during installation.
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-spellbreak--community-version.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +28,9 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port       | Default      | Description               |
+|------------|--------------|---------------------------|
+| Game Port  | free to set  | Main game connection port |
 
 ---
 

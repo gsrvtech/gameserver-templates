@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Nightingale
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Nightingale
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Nightingale** is a shared-world survival crafting game set in a rich gaslamp Victorian fantasy universe. Players venture through mystical portals into a myriad of beautiful, procedurally generated Fae Realms — each increasingly dangerous. Craft tools and gear, build elaborate estates, and forge alliances with other Realmwalkers as you search for the lost city of Nightingale and a path home.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/1928980](https://store.steampowered.com/app/1928980/Nightingale/)
+- **SteamDB**: [steamdb.info/app/1928980](https://steamdb.info/app/1928980/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-pelican-nightingale.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,9 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
 
 ---
 

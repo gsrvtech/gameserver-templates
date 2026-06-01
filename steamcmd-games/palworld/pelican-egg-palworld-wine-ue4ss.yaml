@@ -1,0 +1,258 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/palworld/pelican-egg-palworld-wine-ue4ss.yaml'
+exported_at: '2026-05-23T00:00:00+00:00'
+name: 'Palworld (Wine + UE4SS)'
+author: 'eggs@goover.dev'
+uuid: ca527103-3e6e-4fa0-9a1f-ea468e314294
+description: 'Palworld dedicated server running via Wine (Windows binaries) with UE4SS mod loader support. Uses gOOvER''s Wine image.'
+icon: null
+tags: {  }
+features:
+- steam_disk_space
+docker_images:
+  'ghcr.io/goover/wine:staging': 'ghcr.io/goover/wine:staging'
+  'ghcr.io/goover/wine:latest': 'ghcr.io/goover/wine:latest'
+file_denylist: {  }
+startup_commands:
+  Default: 'export WINEDLLOVERRIDES="dwmapi=n,b" && export WINEPREFIX=/home/container/.wine && export DISPLAY=:0 && wine64 /home/container/PalServer.exe Pal -publiclobby -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -port={{SERVER_PORT}} -publicport={{SERVER_PORT}} -servername="{{SERVER_NAME}}" -players={{MAX_PLAYERS}} $([ -n "$SERVER_PASSWORD" ] && echo "-serverpassword=\"${SERVER_PASSWORD}\"") -adminpassword="{{ADMIN_PASSWORD}}" -rcon -rconport={{RCON_PORT}} -allowconnectplatform={{ALLOW_CONNECT_PLATFORM}}'
+config:
+  files: {  }
+  startup:
+    done: 'Setting breakpad minidump AppID'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # Palworld (Wine + UE4SS) Installscript
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Palworld (Wine + UE4SS) Installscript${NC}"
+      echo -e "${YELLOW}Egg by gOOvER | https://discord.goover.dev${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      # Setup
+      chown -R root:root /mnt
+      export HOME=/mnt/server
+
+      ## download and install steamcmd
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}download and install steamcmd. please wait...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      cd /tmp
+      mkdir -p /mnt/server/steamcmd
+      curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+      tar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd
+      mkdir -p /mnt/server/steamapps
+      cd /mnt/server/steamcmd
+      echo -e "${GREEN}..done..${NC}"
+
+      ## install game using steamcmd (Windows platform required)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Installing Palworld Windows dedicated server...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      ./steamcmd.sh \
+          +force_install_dir /mnt/server \
+          +login anonymous \
+          +@sSteamCmdForcePlatformType windows \
+          +app_update ${STEAM_APPID} validate \
+          +quit
+
+      echo -e "${GREEN}..done..${NC}"
+
+      ## set up Steam SDK libraries
+      mkdir -p /mnt/server/.steam/sdk32
+      cp -v linux32/steamclient.so /mnt/server/.steam/sdk32/steamclient.so 2>/dev/null || true
+      mkdir -p /mnt/server/.steam/sdk64
+      cp -v linux64/steamclient.so /mnt/server/.steam/sdk64/steamclient.so 2>/dev/null || true
+
+      ## Palworld config
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Setting up Palworld config...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      CONFIG_DIR="/mnt/server/Pal/Saved/Config/WindowsServer"
+      mkdir -p "${CONFIG_DIR}"
+
+      if [ -f "${CONFIG_DIR}/PalWorldSettings.ini" ]; then
+          echo -e "${YELLOW}Config already exists, backing up...${NC}"
+          mv "${CONFIG_DIR}/PalWorldSettings.ini" "${CONFIG_DIR}/PalWorldSettings_$(date +"%Y%m%d%H%M%S").ini"
+      fi
+
+      if [ -f "/mnt/server/DefaultPalWorldSettings.ini" ]; then
+          cp /mnt/server/DefaultPalWorldSettings.ini "${CONFIG_DIR}/PalWorldSettings.ini"
+          echo -e "${GREEN}Config copied.${NC}"
+      else
+          echo -e "${YELLOW}DefaultPalWorldSettings.ini not found, skipping.${NC}"
+      fi
+
+      ## UE4SS Installation
+      if [ "${INSTALL_UE4SS}" == "1" ]; then
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          echo -e "${YELLOW}Installing UE4SS...${NC}"
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+
+          UE4SS_DIR="/mnt/server/Pal/Binaries/Win64"
+          mkdir -p "${UE4SS_DIR}"
+
+          UE4SS_URL=$(curl -sSL https://api.github.com/repos/UE4SS-RE/RE-UE4SS/releases/latest \
+              | grep 'browser_download_url' \
+              | grep 'UE4SS_v.*\.zip' \
+              | grep -v 'zDEV\|CustomGameConfigs\|MapGenBP' \
+              | head -1 \
+              | cut -d'"' -f4)
+
+          if [ -z "${UE4SS_URL}" ]; then
+              echo -e "${RED}ERROR: Could not find UE4SS download URL!${NC}"
+              exit 1
+          fi
+
+          echo -e "${YELLOW}Downloading UE4SS from: ${UE4SS_URL}${NC}"
+          curl -sSL -o /tmp/ue4ss.zip "${UE4SS_URL}"
+          mkdir -p /tmp/ue4ss_extract
+          unzip -o /tmp/ue4ss.zip -d /tmp/ue4ss_extract
+
+          cp /tmp/ue4ss_extract/dwmapi.dll "${UE4SS_DIR}/" 2>/dev/null || \
+          cp /tmp/ue4ss_extract/*/dwmapi.dll "${UE4SS_DIR}/" 2>/dev/null || true
+
+          cp /tmp/ue4ss_extract/UE4SS.dll "${UE4SS_DIR}/" 2>/dev/null || \
+          cp /tmp/ue4ss_extract/*/UE4SS.dll "${UE4SS_DIR}/" 2>/dev/null || true
+
+          cp /tmp/ue4ss_extract/UE4SS-settings.ini "${UE4SS_DIR}/" 2>/dev/null || \
+          cp /tmp/ue4ss_extract/*/UE4SS-settings.ini "${UE4SS_DIR}/" 2>/dev/null || true
+
+          if [ -f "${UE4SS_DIR}/UE4SS-settings.ini" ]; then
+              sed -i 's/^GuiConsoleEnabled.*/GuiConsoleEnabled = 0/' "${UE4SS_DIR}/UE4SS-settings.ini"
+              sed -i 's/^ConsoleEnabled.*/ConsoleEnabled = 0/' "${UE4SS_DIR}/UE4SS-settings.ini"
+              sed -i 's/^LogToFile.*/LogToFile = 1/' "${UE4SS_DIR}/UE4SS-settings.ini"
+              echo -e "${GREEN}UE4SS settings patched for headless/Wine operation.${NC}"
+          fi
+
+          mkdir -p "${UE4SS_DIR}/ue4ss/Mods"
+          echo -e "${GREEN}UE4SS installed successfully.${NC}"
+      else
+          echo -e "${YELLOW}Skipping UE4SS installation (INSTALL_UE4SS != 1).${NC}"
+      fi
+
+      ## install end
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${GREEN}Installation completed!${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[SERVER] Server Name'
+  description: 'The name displayed in the server browser.'
+  env_variable: SERVER_NAME
+  default_value: 'A Palworld Server'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:64'
+  sort: 1
+- name: '[SERVER] Max Players'
+  description: 'Maximum number of players (1-32).'
+  env_variable: MAX_PLAYERS
+  default_value: '32'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'between:1,32'
+  sort: 2
+- name: '[SERVER] Admin Password'
+  description: 'Password for server admin commands (RCON/in-game).'
+  env_variable: ADMIN_PASSWORD
+  default_value: 'changeme'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'between:1,30'
+  sort: 3
+- name: '[SERVER] Server Password'
+  description: 'Password required to join the server. Leave empty for a public server.'
+  env_variable: SERVER_PASSWORD
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:30'
+  sort: 4
+- name: '[SERVER] Server Description'
+  description: 'Short description shown in the server browser.'
+  env_variable: SERVER_DESCRIPTION
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:128'
+  sort: 5
+- name: '[SERVER] RCON Port'
+  description: 'RCON port (does not need to be allocated as a panel port).'
+  env_variable: RCON_PORT
+  default_value: '25575'
+  user_viewable: true
+  user_editable: false
+  rules:
+  - required
+  - numeric
+  sort: 6
+- name: '[SERVER] Allow Connect Platform'
+  description: 'Which platform players can connect from.'
+  env_variable: ALLOW_CONNECT_PLATFORM
+  default_value: 'Steam'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - 'in:Steam,Xbox'
+  sort: 7
+- name: '[UE4SS] Install UE4SS'
+  description: 'Set to 1 to automatically download and install UE4SS mod loader during installation. Required for mods/plugins.'
+  env_variable: INSTALL_UE4SS
+  default_value: '1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - 'in:0,1'
+  sort: 8
+- name: '[STEAM] Steam App ID'
+  description: 'Do not edit! Palworld Windows Server App ID.'
+  env_variable: STEAM_APPID
+  default_value: '2394010'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - 'in:2394010'
+  sort: 9
+- name: '[WINE] WINEDEBUG'
+  description: ''
+  env_variable: WINEDEBUG
+  default_value: '-all'
+  user_viewable: false
+  user_editable: false
+  rules: []
+  sort: 10

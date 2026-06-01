@@ -1,0 +1,232 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/schedulei/egg-schedule-i-proton.yaml'
+exported_at: '2026-05-18T00:00:00+00:00'
+name: 'Schedule I - Proton'
+author: 'eggs@goover.de'
+uuid: 8b2e4f7a-3c5d-4a6b-9c0d-e1f2a3b4c5d6
+description: 'Schedule I is an open-world drug dealer simulation game by TVGS. This egg runs the dedicated server via the S1DedicatedServerMod (MelonLoader) under Proton. IMPORTANT: A Steam account that OWNS Schedule I (App ID: 3164500) is required to download the game files.'
+icon: null
+tags: {  }
+features:
+- steam_disk_space
+docker_images:
+  'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
+file_denylist: {  }
+startup_commands:
+  Default: 'proton run "Schedule I.exe" --dedicated-server --server-name "{{SRV_NAME}}" --max-players {{MAX_PLAYERS}} --server-password "{{SRV_PW}}" --auth-provider {{AUTH_PROVIDER}} -logFile - --stdio-console'
+config:
+  files:
+    server_config.toml:
+      parser: file
+      find:
+        'serverPort = ': 'serverPort = {{env.SERVER_PORT}}'
+        'steamGameServerQueryPort = ': 'steamGameServerQueryPort = {{env.QUERY_PORT}}'
+  startup:
+    done: 'Server started'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # THIS EGG IS LICENCED UNDER AGPLv3
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Schedule I Dedicated Server Installscript (Proton)${NC}"
+      echo -e "${YELLOW}Egg by gOOvER (https://discord.goover.dev) | License: AGPLv3${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      # Setup Envs
+      chown -R root:root /mnt
+      export HOME=/mnt/server
+
+      ## Schedule I requires a valid Steam account that owns the game
+      if [ "${STEAM_USER}" == "" ] || [ "${STEAM_USER}" == "anonymous" ]; then
+          echo -e "${RED}ERROR: Schedule I is NOT a free-to-play game.${NC}"
+          echo -e "${RED}Please set STEAM_USER and STEAM_PASS to an account that owns Schedule I (App ID: 3164500).${NC}"
+          exit 1
+      fi
+
+      ## download and install steamcmd
+      cd /tmp
+      mkdir -p /mnt/server/steamcmd
+      curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+      tar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd
+      mkdir -p /mnt/server/steamapps
+      cd /mnt/server/steamcmd
+
+      ## install game using steamcmd (Windows platform required - Linux build unavailable)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Downloading Schedule I via SteamCMD (Windows platform)...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      ./steamcmd.sh \
+          +force_install_dir /mnt/server \
+          +login "${STEAM_USER}" "${STEAM_PASS}" \
+          +@sSteamCmdForcePlatformType windows \
+          +app_update ${STEAM_APPID} validate \
+          +quit
+
+      echo -e "${GREEN}..done..${NC}"
+
+      ## set up Steam SDK libraries
+      mkdir -p /mnt/server/.steam/sdk32
+      cp -v linux32/steamclient.so /mnt/server/.steam/sdk32/steamclient.so 2>/dev/null || true
+      mkdir -p /mnt/server/.steam/sdk64
+      cp -v linux64/steamclient.so /mnt/server/.steam/sdk64/steamclient.so 2>/dev/null || true
+
+      ## download S1 DedicatedServerMod (Mono build)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Downloading S1 DedicatedServerMod (Mono)...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      cd /tmp
+      MOD_URL=$(curl -s https://api.github.com/repos/ifBars/S1DedicatedServers/releases/latest \
+          | grep '"browser_download_url"' \
+          | grep 'Mono-Server\.zip' \
+          | cut -d'"' -f4)
+
+      if [ -z "${MOD_URL}" ]; then
+          echo -e "${RED}Failed to fetch DedicatedServerMod download URL.${NC}"
+          echo -e "${RED}Check: https://github.com/ifBars/S1DedicatedServers/releases${NC}"
+          exit 1
+      fi
+
+      curl -sSL -o Mono-Server.zip "${MOD_URL}"
+      echo -e "${YELLOW}Extracting DedicatedServerMod into server directory...${NC}"
+      unzip -o Mono-Server.zip -d /mnt/server
+      rm -f Mono-Server.zip
+      echo -e "${GREEN}..done..${NC}"
+
+      ## create steam_appid.txt (required for Steam GameServer API initialization)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Creating steam_appid.txt...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      printf '3164500' > /mnt/server/steam_appid.txt
+      echo -e "${GREEN}..done..${NC}"
+
+      ## create default server_config.toml if not present
+      FILE="/mnt/server/server_config.toml"
+      if [ -f "${FILE}" ]; then
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          echo -e "${GREEN} server_config.toml already exists. Skipping.${NC}"
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+      else
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          echo -e "${YELLOW}Creating default server_config.toml...${NC}"
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          curl -sSL -o "${FILE}" \
+              https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/schedulei/config/server_config.toml
+          echo -e "${GREEN}..done..${NC}"
+      fi
+
+      ## install end
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${GREEN}Installation completed!${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[SERVER] Server Name'
+  description: 'The name displayed in the server browser.'
+  env_variable: SRV_NAME
+  default_value: 'Schedule I Server hosted by Pelican'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:64'
+  sort: 1
+- name: '[SERVER] Max Players'
+  description: 'Maximum number of players allowed on the server.'
+  env_variable: MAX_PLAYERS
+  default_value: '16'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'between:1,32'
+  sort: 2
+- name: '[SERVER] Server Password'
+  description: 'Leave empty for a public server.'
+  env_variable: SRV_PW
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:32'
+  sort: 3
+- name: '[SERVER] Auth Provider'
+  description: 'Use SteamGameServer for public servers (enables Steam query/browser). Use None for private/testing servers.'
+  env_variable: AUTH_PROVIDER
+  default_value: SteamGameServer
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - 'in:SteamGameServer,None'
+  sort: 4
+- name: '[SERVER] Steam Query Port'
+  description: 'UDP port for Steam query / server browser. Default: 27016. Must be forwarded if using SteamGameServer auth.'
+  env_variable: QUERY_PORT
+  default_value: '27016'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'between:1024,65535'
+  sort: 5
+- name: '[STEAM] Steam Username'
+  description: 'Steam account username. Must own Schedule I (App ID: 3164500).'
+  env_variable: STEAM_USER
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  sort: 6
+- name: '[STEAM] Steam Password'
+  description: 'Steam account password.'
+  env_variable: STEAM_PASS
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  sort: 7
+- name: '[STEAM] Steam App ID'
+  description: 'Do not edit!'
+  env_variable: STEAM_APPID
+  default_value: '3164500'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - 'in:3164500'
+  sort: 8
+- name: '[STEAM] Windows Install'
+  description: ''
+  env_variable: WINDOWS_INSTALL
+  default_value: '1'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - 'in:1'
+  sort: 9

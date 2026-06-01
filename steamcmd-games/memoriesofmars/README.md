@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Memories of Mars
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Memories of Mars
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Memories of Mars** is a survival game set on the harsh, unforgiving surface of the Red Planet. Compete or cooperate with other players to gather resources, 3D-print your equipment, and build a base capable of withstanding the extreme Martian conditions. Uncover the story behind the colony's abandoned mining operations — and ultimately find a way to escape the planet.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/644290](https://store.steampowered.com/app/644290/Memories_of_Mars/)
+- **SteamDB**: [steamdb.info/app/644290](https://steamdb.info/app/644290/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`egg-pelican-memories-of-mars.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,11 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port         | Default      | Description               |
+|--------------|--------------|---------------------------|
+| Game Port    | free to set  | Main game connection port |
+| Query Port   | free to set  | Steam query port          |
+| Beacon Port  | free to set  | Server beacon port        |
 
 ---
 

@@ -1,0 +1,21 @@
+[storage]
+saveGamePath = ''
+
+[authentication]
+authProvider = 'SteamGameServer'
+authTimeoutSeconds = 60
+steamGameServerLogOnAnonymous = true
+steamGameServerQueryPort = 27016
+
+[networking]
+serverPort = 38465
+
+[messaging]
+messagingBackend = 'FishNetRpc'
+
+[performance]
+targetFrameRate = 60
+vSyncCount = 0
+
+[tcpConsole]
+stdioConsoleMode = true

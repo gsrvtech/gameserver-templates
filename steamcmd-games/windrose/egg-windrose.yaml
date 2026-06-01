@@ -1,0 +1,325 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/windrose/egg-windrose.yaml'
+exported_at: '2026-05-18T00:00:00+00:00'
+name: Windrose
+author: 'eggs@goover.de'
+uuid: f8d2c1a4-7e3b-4f9a-8c5d-2b6e0a3d1f7c
+description: 'Windrose is a survival adventure set in an alternative Age of Piracy. It features the classic "build, craft, survive" formula along with intense combat and engaging exploration on land and sea.'
+icon: null
+tags: {  }
+features:
+- steam_disk_space
+docker_images:
+  'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
+file_denylist: {  }
+startup_commands:
+  Default: 'bash /mnt/server/start.sh'
+config:
+  files:
+    'R5/ServerDescription.json':
+      parser: json
+      find:
+        'ServerDescription_Persistent.ServerName': '{{env.SERVER_NAME}}'
+        'ServerDescription_Persistent.InviteCode': '{{env.INVITE_CODE}}'
+        'ServerDescription_Persistent.IsPasswordProtected': '{{env.IS_PASSWORD_PROTECTED}}'
+        'ServerDescription_Persistent.Password': '{{env.SERVER_PASSWORD}}'
+        'ServerDescription_Persistent.MaxPlayerCount': '{{env.MAX_PLAYERS}}'
+        'ServerDescription_Persistent.UserSelectedRegion': '{{env.SERVER_REGION}}'
+        'ServerDescription_Persistent.UseDirectConnection': '{{env.USE_DIRECT_CONNECTION}}'
+        'ServerDescription_Persistent.DirectConnectionServerPort': '{{env.DIRECT_CONNECTION_PORT}}'
+  startup:
+    done: 'UEngine::LoadMap Load map complete'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # THIS EGG IS LICENCED UNDER AGPLv3
+      #
+      clear
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Windrose Dedicated Server Installscript (Proton)${NC}"
+      echo -e "${YELLOW}Egg by gOOvER (https://discord.goover.dev) | License: AGPLv3${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      chown -R root:root /mnt
+      export HOME=/mnt/server
+
+      ## Windrose dedicated server supports anonymous Steam login
+      if [[ "${STEAM_USER}" == "" ]]; then
+          echo -e "${YELLOW}No Steam user set, using anonymous login.${NC}"
+          STEAM_USER=anonymous
+          STEAM_PASS=""
+      else
+          echo -e "${YELLOW}Steam user set to ${STEAM_USER}.${NC}"
+      fi
+
+      ## download and install steamcmd
+      cd /tmp
+      mkdir -p /mnt/server/steamcmd
+      curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+      tar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd
+      mkdir -p /mnt/server/steamapps
+      cd /mnt/server/steamcmd
+
+      ## install game using steamcmd (Windows dedicated server)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Downloading Windrose via SteamCMD (Windows platform)...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+
+      ./steamcmd.sh \
+          +force_install_dir /mnt/server \
+          +login ${STEAM_USER} ${STEAM_PASS} \
+          +@sSteamCmdForcePlatformType windows \
+          +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) validate \
+          +quit
+
+      echo -e "${GREEN}..done..${NC}"
+
+      ## set up Steam SDK libraries
+      mkdir -p /mnt/server/.steam/sdk32
+      cp -v linux32/steamclient.so /mnt/server/.steam/sdk32/steamclient.so 2>/dev/null || true
+      mkdir -p /mnt/server/.steam/sdk64
+      cp -v linux64/steamclient.so /mnt/server/.steam/sdk64/steamclient.so 2>/dev/null || true
+
+      ## Create default R5/ServerDescription.json if not present
+      mkdir -p /mnt/server/R5
+      FILE=/mnt/server/R5/ServerDescription.json
+      if [ -f "${FILE}" ]; then
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          echo -e "${GREEN}R5/ServerDescription.json already exists. Skipping.${NC}"
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+      else
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          echo -e "${YELLOW}Creating default R5/ServerDescription.json...${NC}"
+          echo -e "${BLUE}-------------------------------------------------${NC}"
+          cat > "${FILE}" <<'EOF'
+      {
+          "Version": 1,
+          "DeploymentId": "",
+          "ServerDescription_Persistent": {
+              "PersistentServerId": "",
+              "InviteCode": "server1",
+              "IsPasswordProtected": false,
+              "Password": "",
+              "ServerName": "Windrose Server",
+              "WorldIslandId": "",
+              "MaxPlayerCount": 4,
+              "UserSelectedRegion": "",
+              "P2pProxyAddress": "0.0.0.0",
+              "UseDirectConnection": false,
+              "DirectConnectionServerAddress": "",
+              "DirectConnectionServerPort": 7777,
+              "DirectConnectionProxyAddress": "0.0.0.0",
+              "AutoLoadLatestBackupIfHasBroken": true
+          }
+      }
+      EOF
+          echo -e "${GREEN}..done..${NC}"
+      fi
+
+      ## create start.sh wrapper (invite code extraction)
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${YELLOW}Creating start.sh wrapper...${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      cat > /mnt/server/start.sh <<'STARTSCRIPT'
+      #!/bin/bash
+      # Windrose server starter – writes invite code to /mnt/server/invite_code.txt
+
+      # Start the Windrose dedicated server
+      PROTON_DISABLE_XALIA=1 proton run ./R5/Binaries/Win64/WindroseServer-Win64-Shipping.exe &
+      WS_PID=$!
+
+      # Wait for the log file to appear
+      while [ ! -f ./R5/Saved/Logs/R5.log ]; do
+          sleep 1
+      done
+
+      # Read the configured InviteCode from ServerDescription.json and persist it
+      if [ -f ./R5/ServerDescription.json ]; then
+          CODE=$(grep -oP '"InviteCode"\s*:\s*"\K[^"]+' ./R5/ServerDescription.json 2>/dev/null || true)
+          if [ -n "$CODE" ]; then
+              echo "$CODE" > /mnt/server/invite_code.txt
+              echo "[Windrose] Configured Invite Code: $CODE"
+          fi
+      fi
+
+      # Background monitor: catch any server-assigned invite / join code from the log
+      (
+          tail -F ./R5/Saved/Logs/R5.log --pid=$WS_PID | while IFS= read -r line; do
+              if echo "$line" | grep -qiE "invite[_ ]?code|join[_ ]?code|server[_ ]?code"; then
+                  DYNAMIC=$(echo "$line" | grep -oP '[A-Za-z0-9]{6,32}' | tail -1)
+                  if [ -n "$DYNAMIC" ]; then
+                      echo "$DYNAMIC" > /mnt/server/invite_code.txt
+                      echo "[Windrose] Server Invite Code: $DYNAMIC"
+                  fi
+              fi
+          done
+      ) &
+
+      # Forward log to stdout so Pelican detects the startup-done marker
+      tail -c0 -F ./R5/Saved/Logs/R5.log --pid=$WS_PID
+      STARTSCRIPT
+      chmod +x /mnt/server/start.sh
+      echo -e "${GREEN}..done..${NC}"
+
+      ## install end
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+      echo -e "${GREEN}Installation completed!${NC}"
+      echo -e "${BLUE}-------------------------------------------------${NC}"
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[SERVER] Server Name'
+  description: 'The display name of your server shown to players in the browser.'
+  env_variable: SERVER_NAME
+  default_value: 'Windrose Server'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:64'
+  sort: 1
+- name: '[SERVER] Invite Code'
+  description: 'Custom invite code players use to find and join your server. Minimum 6 characters, alphanumeric (0-9, a-z, A-Z), case-sensitive.'
+  env_variable: INVITE_CODE
+  default_value: 'server1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - alpha_num
+  - 'min:6'
+  - 'max:32'
+  sort: 2
+- name: '[SERVER] Use Direct Connection'
+  description: 'Set true to use direct TCP/UDP sockets (DirectConnectionServerPort must be reachable). Set false to use ICE/P2P punch-through (default). Most hosted setups should keep this false unless players cannot connect via invite code.'
+  env_variable: USE_DIRECT_CONNECTION
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 3
+- name: '[SERVER] Direct Connection Port'
+  description: 'TCP/UDP port used when Use Direct Connection is true. Must be open on both protocols. Default 7777. Has no effect when direct connection is disabled.'
+  env_variable: DIRECT_CONNECTION_PORT
+  default_value: '7777'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1024'
+  - 'max:65535'
+  sort: 4
+- name: '[SERVER] Password Protected'
+  description: 'Set to true to require a password to join, false for open access.'
+  env_variable: IS_PASSWORD_PROTECTED
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 5
+- name: '[SERVER] Server Password'
+  description: 'Password required to join the server. Only used when Password Protected is set to true.'
+  env_variable: SERVER_PASSWORD
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:64'
+  sort: 6
+- name: '[SERVER] Max Players'
+  description: 'Maximum simultaneous players allowed. Up to 4 is recommended for best performance; 10 players is supported with adequate hardware (>=16 GB RAM).'
+  env_variable: MAX_PLAYERS
+  default_value: '4'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  - 'max:10'
+  sort: 7
+- name: '[SERVER] Region'
+  description: 'Preferred matchmaking/relay region. Allowed: SEA, CIS, EU (EU covers both EU and NA). Leave empty for automatic latency-based selection.'
+  env_variable: SERVER_REGION
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'in:,SEA,CIS,EU'
+  sort: 8
+- name: '[WORLD] World Name'
+  description: 'Display name for the server world. The first world is auto-created on initial startup. To rename an existing world, stop the server and edit WorldDescription.WorldName in R5/Saved/SaveProfiles/Default/RocksDB/<version>/Worlds/<worldId>/WorldDescription.json.'
+  env_variable: WORLD_NAME
+  default_value: 'Windrose World'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:64'
+  sort: 9
+- name: '[WORLD] World Preset Type'
+  description: 'Gameplay difficulty preset for the world. Valid values: Easy, Medium, Hard. Custom world parameters must be edited manually in WorldDescription.json.'
+  env_variable: WORLD_PRESET_TYPE
+  default_value: Medium
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:Easy,Medium,Hard'
+  sort: 10
+- name: '[STEAM] Steam App ID'
+  description: 'Steam App ID for the Windrose Dedicated Server. Do not edit!'
+  env_variable: SRCDS_APPID
+  default_value: '4129620'
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - string
+  - 'in:4129620'
+  sort: 11
+- name: '[STEAM] Beta Branch ID'
+  description: 'Name of the beta branch to install. Leave empty for the default (stable) branch.'
+  env_variable: SRCDS_BETAID
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 12
+- name: '[STEAM] Beta Branch Password'
+  description: 'Password for the beta branch, if required.'
+  env_variable: SRCDS_BETAPASS
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 13

@@ -1,4 +1,4 @@
-# 7 Days to Die
+# Enshrouded
 
 ## Author & Contributors
 
@@ -8,18 +8,18 @@
 
 ---
 
-## About 7 Days to Die
+## About Enshrouded
 
-**7 Days to Die** is a unique open-world survival horror game that combines first-person shooter, survival, tower defence, and RPG elements. Set in a post-apocalyptic world overrun by the undead, you must scavenge resources, craft weapons and tools, build fortifications, and survive the ever-more-dangerous zombie hordes — especially the Blood Moon horde that strikes every seventh night. Play solo or with friends in co-op multiplayer.
+**Enshrouded** is a survival, crafting, and action RPG set within a sprawling voxel-based continent. The world is shrouded in a deadly fog — venture into it to gather resources, discover lost ruins, and face increasingly dangerous enemies. As you journey across mountains and deserts you are free to choose your path, build your base, and shape your own destiny. Play solo or with up to 16 players.
 
-- **Steam**: [store.steampowered.com/app/251570](https://store.steampowered.com/app/251570/7_Days_to_Die/)
-- **SteamDB**: [steamdb.info/app/251570](https://steamdb.info/app/251570/)
+- **Steam**: [store.steampowered.com/app/1203250](https://store.steampowered.com/app/1203250/Enshrouded/)
+- **SteamDB**: [steamdb.info/app/1203250](https://steamdb.info/app/1203250/)
 
 ---
 
 ## Download this Egg
 
-This is a **Pelican** YAML egg.
+This is a **Pelican** YAML egg (`pelican-egg-enshrouded.yaml`).
 
 > **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
 > - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
@@ -29,11 +29,10 @@ This is a **Pelican** YAML egg.
 
 ## Server Ports
 
-| Port       | Default      | Description                    |
-|------------|--------------|--------------------------------|
-| Game Port  | free to set  | Main game connection port      |
-| TelNet     | free to set  | Telnet console port            |
-| Web Port   | free to set  | Webserver / web dashboard port |
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
+| Query Port  | free to set  | Steam query port          |
 
 ---
 

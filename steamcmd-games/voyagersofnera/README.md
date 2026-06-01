@@ -1,35 +1,55 @@
 # Voyagers of Nera
 
-## Author & Contributers
+## Author & Contributors
 
-| Name | Github Profile | Buy me a Coffee |
-| ------------- |-------------|-------------|
-| gOOvER | https://github.com/gOOvER |[Buy me a Coffee](https://donate.goover.dev) | |
+| Name   | GitHub Profile               | Buy me a Coffee                                       |
+|--------|------------------------------|-------------------------------------------------------|
+| gOOvER | https://github.com/gOOvER   | [![donate](https://img.shields.io/badge/Donate-Ko--fi-red)](https://donate.goover.dev) |
 
-## Game infos
-- Steam Shop Link: [https://store.steampowered.com/app/2686630/Voyagers_of_Nera/](https://store.steampowered.com/app/2686630/Voyagers_of_Nera/)
-- SteamDB Link: [https://steamdb.info/app/2686630/)](https://steamdb.info/app/2686630/)
-  
+---
+
+## About Voyagers of Nera
+
+**Voyagers of Nera** is a cooperative survival-crafting game set in a magical ocean world teeming with lost spirits and monstrous creatures. You play as an Echo — a wanderer who sails to distant islands, builds customisable bases, and awakens ancient spirits that grant powerful abilities, teach crafting recipes, and guide your journey. Play solo or with up to 10 friends as you explore underwater ruins, battle the Deep, and restore balance to the world of Nera.
+
+- **Steam**: [store.steampowered.com/app/2686630](https://store.steampowered.com/app/2686630/Voyagers_of_Nera/)
+- **SteamDB**: [steamdb.info/app/2686630](https://steamdb.info/app/2686630/)
+
+---
+
+## Download this Egg
+
+This is a **Pelican** YAML egg.
+
+> **Pterodactyl users:** You can get a Pterodactyl-compatible version in two ways:
+> - 🔀 Convert it yourself with **[Scramble Egg Converter](https://redthirten.github.io/scramble-egg-converter/)**
+> - 💬 Download a pre-built version via `/egg download` in our **[Discord server](http://discord.gg/raurR4vshX)**
+
+---
 
 ## Server Ports
 
-The server requires two ports. One as Gameport; one as QueryPort. You can use every port you want.
+| Port        | Default      | Description               |
+|-------------|--------------|---------------------------|
+| Game Port   | free to set  | Main game connection port |
+| Query Port  | free to set  | Steam query port          |
 
-| Port | default |
-|-------|---------|
-| Game | USE, what you want |
-| Query | USE, what you want |
-
+---
 
 ## Support
-Support only in my Discordserver
+
+Support is provided exclusively via Discord.
 
 [![Join our Discord server!](https://invidget.switchblade.xyz/raurR4vshX)](http://discord.gg/raurR4vshX)
 
-## Homehosting
+---
 
-I cannot and will not provide support for servers that are hosted at home. The reason is that 99% of the errors are due to incorrect network settings and there are many different configurations.
-Unfortunately, I don't have the time to debug such errors, because it takes many hours.
+## Home Hosting
 
-## Licence
-This Egg is licensed under the AGPLv3 licence.
+I cannot and will not provide support for servers hosted at home. 99 % of such issues are caused by incorrect network settings across many different configurations — I simply don't have the time to debug them individually.
+
+---
+
+## License
+
+This Egg is licensed under the [AGPLv3](LICENCE.md) licence.
