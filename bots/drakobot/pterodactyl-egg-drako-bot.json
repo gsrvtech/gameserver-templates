@@ -1,0 +1,75 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-09-12T15:34:52+00:00",
+    "name": "Drako Bot",
+    "author": "eggs@goover.dev",
+    "description": "Egg for Drako Discord Bot",
+    "features": [],
+    "docker_images": {
+        "ghcr.io\/goover\/bots:nodemongo": "ghcr.io\/goover\/bots:nodemongo",
+        "ghcr.io\/goover\/bots:nodemongo83": "ghcr.io\/goover\/bots:nodemongo83",
+        "ghcr.io\/goover\/bots:nodemongo8": "ghcr.io\/goover\/bots:nodemongo8",
+        "ghcr.io\/goover\/bots:nodemongo7": "ghcr.io\/goover\/bots:nodemongo7"
+    },
+    "file_denylist": [],
+    "startup": "if [ -n \"${NODE_PACKAGES}\" ]; then npm install ${NODE_PACKAGES}; fi; if [ -f \/home\/container\/package.json ]; then npm install --omit=dev; fi; node \/home\/container\/{{JS_FILE}}",
+    "config": {
+        "files": "{}",
+        "startup": "{\n    \"done\": \"Bot is ready as\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\n# THIS EGG IS LICENSED UNDER AGPLv3\n\nset -euo pipefail\nIFS=$'\\n\\t'\n\n# --- Non-interactive for apt ---\nexport DEBIAN_FRONTEND=noninteractive\n\n# --- Define App Name ---\nAPPNAME=\"DrakoBot\"\n\n# --- Colors ---\nRED=$(tput setaf 1)\nGREEN=$(tput setaf 2)\nYELLOW=$(tput setaf 3)\nBLUE=$(tput setaf 4)\nNC=$(tput sgr0)\n\n# --- Line separator ---\nLINE=\"${BLUE}-------------------------------------------------${NC}\"\n\n# --- Logging functions ---\nlog_info()    { echo \"${BLUE}[INFO]${NC} $*\"; }\nlog_warn()    { echo \"${YELLOW}[WARN]${NC} $*\"; }\nlog_error()   { echo \"${RED}[ERROR]${NC} $*\" >&2; }\nlog_success() { echo \"${GREEN}[ OK ]${NC} $*\"; }\n\n# --- Helper for running commands safely ---\nrun_or_fail() {\n    local desc=\"$1\"; shift\n    if \"$@\"; then\n        log_success \"$desc\"\n    else\n        log_error \"$desc failed!\"\n        exit 1\n    fi\n}\n\n# --- Print header ---\nprint_header() {\n    echo -e \"$LINE\"\n    echo -e \"${YELLOW}${APPNAME} Installscript${NC}\"\n    echo -e \"${YELLOW}Egg by gOOvER (https:\/\/discord.goover.dev) | License: AGPLv3${NC}\"\n    echo -e \"$LINE\"\n}\n\nprint_header\n\n# --- Ensure base folder ---\nrun_or_fail \"Create \/mnt\/server\" mkdir -p \/mnt\/server\ncd \/mnt\/server || exit 1\n\n# --- Install dependencies ---\necho -e \"$LINE\"\nlog_info \"Installing dependencies...\"\necho -e \"$LINE\"\nrun_or_fail \"apt-get update\" apt-get update -yqq\nrun_or_fail \"Install required packages\" apt-get install -yqq build-essential libtool python3 git tar\nrun_or_fail \"Clean up apt cache\" bash -c \"apt-get clean && rm -rf \/var\/lib\/apt\/lists\/*\"\n\n# --- Update npm ---\necho -e \"$LINE\"\nlog_info \"Updating npm to latest...\"\necho -e \"$LINE\"\nrun_or_fail \"npm install -g npm@latest\" npm install -g --force npm@latest\nlog_success \"npm version: $(npm --version)\"\n\n# --- Backup MongoDB if exists ---\nREINSTALL=false\nif [ -d \"\/mnt\/server\/mongodb\" ]; then\n    echo -e \"$LINE\"\n    log_info \"Backing up existing MongoDB directory...\"\n    echo -e \"$LINE\"\n    run_or_fail \"Create MongoDB backup\" tar --exclude='*.tar.gz' -czf \/tmp\/mongodb_backup.tar.gz mongodb\/\n    log_info \"MongoDB backup size: $(du -h \/tmp\/mongodb_backup.tar.gz | cut -f1)\"\n    REINSTALL=true\nfi\n\n# --- Install Node.js packages ---\nif [ -f package-lock.json ]; then\n    echo -e \"$LINE\"\n    log_info \"Installing Node.js dependencies (npm ci)...\"\n    echo -e \"$LINE\"\n    run_or_fail \"npm ci\" npm ci --omit=dev\nelif [ -f package.json ]; then\n    echo -e \"$LINE\"\n    log_info \"Installing Node.js dependencies (npm install)...\"\n    echo -e \"$LINE\"\n    run_or_fail \"npm install\" npm install --omit=dev\nelse\n    log_warn \"No package.json found, skipping Node.js dependencies\"\nfi\n\n# --- Restore or fresh install ---\nif [ \"$REINSTALL\" == \"true\" ]; then\n    echo -e \"$LINE\"\n    log_info \"Existing MongoDB directory preserved (Backup available at \/tmp\/mongodb_backup.tar.gz)\"\n    echo -e \"$LINE\"\nelse\n    echo -e \"$LINE\"\n    log_info \"Fresh install: creating MongoDB directory\"\n    echo -e \"$LINE\"\n    mkdir -p \/mnt\/server\/mongodb\nfi\n\necho -e \"$LINE\"\nlog_success \"Installation of ${APPNAME} completed!\"\necho -e \"$LINE\"\nexit 0\n",
+            "container": "ghcr.io\/goover\/installers:nodejs",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "JS file",
+            "description": "The file that starts the app",
+            "env_variable": "JS_FILE",
+            "default_value": "index.js",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "MongoDB Port",
+            "description": "Port on which MongoDB listens. Change per server instance to run multiple bots on the same node.",
+            "env_variable": "MONGO_PORT",
+            "default_value": "27017",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|numeric|min:1024|max:65535",
+            "field_type": "text"
+        },
+        {
+            "name": "MongoDB Database",
+            "description": "MongoDB database name used by the bot.",
+            "env_variable": "MONGO_DB",
+            "default_value": "botdb",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "NODE_PACKAGES",
+            "description": "Additional npm packages to install before start. Do not change unless you know what you are doing.",
+            "env_variable": "NODE_PACKAGES",
+            "default_value": "jszip",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string",
+            "field_type": "text"
+        }
+    ]
+}

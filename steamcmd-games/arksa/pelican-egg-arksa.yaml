@@ -1,0 +1,853 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/steamcmd-games/arksa/pelican-egg-arksa.yaml'
+exported_at: '2026-07-14T00:00:00+00:00'
+name: 'ARK: Survival Ascended'
+author: 'eggs@goover.dev'
+uuid: 137f144a-7d2b-4b5d-99c2-30cf885b1e23
+description: |-
+  ARK is reimagined from the ground-up into the next-generation of video game technology with Unreal
+  Engine 5! Form a tribe, tame & breed hundreds of unique dinosaurs and primeval creatures, explore,
+  craft, build, and fight your way to the top of the food-chain. Your new world awaits!
+  Runs via gOOvER's Proton-GE image.
+icon: null
+tags:
+  - steamcmd
+features:
+  - steam_disk_space
+docker_images:
+  'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
+file_denylist: {  }
+startup_commands:
+  Default: 'proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe {{SERVER_MAP}}?listen?MaxPlayers={{MAX_PLAYERS}}?SessionName=\"{{SESSION_NAME}}\"?Port={{SERVER_PORT}}?RCONPort={{RCON_PORT}}?RCONEnabled=True$( [ "$SERVER_PVE" == "0" ] || printf %s ''?ServerPVE=True'' )?ServerPassword="{{SERVER_PASSWORD}}"{{ARGS_PARAMS}}?ServerAdminPassword="{{ARK_ADMIN_PASSWORD}}" -WinLiveMaxPlayers={{MAX_PLAYERS}} -oldconsole -servergamelog $( [ -z "$MOD_IDS" ] || printf %s '' -mods='' $MOD_IDS )$( [ "$BATTLE_EYE" == "1" ] || printf %s '' -NoBattlEye'' ) -Port={{SERVER_PORT}} {{ARGS_FLAGS}} & ARK_PID=$! ; tail -c0 -F ./ShooterGame/Saved/Logs/ShooterGame.log --pid=$ARK_PID'
+config:
+  files:
+    ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini:
+      parser: file
+      find:
+        MaxPlayers=: 'MaxPlayers={{server.environment.MAX_PLAYERS}}'
+        ServerAdminPassword=: 'ServerAdminPassword={{server.environment.ARK_ADMIN_PASSWORD}}'
+  startup:
+    done: 'Server has completed startup and is now advertising for join.'
+  logs: {  }
+  stop: ^C
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # ------------------------------------------------
+      # ARK: Survival Ascended - Install Script
+      # License: AGPLv3
+      # Author: gOOvER (https://discord.goover.dev)
+      # Donate: https://donate.goover.dev
+      # ------------------------------------------------
+      
+      set -euo pipefail  # Strict error handling
+      
+      # ----------------------------
+      # Environment Setup
+      # ----------------------------
+      HOME=/mnt/server
+      export HOME
+      
+      # Ensure /mnt is owned by root
+      chown -R root:root /mnt
+      
+      # ----------------------------
+      # Game Specific Configuration
+      # ----------------------------
+      GAME_NAME="ARK: Survival Ascended"
+      
+      # Steam Client AppID for steam_appid.txt (optional, leave empty if not needed)
+      SteamAppId="${SteamAppId:-}"
+      
+      # ----------------------------
+      # Configuration Initialization
+      # ----------------------------
+      CONFIG_INIT=0           # ARK:SA generates its own config on first run
+      CONFIG_SOURCE=""
+      CONFIG_FILE_NAME=""
+      CONFIG_DIR=""
+      CONFIG_URL=""
+      CONFIG_SAMPLE_FILE=""
+      STEAMCMD_DIR="$HOME/steamcmd"
+      
+      # ----------------------------
+      # Library Copy Configuration (optional)
+      # ----------------------------
+      STEAM_LIBS_DEST=""
+      LIB_COPY_ITEMS=()
+      
+      # -----------------------------------------------------------------------------------
+      # WARNING: Do not modify anything below this line unless you know what you are doing!
+      # -----------------------------------------------------------------------------------
+      
+      STEAM_USER="${STEAM_USER:-anonymous}"
+      STEAM_PASS="${STEAM_PASS:-}"
+      STEAM_AUTH="${STEAM_AUTH:-}"
+      DEPOTDOWNLOADER="${DEPOTDOWNLOADER:-0}"
+      : "${STEAM_APPID:?Environment variable STEAM_APPID must be set for $GAME_NAME}"  # mandatory
+      
+      # ----------------------------
+      # Locale Setup to suppress warnings
+      # ----------------------------
+      export LANG=en_US.UTF-8
+      export LANGUAGE=en_US:en
+      export LC_ALL=en_US.UTF-8
+      
+      # ----------------------------
+      # Logging Setup
+      # ----------------------------
+      SAFE_NAME="${GAME_NAME// /_}_install.log"
+      INSTALL_LOG="$HOME/$SAFE_NAME"
+      
+      # Initialize log file
+      : > "$INSTALL_LOG"
+      
+      # ----------------------------
+      # Colors
+      # ----------------------------
+      RED=$(tput setaf 1 2>/dev/null || echo "")
+      GREEN=$(tput setaf 2 2>/dev/null || echo "")
+      YELLOW=$(tput setaf 3 2>/dev/null || echo "")
+      BLUE=$(tput setaf 4 2>/dev/null || echo "")
+      CYAN=$(tput setaf 6 2>/dev/null || echo "")
+      WHITE=$(tput setaf 7 2>/dev/null || echo "")
+      BOLD=$(tput bold 2>/dev/null || echo "")
+      NC=$(tput sgr0 2>/dev/null || echo "")
+      
+      LINE="${BLUE}════════════════════════════════════════════════════════════════${NC}"
+      
+      # ----------------------------
+      # Logging Functions
+      # ----------------------------
+      log_info()    {
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${BLUE}[INFO]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] $*" >> "$INSTALL_LOG"
+      }
+      log_warn()    {
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${YELLOW}[WARN]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+      }
+      log_error()   {
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${RED}[ERROR]${NC} $*" >&2
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+      }
+      log_success() {
+          echo "$(date '+%Y-%m-%d %H:%M:%S') ${GREEN}[ OK ]${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ OK ] $*" >> "$INSTALL_LOG"
+      }
+      
+      print_step()    {
+          echo "${BLUE}│${NC}  ${CYAN}→${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [STEP] $*" >> "$INSTALL_LOG"
+      }
+      print_ok()      {
+          echo "${BLUE}│${NC}  ${GREEN}✓${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $*" >> "$INSTALL_LOG"
+      }
+      print_warn()    {
+          echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+      }
+      print_error()   {
+          echo "${BLUE}│${NC}  ${RED}✗${NC} $*" >&2
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+      }
+      
+      # ----------------------------
+      # System Check Function
+      # ----------------------------
+      system_check() {
+          local sys_info_file="$HOME/system_info.txt"
+      
+          echo ""
+          echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+          printf "${BLUE}║${NC}%20s${CYAN}${BOLD}%s${NC}%20s${BLUE}║${NC}\n" "" "SYSTEM INFORMATION CHECK" ""
+          echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+          echo ""
+      
+          {
+              echo "=================================================================="
+              echo "                   SYSTEM INFORMATION CHECK"
+              echo "=================================================================="
+              echo "Date: $(date '+%Y-%m-%d %H:%M:%S')"
+              echo "=================================================================="
+              echo ""
+          } > "$sys_info_file"
+      
+          # Kernel Information
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Kernel Information${NC}"
+          if command -v uname &> /dev/null; then
+              local kernel_name kernel_version distro_name="Unknown" distro_version=""
+              kernel_name=$(uname -s)
+              kernel_version=$(uname -r)
+      
+              if [[ -f /etc/os-release ]]; then
+                  while IFS='=' read -r key value; do
+                      value="${value%\"}"; value="${value#\"}"
+                      case "$key" in
+                          PRETTY_NAME) distro_name="$value" ;;
+                          VERSION_ID) distro_version="$value" ;;
+                      esac
+                  done < /etc/os-release
+              elif [[ -f /etc/debian_version ]]; then
+                  distro_name="Debian"; distro_version=$(cat /etc/debian_version 2>/dev/null)
+              fi
+              [[ "$distro_name" == "Unknown" || -z "$distro_name" ]] && distro_name="$kernel_name"
+      
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Distro:  ${WHITE}${distro_name}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Kernel:  ${WHITE}${kernel_version}${NC}"
+              { echo "KERNEL: ${distro_name} / ${kernel_version}"; echo ""; } >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+      
+          # CPU Information
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}CPU Information${NC}"
+          if [[ -f /proc/cpuinfo ]]; then
+              local cpu_model cpu_cores
+              cpu_model=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
+              cpu_cores=$(grep -c "^processor" /proc/cpuinfo)
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Model:   ${WHITE}${cpu_model}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Cores:   ${WHITE}${cpu_cores}${NC}"
+              { echo "CPU: ${cpu_model} (${cpu_cores} cores)"; echo ""; } >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+      
+          # Memory Information
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Memory (RAM)${NC}"
+          if [[ -f /proc/meminfo ]]; then
+              local total_ram_kb total_ram_mb total_ram_gb available_ram_kb available_ram_mb
+              total_ram_kb=$(grep "MemTotal" /proc/meminfo | awk '{print $2}')
+              total_ram_mb=$((total_ram_kb / 1024))
+              total_ram_gb="$((total_ram_mb / 1024)).$((total_ram_mb * 100 / 1024 % 100))"
+              available_ram_kb=$(grep "MemAvailable" /proc/meminfo | awk '{print $2}')
+              available_ram_mb=$((available_ram_kb / 1024))
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Total:     ${WHITE}${total_ram_mb} MB${NC} ${BLUE}(${WHITE}${total_ram_gb} GB${BLUE})${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Available: ${WHITE}${available_ram_mb} MB${NC}"
+              { echo "RAM: ${total_ram_mb} MB total, ${available_ram_mb} MB available"; echo ""; } >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+      
+          # Disk Space
+          echo ""
+          echo "${BLUE}┌─ ${CYAN}${BOLD}Disk Space (Home Directory)${NC}"
+          if command -v df &> /dev/null; then
+              local disk_info disk_total disk_used disk_available disk_percent
+              disk_info=$(df -h "$HOME" 2>/dev/null | tail -n1)
+              disk_total=$(echo "$disk_info" | awk '{print $2}')
+              disk_used=$(echo "$disk_info" | awk '{print $3}')
+              disk_available=$(echo "$disk_info" | awk '{print $4}')
+              disk_percent=$(echo "$disk_info" | awk '{print $5}')
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Total:     ${WHITE}${disk_total}${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Used:      ${WHITE}${disk_used}${NC} ${YELLOW}(${disk_percent})${NC}"
+              echo "${BLUE}│${NC}  ${GREEN}✓${NC} Available: ${WHITE}${disk_available}${NC}"
+              { echo "DISK: ${disk_total} total, ${disk_used} used (${disk_percent}), ${disk_available} free"; echo ""; } >> "$sys_info_file"
+          fi
+          echo "${BLUE}└─${NC}"
+          echo ""
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] System information saved to: ${sys_info_file}" >> "$INSTALL_LOG"
+          echo ""
+      }
+      
+      # ----------------------------
+      # Validation Functions
+      # ----------------------------
+      validate_steam_appid() {
+          if [[ ! "$STEAM_APPID" =~ ^[0-9]+$ ]]; then
+              log_error "STEAM_APPID must be numeric: $STEAM_APPID"
+              exit 1
+          fi
+      }
+      
+      validate_config_url() {
+          if [[ "${CONFIG_INIT:-0}" -eq 1 ]] && [[ -n "$CONFIG_URL" ]]; then
+              if [[ ! "$CONFIG_URL" =~ ^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$ ]]; then
+                  log_error "CONFIG_URL must be a valid HTTP/HTTPS URL: $CONFIG_URL"
+                  exit 1
+              fi
+          fi
+      }
+      
+      validate_steam_credentials() {
+          local suspicious_chars='[;&|`$()]'
+          if [[ "$STEAM_USER" =~ $suspicious_chars ]]; then
+              log_error "STEAM_USER contains suspicious characters"; exit 1
+          fi
+          if [[ -n "$STEAM_PASS" ]] && [[ "$STEAM_PASS" =~ $suspicious_chars ]]; then
+              log_error "STEAM_PASS contains suspicious characters"; exit 1
+          fi
+          if [[ -n "$STEAM_AUTH" ]] && [[ "$STEAM_AUTH" =~ $suspicious_chars ]]; then
+              log_error "STEAM_AUTH contains suspicious characters"; exit 1
+          fi
+      }
+      
+      validate_path() {
+          local path="$1" name="$2"
+          if [[ "$path" =~ \.\. ]] || [[ "$path" =~ ^/etc ]] || [[ "$path" =~ ^/root ]]; then
+              log_error "Invalid or dangerous path for $name: $path"; exit 1
+          fi
+          if [[ ! "$path" =~ ^"$HOME" ]]; then
+              log_error "Path $name must start with HOME directory: $path"; exit 1
+          fi
+      }
+      
+      check_dependencies() {
+          local deps=("curl" "tar")
+          local missing=()
+      
+          for dep in "${deps[@]}"; do
+              if ! command -v "$dep" >/dev/null 2>&1; then missing+=("$dep"); fi
+          done
+      
+          if [[ "${#missing[@]}" -gt 0 ]]; then
+              if command -v apt-get >/dev/null 2>&1; then
+                  export DEBIAN_FRONTEND=noninteractive
+                  apt-get update >/dev/null 2>&1 || true
+                  apt-get install -y curl ca-certificates openssl tar wget 2>/dev/null || {
+                      print_error "Failed to install packages via apt-get"; exit 1
+                  }
+                  update-ca-certificates >/dev/null 2>&1 || true
+              elif command -v apk >/dev/null 2>&1; then
+                  apk add --no-cache curl ca-certificates openssl tar wget 2>/dev/null || {
+                      print_error "Failed to install packages via apk"; exit 1
+                  }
+              else
+                  print_error "Unsupported Linux distribution"; exit 1
+              fi
+          fi
+      
+          missing=()
+          for dep in "${deps[@]}"; do
+              if ! command -v "$dep" >/dev/null 2>&1; then missing+=("$dep"); fi
+          done
+          if [[ "${#missing[@]}" -gt 0 ]]; then
+              print_error "Still missing dependencies after installation: ${missing[*]}"; exit 1
+          fi
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] All required dependencies found" >> "$INSTALL_LOG"
+      }
+      
+      # ----------------------------
+      # Download with Retry
+      # ----------------------------
+      # shellcheck disable=SC2317
+      download_with_retry() {
+          local url="$1" output="$2" retries="${3:-3}" desc="${4:-file}"
+      
+          for i in $(seq 1 "$retries"); do
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Downloading $desc (attempt $i/$retries)..." >> "$INSTALL_LOG"
+              if curl -fsSL --connect-timeout 30 --max-time 300 --retry 1 --location \
+                  -H "User-Agent: GameServer-Installer/1.0" \
+                  --proto '=https' --tlsv1.2 \
+                  -o "$output" "$url" 2>>"$INSTALL_LOG"; then
+                  if [[ -s "$output" ]]; then
+                      echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] Downloaded $desc" >> "$INSTALL_LOG"
+                      return 0
+                  fi
+              fi
+              [[ "$i" -lt "$retries" ]] && sleep 5
+          done
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] Failed to download $desc after $retries attempts" >> "$INSTALL_LOG"
+          return 1
+      }
+      
+      # ----------------------------
+      # Safe command execution
+      # ----------------------------
+      run_or_fail() {
+          local desc="$1"; shift
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Starting: $desc" >> "$INSTALL_LOG"
+          if "$@" >> "$INSTALL_LOG" 2>&1; then
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc" >> "$INSTALL_LOG"
+          else
+              local exit_code=$?
+              echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $desc failed with exit code $exit_code" >> "$INSTALL_LOG"
+              print_error "$desc failed (exit code $exit_code)"; exit 1
+          fi
+      }
+      
+      # ----------------------------
+      # Library Copy Helper
+      # ----------------------------
+      STEAM_STANDARD_LIBS=(
+          "steamclient.dll" "steamclient64.dll"
+          "tier0_s.dll" "tier0_s64.dll"
+          "vstdlib_s.dll" "vstdlib_s64.dll"
+      )
+      
+      _copy_single_lib() {
+          local src="$1" dest="$2"
+          [[ ! -e "$src" ]] && { print_error "Source not found: $src"; return; }
+          mkdir -p "$(dirname "$dest")"
+          if [[ -d "$src" ]]; then
+              cp -a "$src" "$dest" >/dev/null 2>&1 && print_ok "Copied directory: $src -> $dest" || print_warn "Failed to copy directory: $src -> $dest"
+          else
+              cp -f "$src" "$dest" >/dev/null 2>&1 && print_ok "Copied file: $src -> $dest" || print_warn "Failed to copy file: $src -> $dest"
+          fi
+      }
+      
+      copy_game_libs() {
+          [[ -z "${STEAM_LIBS_DEST:-}" ]] && [[ "${#LIB_COPY_ITEMS[@]}" -eq 0 ]] && return 0
+          print_step "Copying libraries..."
+          if [[ -n "${STEAM_LIBS_DEST:-}" ]]; then
+              mkdir -p "$STEAM_LIBS_DEST"
+              for lib in "${STEAM_STANDARD_LIBS[@]}"; do
+                  local src="$HOME/$lib"
+                  [[ -f "$src" ]] && _copy_single_lib "$src" "$STEAM_LIBS_DEST/$lib" || print_warn "Standard Steam lib not found (skipping): $src"
+              done
+          fi
+          for item in "${LIB_COPY_ITEMS[@]}"; do
+              IFS='|' read -r src dest <<< "$item"
+              [[ -z "${src:-}" || -z "${dest:-}" ]] && { print_warn "Invalid copy entry (expected 'src|dest'): $item"; continue; }
+              _copy_single_lib "$src" "$dest"
+          done
+      }
+      
+      # ----------------------------
+      # Cleanup Function
+      # ----------------------------
+      # shellcheck disable=SC2329
+      cleanup() {
+          local exit_code=$?
+          rm -f /tmp/steamcmd.tar.gz /tmp/steam_output.log 2>/dev/null || true
+          pkill -f "steamcmd" 2>/dev/null || true
+          unset STEAM_PASS STEAM_AUTH
+          exit "$exit_code"
+      }
+      
+      trap cleanup EXIT
+      
+      # ----------------------------
+      # Secure Steam Command Execution
+      # ----------------------------
+      run_steam_command() {
+          local desc="$1"
+          local -a cmd_array=("${_STEAM_CMD[@]}")
+          unset _STEAM_CMD
+      
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Executing: $desc" >> "$INSTALL_LOG"
+          local exit_code_file="/tmp/steam_exit_$.code"
+          echo "${BLUE}│${NC}"
+      
+          {
+              "${cmd_array[@]}" 2>&1
+              echo $? > "$exit_code_file"
+          } | while IFS= read -r line; do
+              local clean_line
+              clean_line=$(echo "$line" | sed -r 's/\x1b\[[0-9;]*[mK]//g' | sed 's/(B\[m//g')
+              [[ "$clean_line" =~ ^[[:space:]]*$ ]] && continue
+              if ! echo "$clean_line" | grep -qiE "password|auth|token|secret"; then
+                  if [[ "$clean_line" =~ (ERROR|Failed|Warning|Success|Update|Downloading|Validating|Installing|Loading|App|state|Connecting) ]] || \
+                     [[ "$clean_line" =~ ^\ *\[.*\] ]]; then
+                      echo "$clean_line" >> "$INSTALL_LOG" 2>/dev/null || true
+                  fi
+                  if [[ "$clean_line" =~ (Update|Downloading|Validating|Installing|Loading|Success|[0-9]+%|App.*[0-9]+) ]] || \
+                     [[ "$clean_line" =~ ^\ *\[.*\] ]]; then
+                      printf "${BLUE}│${NC}  ${WHITE}%s${NC}\n" "$clean_line"
+                  fi
+              fi
+          done
+      
+          local exit_code=0
+          if [[ -f "$exit_code_file" ]]; then
+              exit_code=$(cat "$exit_code_file")
+              rm -f "$exit_code_file"
+          else
+              exit_code=1
+          fi
+          echo "${BLUE}│${NC}"
+      
+          case "$exit_code" in
+              0) echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $desc completed successfully" >> "$INSTALL_LOG"; return 0 ;;
+              2) print_error "Steam login failed"; exit 1 ;;
+              5) print_error "App not found (AppID: $STEAM_APPID)"; exit 1 ;;
+              7) print_error "Steam is updating, please try again later"; exit 1 ;;
+              8) print_error "Installation failed (AppID: $STEAM_APPID)"; exit 1 ;;
+              *) [[ "$exit_code" -ne 0 ]] && { print_warn "$desc exited with code $exit_code"; exit 1; } ;;
+          esac
+      }
+      
+      # ----------------------------
+      # Start Script Output
+      # ----------------------------
+      clear
+      echo ""
+      echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+      printf "${BLUE}║${NC}%23s${YELLOW}${BOLD}%s${NC}%24s${BLUE}║${NC}\n" "" "GAME INSTALLATION" ""
+      game_name_len=${#GAME_NAME}
+      game_left=$(( (64 - game_name_len) / 2 ))
+      game_right=$(( 64 - game_name_len - game_left ))
+      printf "${BLUE}║${NC}%*s${WHITE}%s${NC}%*s${BLUE}║${NC}\n" "$game_left" "" "${GAME_NAME}" "$game_right" ""
+      echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+      echo ""
+      
+      system_check
+      
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Pre-flight Checks${NC}"
+      print_step "Validating environment..."
+      check_dependencies
+      print_step "Validating Steam App ID..."
+      validate_steam_appid
+      print_step "Validating configuration..."
+      validate_config_url
+      print_step "Validating Steam credentials..."
+      validate_steam_credentials
+      print_step "Validating paths..."
+      validate_path "$STEAMCMD_DIR" "STEAMCMD_DIR"
+      print_ok "All checks passed"
+      echo "${BLUE}└─${NC}"
+      
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Network Connectivity${NC}"
+      if ! curl -s --connect-timeout 10 --max-time 15 "https://steamcdn-a.akamaihd.net" >/dev/null 2>&1; then
+          print_error "Cannot reach Steam servers"
+          echo "${BLUE}└─${NC}"
+          exit 1
+      fi
+      print_ok "HTTPS connection verified"
+      echo "${BLUE}└─${NC}"
+      
+      echo ""
+      if [[ "$STEAM_USER" == "anonymous" ]]; then
+          echo "${BLUE}•${NC} ${YELLOW}Using anonymous Steam login${NC}"
+      else
+          echo "${BLUE}•${NC} ${CYAN}Steam user:${NC} ${WHITE}$STEAM_USER${NC}"
+      fi
+      
+      # ----------------------------
+      # Game Installation via SteamCMD
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Game Installation (SteamCMD)${NC}"
+      mkdir -p "$STEAMCMD_DIR" "$HOME/steamapps"
+      
+      print_step "Downloading SteamCMD..."
+      if download_with_retry \
+          "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+          "/tmp/steamcmd.tar.gz" 3 "SteamCMD archive"; then
+          print_ok "SteamCMD downloaded"
+      else
+          print_error "Failed to download SteamCMD"; exit 1
+      fi
+      
+      print_step "Extracting SteamCMD..."
+      if tar -xzf /tmp/steamcmd.tar.gz -C "$STEAMCMD_DIR" >> "$INSTALL_LOG" 2>&1; then
+          print_ok "SteamCMD extracted"
+      else
+          print_error "Failed to extract SteamCMD"; exit 1
+      fi
+      
+      print_step "Installing $GAME_NAME (Windows binaries via Proton)..."
+      cd "$STEAMCMD_DIR"
+      
+      declare -a steam_cmd=(
+          "./steamcmd.sh"
+          "+force_install_dir" "$HOME"
+          "+login" "$STEAM_USER"
+      )
+      [[ -n "$STEAM_PASS" ]] && steam_cmd+=("$STEAM_PASS")
+      [[ -n "$STEAM_AUTH" ]] && steam_cmd+=("$STEAM_AUTH")
+      
+      # ARK:SA requires Windows platform binaries for Proton
+      steam_cmd+=("+@sSteamCmdForcePlatformType" "windows")
+      
+      steam_cmd+=("+app_update" "1007" "validate")
+      steam_cmd+=("+app_update" "$STEAM_APPID")
+      
+      [[ -n "${STEAM_BETAID:-}" ]]   && steam_cmd+=("-beta" "$STEAM_BETAID")
+      [[ -n "${STEAM_BETAPASS:-}" ]] && steam_cmd+=("-betapassword" "$STEAM_BETAPASS")
+      [[ -n "${INSTALL_FLAGS:-}" ]]  && { read -ra flags <<< "$INSTALL_FLAGS"; steam_cmd+=("${flags[@]}"); }
+      
+      steam_cmd+=("validate" "+quit")
+      
+      _STEAM_CMD=("${steam_cmd[@]}")
+      run_steam_command "SteamCMD installation"
+      print_ok "Installation finished"
+      echo "${BLUE}└─${NC}"
+      
+      # ----------------------------
+      # Steam Libraries Setup
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Steam Libraries Setup${NC}"
+      mkdir -p "$HOME/.steam/sdk32" "$HOME/.steam/sdk64"
+      
+      if [[ -f "$STEAMCMD_DIR/linux32/steamclient.so" ]]; then
+          cp -v "$STEAMCMD_DIR/linux32/steamclient.so" "$HOME/.steam/sdk32/steamclient.so" >/dev/null 2>&1 \
+              && print_ok "32-bit Steam library copied" || print_warn "Failed to copy 32-bit library"
+      else
+          print_warn "32-bit Steam library not found"
+      fi
+      
+      if [[ -f "$STEAMCMD_DIR/linux64/steamclient.so" ]]; then
+          cp -v "$STEAMCMD_DIR/linux64/steamclient.so" "$HOME/.steam/sdk64/steamclient.so" >/dev/null 2>&1 \
+              && print_ok "64-bit Steam library copied" || print_warn "Failed to copy 64-bit library"
+      else
+          print_warn "64-bit Steam library not found"
+      fi
+      print_ok "Setup complete"
+      echo "${BLUE}└─${NC}"
+      
+      # ----------------------------
+      # ARK: Survival Ascended - Game-specific Hooks
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}ARK:SA Post-Install Steps${NC}"
+      copy_game_libs
+      
+      # Remove large, unnecessary intro movie files to save disk space
+      if [[ -d "$HOME/ShooterGame/Content/Movies" ]]; then
+          print_step "Removing intro movies to save disk space..."
+          rm -rf "$HOME/ShooterGame/Content/Movies"
+          print_ok "Intro movies removed"
+      else
+          print_step "Movies directory not found, skipping"
+      fi
+      
+      # Create log directory and seed the log file so tail -F works immediately on first start
+      print_step "Seeding ShooterGame log file..."
+      mkdir -p "$HOME/ShooterGame/Saved/Logs"
+      if [[ ! -f "$HOME/ShooterGame/Saved/Logs/ShooterGame.log" ]]; then
+          echo "--fresh install--" > "$HOME/ShooterGame/Saved/Logs/ShooterGame.log"
+          print_ok "ShooterGame.log created"
+      else
+          print_ok "ShooterGame.log already exists"
+      fi
+      
+      # Ensure config directories exist so the panel can write GameUserSettings.ini
+      print_step "Creating config directories..."
+      mkdir -p "$HOME/ShooterGame/Saved/Config/WindowsServer"
+      print_ok "Config directories ready"
+      
+      print_ok "Post-install steps completed"
+      echo "${BLUE}└─${NC}"
+      
+      # ----------------------------
+      # Post-Installation Verification
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Post-Installation Verification${NC}"
+      steam_files_found=0
+      [[ -f "$HOME/.steam/sdk32/steamclient.so" ]] && steam_files_found=$((steam_files_found + 1))
+      [[ -f "$HOME/.steam/sdk64/steamclient.so" ]] && steam_files_found=$((steam_files_found + 1))
+      [[ "$steam_files_found" -ge 2 ]] && print_ok "Steam libraries installed" || print_warn "Steam libraries incomplete"
+      
+      if [[ -f "$HOME/ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]]; then
+          print_ok "ArkAscendedServer.exe found"
+      else
+          print_warn "ArkAscendedServer.exe not found — check installation"
+      fi
+      
+      [[ -f "$HOME/ShooterGame/Saved/Logs/ShooterGame.log" ]] \
+          && print_ok "ShooterGame.log ready" || print_warn "ShooterGame.log missing"
+      
+      [[ -f "$STEAMCMD_DIR/steamcmd.sh" ]] && print_ok "SteamCMD present" || print_warn "SteamCMD not found"
+      print_ok "Verification completed"
+      echo "${BLUE}└─${NC}"
+      
+      # ----------------------------
+      # Cleanup
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Cleanup${NC}"
+      rm -f /tmp/steamcmd.tar.gz /tmp/steam_output.log
+      print_ok "Cleanup complete"
+      echo "${BLUE}└─${NC}"
+      
+      # ----------------------------
+      # Done
+      # ----------------------------
+      echo ""
+      echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+      printf "${BLUE}║${NC}%21s${GREEN}${BOLD}%s${NC}%21s${BLUE}║${NC}\n" "" "INSTALLATION COMPLETED" ""
+      echo "${BLUE}╠════════════════════════════════════════════════════════════════╣${NC}"
+      printf "${BLUE}║${NC}  ${GREEN}[OK]${NC} %-57s${BLUE}║${NC}\n" "${GAME_NAME} successfully installed"
+      printf "${BLUE}║${NC}  Log: %-57s${BLUE}║${NC}\n" "$INSTALL_LOG"
+      printf "${BLUE}║${NC}  Support: %-53s${BLUE}║${NC}\n" "https://discord.goover.dev"
+      echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+      echo ""
+      
+      exit 0
+      
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+- name: '[SERVER] Server Map'
+  description: 'Available Maps: TheIsland_WP, ScorchedEarth_WP, Aberration_WP, TheCenter_WP'
+  env_variable: SERVER_MAP
+  default_value: TheIsland_WP
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:64'
+  sort: 1
+- name: '[SERVER] Session Name'
+  description: '"Unofficial" dedicated server name shown in the browser'
+  env_variable: SESSION_NAME
+  default_value: 'A Pterodactyl Hosted Server'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'max:256'
+  sort: 2
+- name: '[SERVER] Max Players'
+  description: 'Specifies the maximum number of players able to join the server.'
+  env_variable: MAX_PLAYERS
+  default_value: 70
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  - 'max:200'
+  sort: 3
+- name: '[SERVER] Auto-Update'
+  description: 'Enable auto-updating server files on restart/re-install. 1 = enabled, 0 = disabled.'
+  env_variable: AUTO_UPDATE
+  default_value: 1
+  user_viewable: true
+  user_editable: true
+  rules:
+  - boolean
+  sort: 4
+- name: '[SERVER] BattleEye'
+  description: 'Enable BattleEye anti-cheat. 1 = enabled, 0 = disabled.'
+  env_variable: BATTLE_EYE
+  default_value: 0
+  user_viewable: true
+  user_editable: true
+  rules:
+  - boolean
+  sort: 5
+- name: '[SERVER] Additional Params'
+  description: |-
+    Additional URL parameters (?Key=Value). Must start with ? and have no spaces.
+    Example: ?AllowCaveBuildingPvE=True
+  env_variable: ARGS_PARAMS
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:1024'
+  sort: 6
+- name: '[SERVER] Admin Password'
+  description: 'Password for in-game admin commands (EnableCheats). Also used for RCON if enabled.'
+  env_variable: ARK_ADMIN_PASSWORD
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - alpha_dash
+  - 'max:128'
+  sort: 7
+- name: '[SERVER] Server Password'
+  description: 'Password required to join the server. Leave blank for a public server.'
+  env_variable: SERVER_PASSWORD
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - alpha_dash
+  - 'max:128'
+  sort: 8
+- name: '[SERVER] Server PvE'
+  description: '1 = PvE (Player vs Environment), 0 = PvP (Player vs Player)'
+  env_variable: SERVER_PVE
+  default_value: 1
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - boolean
+  sort: 9
+- name: '[SERVER] Additional Flags'
+  description: |-
+    Additional launch flags (e.g. -crossplay).
+    Do NOT add -mods here; use the MOD IDs field instead.
+  env_variable: ARGS_FLAGS
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:1024'
+  sort: 10
+- name: '[SERVER] RCON Port'
+  description: 'RCON port for remote console access. Does not need to be publicly exposed.'
+  env_variable: RCON_PORT
+  default_value: 37015
+  user_viewable: true
+  user_editable: false
+  rules:
+  - required
+  - integer
+  - 'min:1025'
+  - 'max:65535'
+  sort: 11
+- name: '[SERVER] Server Password'
+  description: 'Password required to join the server. Leave blank for a public server.'
+  env_variable: SERVER_PASSWORD
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - alpha_dash
+  - 'max:128'
+  sort: 12
+- name: '[MODS] Mod IDs'
+  description: |-
+    CurseForge Project IDs for mods. Separate by comma without spaces.
+    Find IDs at https://www.curseforge.com/ark-survival-ascended
+    Example: 1234,5678
+  env_variable: MOD_IDS
+  default_value: ''
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  - 'max:512'
+  sort: 13
+- name: '[HIDDEN] App ID'
+  description: 'Steam App ID for ARK: Survival Ascended dedicated server.'
+  env_variable: SRCDS_APPID
+  default_value: 2430930
+  user_viewable: false
+  user_editable: false
+  rules:
+  - required
+  - integer
+  - 'in:2430930'
+  sort: 14
+- name: '[HIDDEN] STEAM_APPID'
+  description: 'Required by the Proton image for WINEPREFIX setup.'
+  env_variable: STEAM_APPID
+  default_value: 2430930
+  user_viewable: false
+  user_editable: false
+  rules: {  }
+  sort: 15
+- name: '[HIDDEN] Windows Install'
+  description: 'Forces SteamCMD to download the Windows server binary (required for Proton).'
+  env_variable: WINDOWS_INSTALL
+  default_value: 1
+  user_viewable: false
+  user_editable: false
+  rules:
+  - boolean
+  sort: 16
