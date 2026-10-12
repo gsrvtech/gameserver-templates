@@ -15,7 +15,7 @@ docker_images:
   'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
 file_denylist: {  }
 startup_commands:
-  Default: 'bash /mnt/server/start.sh'
+  Default: 'bash /home/container/start.sh'
 config:
   files:
     'R5/ServerDescription.json':
