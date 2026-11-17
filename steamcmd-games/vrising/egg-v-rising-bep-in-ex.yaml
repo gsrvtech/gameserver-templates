@@ -13,7 +13,7 @@ tags:
 features:
 - steam_disk_space
 docker_images:
-  'ghcr.io/parkervcp/yolks:wine_staging': 'ghcr.io/parkervcp/yolks:wine_staging'
+  'ghcr.io/goover/wine:staging': 'ghcr.io/goover/wine:staging'
 file_denylist: {  }
 startup_commands:
   Default: 'export WINEDLLOVERRIDES="winhttp=n,b" && xvfb-run wine ./VRisingServer.exe -persistentDataPath save-data -address 0.0.0.0'
@@ -55,7 +55,7 @@ scripts:
       ## Original Authors: David Wolfe (Red-Thirten), Kapatheus
       ## Maintained by: gOOvER (eggs@goover.dev)
       ## License: MIT License
-      ## Image to install with is 'ghcr.io/parkervcp/installers:debian'
+      ## Image to install with is 'ghcr.io/goover/installers:debian'
 
       clear
       RED='\033[0;31m'
@@ -231,7 +231,7 @@ scripts:
       echo -e "${BLUE}-------------------------------------------------${NC}"
       echo -e "${GREEN}Installation completed${NC}"
       echo -e "${BLUE}-------------------------------------------------${NC}"
-    container: 'ghcr.io/parkervcp/installers:debian'
+    container: 'ghcr.io/goover/installers:debian'
     entrypoint: /bin/bash
 variables:
 - name: '[REQUIRED] Server Query Port'

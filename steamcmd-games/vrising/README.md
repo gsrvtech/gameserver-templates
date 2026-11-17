@@ -21,7 +21,7 @@
 
 ## About this Egg
 
-This egg runs the **Windows-native V Rising dedicated server** via **Wine** (`ghcr.io/parkervcp/yolks:wine_staging`) with **BepInEx (IL2CPP)** automatically installed and updated from Thunderstore (`BepInExPack_V_Rising`).
+This egg runs the **Windows-native V Rising dedicated server** via **Wine** (`ghcr.io/goover/wine:staging`) with **BepInEx (IL2CPP)** automatically installed and updated from Thunderstore (`BepInExPack_V_Rising`).
 
 > **Important (First Startup / RAM):** Generating the IL2CPP interop assemblies (`Cpp2IL` / `Il2CppInterop`) during the first start requires a temporary RAM spike of **6–8+ GB**. Make sure the server container has enough memory allocated.
 
