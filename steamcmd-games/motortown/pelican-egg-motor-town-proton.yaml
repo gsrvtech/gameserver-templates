@@ -15,7 +15,7 @@ docker_images:
   'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
 file_denylist: {  }
 startup_commands:
-  Default: 'proton run ./MotorTown/Binaries/Win64/MotorTownServer-Win64-Shipping.exe Jeju_World?listen -server -log -useperfthreads -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}}'
+  Default: 'export SDL_VIDEODRIVER=x11; proton run ./MotorTown/Binaries/Win64/MotorTownServer-Win64-Shipping.exe Jeju_World?listen -server -log -useperfthreads -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}} & MT_PID=$! ; tail -c0 -F ./MotorTown/Saved/ServerLog/motortown.log --pid=$MT_PID'
 config:
   files:
     DedicatedServerConfig.json:
