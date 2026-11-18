@@ -442,21 +442,20 @@ validate_config_url() {
 
 # New function for additional security checks
 validate_steam_credentials() {
-    # Check for suspicious characters in Steam credentials
-    local suspicious_chars='[;&|`$()]'
-    
-    if [[ "$STEAM_USER" =~ $suspicious_chars ]]; then
-        log_error "STEAM_USER contains suspicious characters"
+    # Credentials are passed via quoted array elements, so shell metacharacters
+    # in passwords (like $, &, (, )) are safe; only reject newlines/control chars.
+    if [[ "$STEAM_USER" == *$'\n'* ]] || [[ "$STEAM_USER" == *$'\r'* ]]; then
+        log_error "STEAM_USER contains invalid control characters"
         exit 1
     fi
     
-    if [[ -n "$STEAM_PASS" ]] && [[ "$STEAM_PASS" =~ $suspicious_chars ]]; then
-        log_error "STEAM_PASS contains suspicious characters"
+    if [[ -n "$STEAM_PASS" ]] && { [[ "$STEAM_PASS" == *$'\n'* ]] || [[ "$STEAM_PASS" == *$'\r'* ]]; }; then
+        log_error "STEAM_PASS contains invalid control characters"
         exit 1
     fi
     
-    if [[ -n "$STEAM_AUTH" ]] && [[ "$STEAM_AUTH" =~ $suspicious_chars ]]; then
-        log_error "STEAM_AUTH contains suspicious characters"
+    if [[ -n "$STEAM_AUTH" ]] && { [[ "$STEAM_AUTH" == *$'\n'* ]] || [[ "$STEAM_AUTH" == *$'\r'* ]]; }; then
+        log_error "STEAM_AUTH contains invalid control characters"
         exit 1
     fi
 }
