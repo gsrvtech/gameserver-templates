@@ -15,15 +15,58 @@ docker_images:
   'ghcr.io/goover/steam:proton': 'ghcr.io/goover/steam:proton'
 file_denylist: {  }
 startup_commands:
-  Default: 'proton run ./MotorTown/Binaries/Win64/MotorTownServer-Win64-Shipping.exe Jeju_World?listen?- server -log -useperfthreads -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}}'
+  Default: 'proton run ./MotorTown/Binaries/Win64/MotorTownServer-Win64-Shipping.exe Jeju_World?listen -server -log -useperfthreads -Port={{SERVER_PORT}} -QueryPort={{QUERY_PORT}}'
 config:
   files:
     DedicatedServerConfig.json:
       parser: json
       find:
         ServerName: '{{env.SRV_NAME}}'
+        ServerMessage: '{{env.SRV_MESSAGE}}'
         Password: '{{env.SRV_PW}}'
         MaxPlayers: '{{env.MAX_PLAYERS}}'
+        MaxJoinQueuePlayers: '{{env.MAX_JOIN_QUEUE}}'
+        MaxVehiclePerPlayer: '{{env.MAX_VEHICLE_PER_PLAYER}}'
+        VehicleSpawnLimitMode: '{{env.VEHICLE_SPAWN_LIMIT_MODE}}'
+        MaxSpawnedPersonalVehiclesPerPlayer: '{{env.MAX_PERSONAL_VEHICLES}}'
+        MaxSpawnedCompanyVehiclesPerCompany: '{{env.MAX_COMPANY_VEHICLES}}'
+        MaxSpawnedCorporationVehiclesPerCorporation: '{{env.MAX_CORP_VEHICLES}}'
+        MaxSpawnedManagedFleetVehiclesTotal: '{{env.MAX_FLEET_VEHICLES_TOTAL}}'
+        bPauseSimulationWhileNoPlayers: '{{env.PAUSE_WHEN_EMPTY}}'
+        bAllowPlayerToJoinWithCompanyVehicles: '{{env.ALLOW_JOIN_COMPANY_VEHICLES}}'
+        bAllowCompanyAIDriver: '{{env.ALLOW_COMPANY_AI}}'
+        bAllowCorporation: '{{env.ALLOW_CORPORATION}}'
+        bAllowCorporationAIDriver: '{{env.ALLOW_CORP_AI}}'
+        bAllowAutopilot: '{{env.ALLOW_AUTOPILOT}}'
+        bAllowRoadsideTow: '{{env.ALLOW_ROADSIDE_TOW}}'
+        bAllowMobileRefuel: '{{env.ALLOW_MOBILE_REFUEL}}'
+        bAllowVoiceChat: '{{env.ALLOW_VOICE_CHAT}}'
+        MaxHousingPlotRentalPerPlayer: '{{env.MAX_HOUSING_PER_PLAYER}}'
+        MaxHousingPlotRentalDays: '{{env.MAX_HOUSING_DAYS}}'
+        HousingPlotRentalPriceRatio: '{{env.HOUSING_PRICE_RATIO}}'
+        bAllowModdedVehicle: '{{env.ALLOW_MODDED_VEHICLE}}'
+        Rain: '{{env.WEATHER_RAIN}}'
+        Fog: '{{env.WEATHER_FOG}}'
+        Fire: '{{env.WEATHER_FIRE}}'
+        RoadEvent: '{{env.ROAD_EVENT}}'
+        NPCVehicleDensity: '{{env.NPC_VEHICLE_DENSITY}}'
+        NPCPoliceDensity: '{{env.NPC_POLICE_DENSITY}}'
+        AISpeederDensity: '{{env.AI_SPEEDER_DENSITY}}'
+        TimeOfDayMinutes: '{{env.TIME_OF_DAY_MINUTES}}'
+        DroppedItemDespawnMinutes: '{{env.DROPPED_ITEM_DESPAWN_MIN}}'
+        bEnableHostWebAPIServer: '{{env.WEBAPI_ENABLED}}'
+        HostWebAPIServerPassword: '{{env.WEBAPI_PASSWORD}}'
+        HostWebAPIServerPort: '{{env.WEBAPI_PORT}}'
+        bAllowPoliceVehicleByPlayerRole: '{{env.ALLOW_POLICE_BY_ROLE}}'
+        bAllowAdminToRemoveAdmin: '{{env.ALLOW_ADMIN_REMOVE_ADMIN}}'
+        bAllowAdminJoinWhenFull: '{{env.ALLOW_ADMIN_JOIN_FULL}}'
+        bSendServerDiagnostics: '{{env.SEND_DIAGNOSTICS}}'
+        bSendCrashReports: '{{env.SEND_CRASH_REPORTS}}'
+        GameDataValidation.bAllowVehicleAndPartsMismatch: '{{env.ALLOW_VEHICLE_PARTS_MISMATCH}}'
+        GameDataValidation.bAllowCargoMismatch: '{{env.ALLOW_CARGO_MISMATCH}}'
+        GameDataValidation.bAllowItemMismatch: '{{env.ALLOW_ITEM_MISMATCH}}'
+        GameDataValidation.bAllowConsoleVariableMismatch: '{{env.ALLOW_CVAR_MISMATCH}}'
+        GameDataValidation.bAllowBalanceTableMismatch: '{{env.ALLOW_BALANCE_MISMATCH}}'
   startup:
     done: 'fsync: up and running.'
   logs: {  }
@@ -262,3 +305,473 @@ variables:
   - required
   - boolean
   sort: 7
+- name: '[SERVER] Server Message'
+  description: 'Welcome message shown to players upon joining.'
+  env_variable: SRV_MESSAGE
+  default_value: 'Welcome!\nHave fun!'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 12
+- name: '[SERVER] Max Join Queue Players'
+  description: 'Maximum number of players allowed in the join queue.'
+  env_variable: MAX_JOIN_QUEUE
+  default_value: '10'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 13
+- name: '[SERVER] Pause Simulation While No Players'
+  description: 'Pause the world simulation when no players are connected (true or false).'
+  env_variable: PAUSE_WHEN_EMPTY
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 14
+- name: '[SERVER] Allow Admin Join When Full'
+  description: 'Allow admins to join even when the server is full (true or false).'
+  env_variable: ALLOW_ADMIN_JOIN_FULL
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 15
+- name: '[SERVER] Allow Admin To Remove Admin'
+  description: 'Allow admins to remove other admins (true or false).'
+  env_variable: ALLOW_ADMIN_REMOVE_ADMIN
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 16
+- name: '[SERVER] Allow Police Vehicle By Player Role'
+  description: 'Restrict police vehicles to players with the police role (true or false).'
+  env_variable: ALLOW_POLICE_BY_ROLE
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 17
+- name: '[VEHICLES] Max Vehicles Per Player'
+  description: 'Maximum number of vehicles per player.'
+  env_variable: MAX_VEHICLE_PER_PLAYER
+  default_value: '10'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  sort: 18
+- name: '[VEHICLES] Vehicle Spawn Limit Mode'
+  description: 'Vehicle spawn limit mode (e.g. SplitFixed).'
+  env_variable: VEHICLE_SPAWN_LIMIT_MODE
+  default_value: SplitFixed
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  sort: 19
+- name: '[VEHICLES] Max Spawned Personal Vehicles Per Player'
+  description: 'Maximum spawned personal vehicles per player.'
+  env_variable: MAX_PERSONAL_VEHICLES
+  default_value: '10'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 20
+- name: '[VEHICLES] Max Spawned Company Vehicles Per Company'
+  description: 'Maximum spawned company vehicles per company.'
+  env_variable: MAX_COMPANY_VEHICLES
+  default_value: '10'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 21
+- name: '[VEHICLES] Max Spawned Corporation Vehicles Per Corporation'
+  description: 'Maximum spawned corporation vehicles per corporation.'
+  env_variable: MAX_CORP_VEHICLES
+  default_value: '20'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 22
+- name: '[VEHICLES] Max Spawned Managed Fleet Vehicles Total'
+  description: 'Maximum total spawned managed fleet vehicles across the server.'
+  env_variable: MAX_FLEET_VEHICLES_TOTAL
+  default_value: '100'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 23
+- name: '[VEHICLES] Allow Join With Company Vehicles'
+  description: 'Allow players to join with their company vehicles (true or false).'
+  env_variable: ALLOW_JOIN_COMPANY_VEHICLES
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 24
+- name: '[VEHICLES] Allow Modded Vehicles'
+  description: 'Allow modded vehicles on the server (true or false).'
+  env_variable: ALLOW_MODDED_VEHICLE
+  default_value: 'false'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 25
+- name: '[GAMEPLAY] Allow Company AI Driver'
+  description: 'Allow company AI drivers (true or false).'
+  env_variable: ALLOW_COMPANY_AI
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 26
+- name: '[GAMEPLAY] Allow Corporation'
+  description: 'Allow corporations on the server (true or false).'
+  env_variable: ALLOW_CORPORATION
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 27
+- name: '[GAMEPLAY] Allow Corporation AI Driver'
+  description: 'Allow corporation AI drivers (true or false).'
+  env_variable: ALLOW_CORP_AI
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 28
+- name: '[GAMEPLAY] Allow Autopilot'
+  description: 'Allow autopilot feature (true or false).'
+  env_variable: ALLOW_AUTOPILOT
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 29
+- name: '[GAMEPLAY] Allow Roadside Tow'
+  description: 'Allow roadside towing (true or false).'
+  env_variable: ALLOW_ROADSIDE_TOW
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 30
+- name: '[GAMEPLAY] Allow Mobile Refuel'
+  description: 'Allow mobile refueling (true or false).'
+  env_variable: ALLOW_MOBILE_REFUEL
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 31
+- name: '[GAMEPLAY] Allow Voice Chat'
+  description: 'Enable in-game voice chat (true or false).'
+  env_variable: ALLOW_VOICE_CHAT
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 32
+- name: '[HOUSING] Max Housing Plot Rental Per Player'
+  description: 'Maximum housing plots a player can rent.'
+  env_variable: MAX_HOUSING_PER_PLAYER
+  default_value: '1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 33
+- name: '[HOUSING] Max Housing Plot Rental Days'
+  description: 'Maximum rental duration in days for housing plots.'
+  env_variable: MAX_HOUSING_DAYS
+  default_value: '7'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  sort: 34
+- name: '[HOUSING] Housing Plot Rental Price Ratio'
+  description: 'Multiplier for housing plot rental prices (e.g. 0.1).'
+  env_variable: HOUSING_PRICE_RATIO
+  default_value: '0.1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'min:0'
+  sort: 35
+- name: '[WORLD] Rain'
+  description: 'Rain frequency/level.'
+  env_variable: WEATHER_RAIN
+  default_value: '2'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 36
+- name: '[WORLD] Fog'
+  description: 'Fog frequency/level.'
+  env_variable: WEATHER_FOG
+  default_value: '2'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 37
+- name: '[WORLD] Fire'
+  description: 'Fire event frequency/level.'
+  env_variable: WEATHER_FIRE
+  default_value: '2'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 38
+- name: '[WORLD] Road Event'
+  description: 'Road event frequency/level.'
+  env_variable: ROAD_EVENT
+  default_value: '1'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:0'
+  sort: 39
+- name: '[WORLD] NPC Vehicle Density'
+  description: 'Density multiplier for NPC traffic (e.g. 1.0).'
+  env_variable: NPC_VEHICLE_DENSITY
+  default_value: '1.0'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'min:0'
+  sort: 40
+- name: '[WORLD] NPC Police Density'
+  description: 'Density multiplier for NPC police (e.g. 1.0).'
+  env_variable: NPC_POLICE_DENSITY
+  default_value: '1.0'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'min:0'
+  sort: 41
+- name: '[WORLD] AI Speeder Density'
+  description: 'Density multiplier for AI speeders (e.g. 1.0).'
+  env_variable: AI_SPEEDER_DENSITY
+  default_value: '1.0'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - numeric
+  - 'min:0'
+  sort: 42
+- name: '[WORLD] Time Of Day Minutes'
+  description: 'Duration of a full in-game day in real minutes.'
+  env_variable: TIME_OF_DAY_MINUTES
+  default_value: '30'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  sort: 43
+- name: '[WORLD] Dropped Item Despawn Minutes'
+  description: 'Minutes before dropped items despawn.'
+  env_variable: DROPPED_ITEM_DESPAWN_MIN
+  default_value: '30'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'min:1'
+  sort: 44
+- name: '[WEBAPI] Enable Host Web API Server'
+  description: 'Enable the built-in Host Web API server (true or false).'
+  env_variable: WEBAPI_ENABLED
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 45
+- name: '[WEBAPI] Host Web API Server Password'
+  description: 'Password for the Host Web API server.'
+  env_variable: WEBAPI_PASSWORD
+  default_value: 'ENTER PASSWORD HERE'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - nullable
+  - string
+  sort: 46
+- name: '[WEBAPI] Host Web API Server Port'
+  description: 'Port for the Host Web API server (must be allocated if exposed).'
+  env_variable: WEBAPI_PORT
+  default_value: '8080'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - integer
+  - 'between:1024,65535'
+  sort: 47
+- name: '[DIAGNOSTICS] Send Server Diagnostics'
+  description: 'Send anonymous server diagnostics to developer (true or false).'
+  env_variable: SEND_DIAGNOSTICS
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 48
+- name: '[DIAGNOSTICS] Send Crash Reports'
+  description: 'Send crash reports to developer (true or false).'
+  env_variable: SEND_CRASH_REPORTS
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 49
+- name: '[VALIDATION] Allow Vehicle And Parts Mismatch'
+  description: 'Allow vehicle and parts data mismatch (true or false).'
+  env_variable: ALLOW_VEHICLE_PARTS_MISMATCH
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 50
+- name: '[VALIDATION] Allow Cargo Mismatch'
+  description: 'Allow cargo data mismatch (true or false).'
+  env_variable: ALLOW_CARGO_MISMATCH
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 51
+- name: '[VALIDATION] Allow Item Mismatch'
+  description: 'Allow item data mismatch (true or false).'
+  env_variable: ALLOW_ITEM_MISMATCH
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 52
+- name: '[VALIDATION] Allow Console Variable Mismatch'
+  description: 'Allow console variable mismatch (true or false).'
+  env_variable: ALLOW_CVAR_MISMATCH
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 53
+- name: '[VALIDATION] Allow Balance Table Mismatch'
+  description: 'Allow balance table mismatch (true or false).'
+  env_variable: ALLOW_BALANCE_MISMATCH
+  default_value: 'true'
+  user_viewable: true
+  user_editable: true
+  rules:
+  - required
+  - string
+  - 'in:true,false'
+  sort: 54
