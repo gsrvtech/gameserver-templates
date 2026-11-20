@@ -8,7 +8,8 @@ author: 'eggs@goover.dev'
 uuid: 5cce938c-20d9-4617-acc1-4396ecc8775c
 description: 'Enjoy realistic driving in the open world. Relaxing cargo deliveries or driving buses and taxis will give you enough money to buy new cars and parts. You can test your driving skills at the race track. It''s all about pure driving pleasure!'
 icon: null
-tags: {  }
+tags:
+- motortown
 features:
 - steam_disk_space
 docker_images:

@@ -3,24 +3,54 @@
   "ServerMessage": "Welcome!\nHave fun!",
   "Password": "",
   "MaxPlayers": 10,
+  "MaxJoinQueuePlayers": 10,
   "MaxVehiclePerPlayer": 10,
+  "VehicleSpawnLimitMode": "SplitFixed",
+  "MaxSpawnedPersonalVehiclesPerPlayer": 10,
+  "MaxSpawnedCompanyVehiclesPerCompany": 10,
+  "MaxSpawnedCorporationVehiclesPerCorporation": 20,
+  "MaxSpawnedManagedFleetVehiclesTotal": 100,
+  "bPauseSimulationWhileNoPlayers": false,
   "bAllowPlayerToJoinWithCompanyVehicles": false,
   "bAllowCompanyAIDriver": true,
   "bAllowCorporation": true,
   "bAllowCorporationAIDriver": true,
+  "bAllowAutopilot": true,
+  "bAllowRoadsideTow": true,
+  "bAllowMobileRefuel": true,
+  "bAllowVoiceChat": true,
   "MaxHousingPlotRentalPerPlayer": 1,
   "MaxHousingPlotRentalDays": 7,
   "HousingPlotRentalPriceRatio": 0.1,
   "bAllowModdedVehicle": false,
   "Rain": 2,
+  "Fog": 2,
   "Fire": 2,
+  "RoadEvent": 1,
   "NPCVehicleDensity": 1.0,
-  "NPCPoliceDensity": 1.0, 
-  "bEnableHostWebAPIServer": false,
+  "NPCPoliceDensity": 1.0,
+  "AISpeederDensity": 1.0,
+  "TimeOfDayMinutes": 30,
+  "DroppedItemDespawnMinutes": 30,
+  "bEnableHostWebAPIServer": true,
   "HostWebAPIServerPassword": "ENTER PASSWORD HERE",
   "HostWebAPIServerPort": 8080,
   "HostWebAPIDisabledCommands": [
     "/chat_sample"
+  ],
+  "HostWebAPIOptions": [
+    {
+      "Endpoint": "/player/role/add",
+      "Params": {
+        "police": "disable"
+      }
+    },
+    {
+      "Endpoint": "/player/role/remove",
+      "Params": {
+        "police": "disable"
+      }
+    }
   ],
   "Admins": [
     {
@@ -39,5 +69,15 @@
       "Nickname": "PoliceCharacterName1"
     }
   ],
-  "bAllowAdminToRemoveAdmin": false
+  "bAllowAdminToRemoveAdmin": false,
+  "bAllowAdminJoinWhenFull": false,
+  "bSendServerDiagnostics": true,
+  "bSendCrashReports": true,
+  "GameDataValidation": {
+    "bAllowVehicleAndPartsMismatch": true,
+    "bAllowCargoMismatch": true,
+    "bAllowItemMismatch": true,
+    "bAllowConsoleVariableMismatch": true,
+    "bAllowBalanceTableMismatch": true
+  }
 }
