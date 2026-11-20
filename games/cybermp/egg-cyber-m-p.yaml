@@ -1,0 +1,297 @@
+_comment: 'DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PANEL'
+meta:
+  version: PLCN_v3
+  update_url: 'https://raw.githubusercontent.com/gsrvtech/gameserver-templates/main/games/cybermp/egg-cyber-m-p.yaml'
+exported_at: '2026-11-20T00:00:00+00:00'
+name: CyberMP
+author: eggs@goover.dev
+uuid: 3c78ceb1-3eb5-4ea1-82a7-aff9f9fa0152
+description: 'CyberMP - multiplayer mod for Cyberpunk 2077. https://docs.cyber.mp'
+icon: null
+tags: {  }
+features: {  }
+docker_images:
+  'Debian 13 (Trixie)': 'ghcr.io/goover/debian:13-trixie'
+file_denylist: {  }
+startup_commands:
+  Default: 'LD_LIBRARY_PATH=./libs CYBERMP_TCP_HOST=0.0.0.0:{{SERVER_PORT}} CYBERMP_UDP_HOST=0.0.0.0:{{SERVER_PORT}} CYBERMP_CONNECTION_HOST_ADDR=${PUBLIC_ADDRESS:-127.0.0.1}:{{SERVER_PORT}} ./cybermp-server -run'
+config:
+  files: {  }
+  startup:
+    done: 'Server started'
+  logs: {  }
+  stop: quit
+scripts:
+  installation:
+    script: |-
+      #!/bin/bash
+      # ------------------------------------------------
+      # Installscript for CyberMP (Pelican Egg - Linux)
+      # License: AGPLv3
+      # Author: gOOvER (https://discord.goover.dev)
+      # Donate: https://donate.goover.dev
+      # ------------------------------------------------
+
+      set -euo pipefail
+
+      # ----------------------------
+      # Environment Setup
+      # ----------------------------
+      HOME=/mnt/server
+      export HOME
+      chown -R root:root /mnt
+
+      GAME_NAME="CyberMP"
+      REPO="Cyber-MP/CyberMP-Server-Releases"
+      SERVER_VERSION="${SERVER_VERSION:-latest}"
+
+      # ----------------------------
+      # Locale Setup
+      # ----------------------------
+      export LANG=en_US.UTF-8
+      export LANGUAGE=en_US:en
+      export LC_ALL=en_US.UTF-8
+
+      # ----------------------------
+      # Logging & Colors
+      # ----------------------------
+      SAFE_NAME="${GAME_NAME// /_}_install.log"
+      INSTALL_LOG="$HOME/$SAFE_NAME"
+      : > "$INSTALL_LOG"
+
+      RED=$(tput setaf 1 2>/dev/null || echo "")
+      GREEN=$(tput setaf 2 2>/dev/null || echo "")
+      YELLOW=$(tput setaf 3 2>/dev/null || echo "")
+      BLUE=$(tput setaf 4 2>/dev/null || echo "")
+      CYAN=$(tput setaf 6 2>/dev/null || echo "")
+      BOLD=$(tput bold 2>/dev/null || echo "")
+      NC=$(tput sgr0 2>/dev/null || echo "")
+
+      print_step() {
+          echo "${BLUE}│${NC}  ${CYAN}→${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [STEP] $*" >> "$INSTALL_LOG"
+      }
+      print_ok() {
+          echo "${BLUE}│${NC}  ${GREEN}✓${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [OK] $*" >> "$INSTALL_LOG"
+      }
+      print_warn() {
+          echo "${BLUE}│${NC}  ${YELLOW}⚠${NC} $*"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [WARN] $*" >> "$INSTALL_LOG"
+      }
+      print_error() {
+          echo "${BLUE}│${NC}  ${RED}✗${NC} $*" >&2
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$INSTALL_LOG"
+      }
+
+      # ----------------------------
+      # Dependencies
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Installing Dependencies${NC}"
+      print_step "Adding Debian bullseye repository for libssl1.1..."
+      echo "deb http://deb.debian.org/debian bullseye main" > /etc/apt/sources.list.d/bullseye.list
+      print_step "Updating apt and installing required packages..."
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update >> "$INSTALL_LOG" 2>&1
+      apt-get install -y --no-install-recommends libssl1.1 libnng1 libc-ares2 libatomic1 libcurl3-gnutls >> "$INSTALL_LOG" 2>&1
+      print_ok "Dependencies installed"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Download & Extract
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Downloading ${GAME_NAME}${NC}"
+      mkdir -p "$HOME"
+      cd "$HOME"
+
+      if [ -z "${SERVER_VERSION}" ] || [ "${SERVER_VERSION}" = "latest" ]; then
+          RELEASE_URL="https://api.github.com/repos/${REPO}/releases/latest"
+      else
+          TAG="${SERVER_VERSION}"
+          if [[ "${TAG}" != v* ]]; then
+              TAG="v${TAG}"
+          fi
+          RELEASE_URL="https://api.github.com/repos/${REPO}/releases/tags/${TAG}"
+      fi
+
+      print_step "Resolving release from ${RELEASE_URL}..."
+      DOWNLOAD_URL=$(curl -fsSL "${RELEASE_URL}" | jq -r '.assets[] | select((.name | startswith("cybermp-server-linux-build")) and (.name | endswith(".zip"))) | .browser_download_url' | head -n 1)
+
+      if [ -z "${DOWNLOAD_URL}" ] || [ "${DOWNLOAD_URL}" = "null" ]; then
+          print_error "Could not find a Linux server build for version '${SERVER_VERSION}'"
+          exit 1
+      fi
+
+      print_step "Downloading ${DOWNLOAD_URL}..."
+      curl -fsSL -o cybermp-server.zip "${DOWNLOAD_URL}"
+
+      if [ -f server.toml ]; then
+          print_step "Backing up existing server.toml..."
+          mv server.toml server.toml.keep
+      fi
+
+      print_step "Extracting server archive..."
+      unzip -o -q cybermp-server.zip
+      rm -f cybermp-server.zip
+
+      if [ -f server.toml.keep ]; then
+          mv -f server.toml.keep server.toml
+          print_ok "Restored existing server.toml"
+      fi
+
+      mkdir -p resources
+
+      if [ ! -f server.toml ]; then
+          print_step "Downloading default server.toml..."
+          curl -fsSL -o server.toml "https://raw.githubusercontent.com/${REPO}/main/server.toml"
+      fi
+
+      ## Upstream default still uses the old key name
+      sed -i 's/^disable_VoIP_server/disable_voice/' server.toml
+
+      chmod +x cybermp-server
+      if [ -f bin/crashpad_handler ]; then
+          chmod +x bin/crashpad_handler
+      fi
+      print_ok "Server files extracted"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Bundle Shared Libraries
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Bundling Shared Libraries${NC}"
+      if ldd ./cybermp-server | grep -q "not found"; then
+          print_error "Missing libraries detected:"
+          ldd ./cybermp-server | grep "not found" >&2
+          exit 1
+      fi
+
+      rm -rf libs
+      mkdir -p libs
+      for BIN in ./cybermp-server ./bin/crashpad_handler; do
+          if [ -f "${BIN}" ]; then
+              ldd "${BIN}" | awk '$2 == "=>" {print $3}' | grep '^/' || true
+          fi
+      done | sort -u | while read -r LIB; do
+          case "$(basename "${LIB}")" in
+              libc.so.*|libm.so.*|libdl.so.*|libpthread.so.*|librt.so.*|libresolv.so.*|ld-linux*|libstdc++.so.*|libgcc_s.so.*)
+                  ;;
+              *)
+                  cp -L "${LIB}" libs/
+                  ;;
+          esac
+      done
+      print_ok "Shared libraries bundled into ./libs"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Post-Installation Verification
+      # ----------------------------
+      echo ""
+      echo "${BLUE}┌─ ${CYAN}${BOLD}Post-Installation Verification${NC}"
+      if [[ -x "$HOME/cybermp-server" ]]; then
+          print_ok "Binary ready: cybermp-server"
+      else
+          print_error "cybermp-server binary missing or not executable"
+          exit 1
+      fi
+      if [[ -f "$HOME/server.toml" ]]; then
+          print_ok "Config ready: server.toml"
+      else
+          print_warn "server.toml not found"
+      fi
+      print_ok "Verification completed"
+      echo "${BLUE}└─${NC}"
+
+      # ----------------------------
+      # Done
+      # ----------------------------
+      echo ""
+      echo "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+      printf "${BLUE}║${NC}%21s${GREEN}${BOLD}%s${NC}%21s${BLUE}║${NC}\n" "" "INSTALLATION COMPLETED" ""
+      echo "${BLUE}╠════════════════════════════════════════════════════════════════╣${NC}"
+      printf "${BLUE}║${NC}  ${GREEN}[OK]${NC} %-57s${BLUE}║${NC}\n" "${GAME_NAME} successfully installed"
+      printf "${BLUE}║${NC}  Log: %-57s${BLUE}║${NC}\n" "$INSTALL_LOG"
+      printf "${BLUE}║${NC}  Support: %-53s${BLUE}║${NC}\n" "https://donate.goover.dev"
+      echo "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+      echo ""
+
+      exit 0
+    container: 'ghcr.io/goover/installers:debian'
+    entrypoint: bash
+variables:
+  -
+    name: 'Server Version'
+    description: 'Release tag to install (e.g. v4.0.4-beta.1) or "latest". Reinstall the server to apply.'
+    env_variable: SERVER_VERSION
+    default_value: latest
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'max:64'
+    sort: 1
+  -
+    name: 'Public Address'
+    description: 'Public IP or hostname clients use to connect (connection_host_addr). Port is added automatically. Defaults to 127.0.0.1 when empty.'
+    env_variable: PUBLIC_ADDRESS
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - nullable
+      - string
+      - 'max:255'
+    sort: 2
+  -
+    name: 'Max Players'
+    description: 'Maximum number of concurrent player slots.'
+    env_variable: CYBERMP_MAX_PLAYERS
+    default_value: 20
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - integer
+      - 'between:1,1000'
+    sort: 3
+  -
+    name: 'Masterlist Token'
+    description: 'Masterlist server token (private_token). Leave empty for private/local servers.'
+    env_variable: CYBERMP_PRIVATE_TOKEN
+    default_value: ''
+    user_viewable: true
+    user_editable: true
+    rules:
+      - nullable
+      - string
+      - 'max:255'
+    sort: 4
+  -
+    name: 'Disable Voice'
+    description: 'Disable the built-in 3D positional VoIP server.'
+    env_variable: CYBERMP_DISABLE_VOICE
+    default_value: 'false'
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'in:true,false'
+    sort: 5
+  -
+    name: 'Phantom Liberty DLC'
+    description: 'Enable content from the Phantom Liberty expansion (ep2_dlc_enabled).'
+    env_variable: CYBERMP_EP2_DLC_ENABLED
+    default_value: 'false'
+    user_viewable: true
+    user_editable: true
+    rules:
+      - required
+      - string
+      - 'in:true,false'
+    sort: 6
