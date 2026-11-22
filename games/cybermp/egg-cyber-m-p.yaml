@@ -39,7 +39,8 @@ scripts:
       # ----------------------------
       HOME=/mnt/server
       export HOME
-      chown -R root:root /mnt
+      mkdir -p "$HOME"
+      chown -R root:root "$HOME"
 
       GAME_NAME="CyberMP"
       REPO="Cyber-MP/CyberMP-Server-Releases"
